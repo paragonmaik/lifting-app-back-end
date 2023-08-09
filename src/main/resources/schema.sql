@@ -1,7 +1,8 @@
-DROP TABLE IF EXISTS exercises;
-DROP TABLE IF EXISTS workouts;
+DROP TABLE IF EXISTS exercise CASCADE;
+DROP TABLE IF EXISTS workout CASCADE;
+DROP TABLE IF EXISTS workout_exercise;
 
-CREATE TABLE exercises (
+CREATE TABLE exercise (
   id SERIAL PRIMARY KEY,
   name VARCHAR(30) NOT NULL,
   load INTEGER,
@@ -12,10 +13,10 @@ CREATE TABLE exercises (
   date_updated TIMESTAMP
 );
 
-INSERT INTO Exercises (name, load, goal, rest_period_sec, description, date_created)
+INSERT INTO exercise (name, load, goal, rest_period_sec, description, date_created)
 VALUES ('Squat', 120, 'Strength', 150, 'High bar back squat.', CURRENT_TIMESTAMP);
 
-CREATE TABLE workouts (
+CREATE TABLE workout (
   id SERIAL PRIMARY KEY,
   name VARCHAR(30) NOT NULL,
   duration_sec INTEGER,
@@ -24,5 +25,11 @@ CREATE TABLE workouts (
   date_updated TIMESTAMP
 );
 
-INSERT INTO Workouts (name, duration_sec, description, date_created)
+INSERT INTO workout (name, duration_sec, description, date_created)
 VALUES ('Workout A', 3600, 'A really cool workout.', CURRENT_TIMESTAMP);
+
+CREATE TABLE workout_exercise (
+  workout_id INT REFERENCES workout (id) ON UPDATE CASCADE,
+  exercise_id INT REFERENCES exercise (id) ON UPDATE CASCADE,
+  CONSTRAINT workout_exercise_pk PRIMARY KEY (workout_id, exercise_id)
+);
