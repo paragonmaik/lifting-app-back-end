@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS workout CASCADE;
 DROP TABLE IF EXISTS workout_exercise;
 DROP TABLE IF EXISTS program CASCADE;
 DROP TABLE IF EXISTS program_workout;
+DROP TABLE IF EXISTS profile CASCADE;
 
 CREATE TABLE exercise (
   id SERIAL PRIMARY KEY,
@@ -66,3 +67,10 @@ VALUES (
   (SELECT id FROM workout WHERE name = 'Workout A')
 );
 
+CREATE TABLE profile (
+  id SERIAL PRIMARY KEY,
+  weight INTEGER,
+  height INTEGER,
+  date_created TIMESTAMP NOT NULL,
+  date_updated TIMESTAMP
+);
