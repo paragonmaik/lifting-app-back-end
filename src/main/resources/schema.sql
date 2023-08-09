@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS exercise CASCADE;
 DROP TABLE IF EXISTS workout CASCADE;
 DROP TABLE IF EXISTS workout_exercise;
 DROP TABLE IF EXISTS program CASCADE;
+DROP TABLE IF EXISTS program_workout;
 
 CREATE TABLE exercise (
   id SERIAL PRIMARY KEY,
@@ -51,5 +52,17 @@ CREATE TABLE program (
 );
 
 INSERT INTO program (name, duration_weeks, description, date_created)
-VALUES ('Bulgarian Program', 52, 'A tought program.', CURRENT_TIMESTAMP);
+VALUES ('Bulgarian Program', 52, 'A tough program.', CURRENT_TIMESTAMP);
+
+CREATE TABLE program_workout (
+  program_id INT REFERENCES program (id) ON UPDATE CASCADE,
+  workout_id INT REFERENCES workout (id) ON UPDATE CASCADE,
+  CONSTRAINT program_workout_pk PRIMARY KEY (program_id, workout_id)
+);
+
+INSERT INTO program_workout (program_id, workout_id)
+VALUES (
+  (SELECT id FROM program WHERE name = 'Bulgarian Program'),
+  (SELECT id FROM workout WHERE name = 'Workout A')
+);
 
