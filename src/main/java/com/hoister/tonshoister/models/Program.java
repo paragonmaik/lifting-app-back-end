@@ -24,6 +24,9 @@ public class Program {
   @Column(name = "date_created")
   LocalDateTime dateCreated;
 
+  public Program() {
+  }
+
   public Program(String name, Integer durationWeeks, String description) {
     this.name = name;
     this.durationWeeks = durationWeeks;
