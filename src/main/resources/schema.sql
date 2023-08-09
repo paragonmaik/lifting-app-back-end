@@ -35,6 +35,12 @@ CREATE TABLE workout_exercise (
   CONSTRAINT workout_exercise_pk PRIMARY KEY (workout_id, exercise_id)
 );
 
+INSERT INTO workout_exercise (workout_id, exercise_id)
+VALUES (
+  (SELECT id FROM workout WHERE name = 'Workout A'),
+  (SELECT id FROM exercise WHERE name = 'Squat')
+);
+
 CREATE TABLE program (
   id SERIAL PRIMARY KEY,
   name VARCHAR(30) NOT NULL,
