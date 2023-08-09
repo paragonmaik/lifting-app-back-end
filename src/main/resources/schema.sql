@@ -74,3 +74,6 @@ CREATE TABLE profile (
   date_created TIMESTAMP NOT NULL,
   date_updated TIMESTAMP
 );
+
+INSERT INTO profile (weight, height, date_created)
+VALUES (97, 190, CURRENT_TIMESTAMP);
