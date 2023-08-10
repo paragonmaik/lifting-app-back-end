@@ -1,4 +1,4 @@
-package com.hoister.tonshoister;
+package com.hoister.tonshoister.programTests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
