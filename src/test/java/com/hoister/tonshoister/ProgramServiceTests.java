@@ -28,7 +28,7 @@ public class ProgramServiceTests {
   ProgramService programService;
 
   @Test
-  public void findAllProgramsSuccess() {
+  public void findAllProgramsSuccess() throws Exception {
     Program program = new Program("GVT", 12, "German Volume training");
     List<Program> programs = new ArrayList<Program>();
     programs.add(program);
@@ -42,7 +42,7 @@ public class ProgramServiceTests {
   }
 
   @Test
-  public void findAllProgramsThrowsException() {
+  public void findAllProgramsThrowsException() throws Exception {
     List<Program> programs = new ArrayList<Program>();
 
     when(programRepository.findAll()).thenReturn(programs);
