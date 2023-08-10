@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS exercise CASCADE;
 DROP TABLE IF EXISTS workout CASCADE;
 DROP TABLE IF EXISTS workout_exercise;
 DROP TABLE IF EXISTS program CASCADE;
+DROP SEQUENCE IF EXISTS program_sequence;
 DROP TABLE IF EXISTS program_workout;
 DROP TABLE IF EXISTS profile CASCADE;
 
@@ -48,16 +49,18 @@ CREATE TABLE program (
   name VARCHAR(30) NOT NULL,
   duration_weeks INTEGER,
   description TEXT,
-  date_created TIMESTAMP NOT NULL,
+  date_created TIMESTAMP, --NOT NULL,
   date_updated TIMESTAMP
 );
 
 INSERT INTO program (name, duration_weeks, description, date_created)
 VALUES ('Bulgarian Program', 52, 'A tough program.', CURRENT_TIMESTAMP);
 
+CREATE SEQUENCE program_sequence START WITH 1 INCREMENT BY 1 MINVALUE 1;
+
 CREATE TABLE program_workout (
-  program_id INT REFERENCES program (id) ON UPDATE CASCADE,
-  workout_id INT REFERENCES workout (id) ON UPDATE CASCADE,
+  program_id INT REFERENCES program (id) ON UPDATE CASCADE ON DELETE CASCADE,
+  workout_id INT REFERENCES workout (id) ON UPDATE CASCADE ON DELETE CASCADE,
   CONSTRAINT program_workout_pk PRIMARY KEY (program_id, workout_id)
 );
 
