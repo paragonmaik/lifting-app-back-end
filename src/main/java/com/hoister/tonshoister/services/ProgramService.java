@@ -16,7 +16,7 @@ public class ProgramService {
     this.programRepository = programRepository;
   }
 
-  public List<Program> findAll() throws Exception {
+  public List<Program> findAll() throws ProgramNotFoundException {
     List<Program> programsList = programRepository.findAll();
 
     if (programsList.isEmpty()) {
