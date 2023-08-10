@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -52,5 +53,31 @@ public class ProgramServiceTests {
     });
 
     verify(programRepository).findAll();
+  }
+
+  @Test
+  public void findByIdSuccess() {
+    Optional<Program> program = Optional.of(
+        new Program("GVT", 12, "German Volume training"));
+
+    when(programRepository.findById(1)).thenReturn(program);
+
+    Optional<Program> requestedProgram = Optional.of(programService.findById(1));
+
+    assertEquals(program, requestedProgram);
+    verify(programRepository).findById(1);
+  }
+
+  @Test
+  public void findByIdThrowsException() {
+    Optional<Program> program = Optional.empty();
+
+    when(programRepository.findById(1)).thenReturn(program);
+
+    assertThrows(ProgramNotFoundException.class, () -> {
+      programService.findById(1);
+    });
+
+    verify(programRepository).findById(1);
   }
 }

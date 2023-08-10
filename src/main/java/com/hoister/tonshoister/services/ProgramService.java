@@ -25,4 +25,8 @@ public class ProgramService {
 
     return programsList;
   }
+
+  public Program findById(Integer id) throws ProgramNotFoundException {
+    return programRepository.findById(id).orElseThrow(() -> new ProgramNotFoundException());
+  }
 }
