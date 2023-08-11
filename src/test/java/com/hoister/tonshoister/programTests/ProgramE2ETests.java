@@ -1,5 +1,6 @@
 package com.hoister.tonshoister.programTests;
 
+import org.hibernate.jdbc.Expectations;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +17,12 @@ import com.hoister.tonshoister.models.Program;
 import com.hoister.tonshoister.repositories.ProgramRepository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 import java.util.List;
+import java.util.Objects;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @AutoConfigureWebMvc
@@ -49,6 +53,26 @@ public class ProgramE2ETests {
 
   @Test
   public void getAllProgramsThrowsException() throws Exception {
+
+    ResponseEntity<Program> responseProgram = testRestTemplate
+        .getForEntity("/api/programs", Program.class);
+
+    assertEquals(responseProgram.getStatusCode(), HttpStatus.NOT_FOUND);
+  }
+
+  @Test
+  public void getProgramByIdSuccess() throws Exception {
+    Program program = new Program("GVT", 12, "German Volume training");
+    programRepository.save(program);
+
+    ResponseEntity<Program> responseProgram = testRestTemplate
+        .getForEntity("/api/programs/1", Program.class);
+
+    assertEquals(responseProgram.getStatusCode(), HttpStatus.OK);
+  }
+
+  @Test
+  public void getProgramByIdThrowsException() throws Exception {
 
     ResponseEntity<Program> responseProgram = testRestTemplate
         .getForEntity("/api/programs", Program.class);
