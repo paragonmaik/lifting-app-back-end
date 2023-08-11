@@ -16,6 +16,10 @@ public class ProgramService {
     this.programRepository = programRepository;
   }
 
+  public Program createProgram(Program program) {
+    return programRepository.save(program);
+  }
+
   public List<Program> findAll() throws ProgramNotFoundException {
     List<Program> programsList = programRepository.findAll();
 

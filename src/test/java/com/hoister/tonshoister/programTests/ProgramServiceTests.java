@@ -29,6 +29,19 @@ public class ProgramServiceTests {
   ProgramService programService;
 
   @Test
+  public void createProgramSuccess() {
+    Program program = new Program("Starting Strength", 40, "Rookie Program.");
+
+    when(programRepository.save(program)).thenReturn(program);
+
+    Program createdProgram = programService.createProgram(program);
+
+    assertEquals(program, createdProgram);
+
+    verify(programRepository).save(createdProgram);
+  }
+
+  @Test
   public void findAllProgramsSuccess() throws ProgramNotFoundException {
     Program program = new Program("GVT", 12, "German Volume training");
     List<Program> programs = new ArrayList<Program>();
@@ -80,4 +93,5 @@ public class ProgramServiceTests {
 
     verify(programRepository).findById(1);
   }
+
 }
