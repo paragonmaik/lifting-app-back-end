@@ -52,4 +52,27 @@ public class ProgramControllerTests {
 
         verify(programService).findAll();    
   }
+
+  @Test
+  public void getProgramByIdSuccess() throws Exception {
+    Program program = new Program("GVT", 12, "German Volume training");
+
+    when(programService.findById(1)).thenReturn(program);
+
+    mockMvc.perform(get("/api/programs/1"))
+        .andExpect(status().isOk()).andExpect(jsonPath("$.name").value("GVT"));
+
+    verify(programService).findById(1);
+  }
+
+  @Test
+  public void getProgramByIdThrowsException() throws Exception {
+    when(programService.findById(1)).thenThrow(new ProgramNotFoundException());
+
+     mockMvc.perform(get("/api/programs/1"))
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$..message").exists());
+
+        verify(programService).findById(1);
+  }
 }
