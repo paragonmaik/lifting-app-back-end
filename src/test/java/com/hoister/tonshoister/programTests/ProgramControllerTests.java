@@ -7,14 +7,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hoister.tonshoister.advisors.ProgramNotFoundException;
 import com.hoister.tonshoister.controllers.ProgramController;
 import com.hoister.tonshoister.models.Program;
@@ -27,6 +30,21 @@ public class ProgramControllerTests {
   ProgramService programService;
   @Autowired
   MockMvc mockMvc;
+
+  @Test
+  public void createProgramSuccess() throws Exception {
+    ObjectMapper objectMapper = new ObjectMapper();
+    Program program = new Program("Starting Strength", 40, "Rookie Program.");
+
+    when(programService.createProgram(program)).thenReturn(program);
+
+    mockMvc
+        .perform(
+            post("/api/programs").contentType("application/json").content(objectMapper.writeValueAsString(program)))
+        .andExpect(status().isCreated());
+
+    verify(programService).createProgram(ArgumentMatchers.refEq(program));
+  }
 
   @Test
   public void getProgramsSuccess() throws Exception {
