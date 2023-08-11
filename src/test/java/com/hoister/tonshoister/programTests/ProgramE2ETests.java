@@ -1,6 +1,5 @@
 package com.hoister.tonshoister.programTests;
 
-import org.hibernate.jdbc.Expectations;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +16,10 @@ import com.hoister.tonshoister.models.Program;
 import com.hoister.tonshoister.repositories.ProgramRepository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 import java.util.List;
-import java.util.Objects;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @AutoConfigureWebMvc
@@ -69,6 +66,7 @@ public class ProgramE2ETests {
         .getForEntity("/api/programs/1", Program.class);
 
     assertEquals(responseProgram.getStatusCode(), HttpStatus.OK);
+    assertNotNull(responseProgram);
   }
 
   @Test
