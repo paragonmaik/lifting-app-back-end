@@ -2,6 +2,8 @@ package com.hoister.tonshoister.models;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table
@@ -17,11 +20,13 @@ public class Program {
   @SequenceGenerator(name = "program_sequence", sequenceName = "program_sequence", allocationSize = 1)
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "program_sequence")
   Integer id;
+  @NotBlank
   String name;
   @Column(name = "duration_weeks")
   Integer durationWeeks;
   String description;
   @Column(name = "date_created")
+  @CreationTimestamp
   LocalDateTime dateCreated;
 
   public Program() {
@@ -59,6 +64,14 @@ public class Program {
 
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  public LocalDateTime getDateCreated() {
+    return this.dateCreated;
+  }
+
+  public void setDateCreated(LocalDateTime dateCreated) {
+    this.dateCreated = dateCreated;
   }
 
 }
