@@ -37,6 +37,15 @@ public class ProgramE2ETests {
   }
 
   @Test
+  public void createProgramSuccess() throws Exception {
+    Program program = new Program("Starting Strength", 40, "Rookie program.");
+    ResponseEntity<Program> responseProgram = testRestTemplate.postForEntity("/api/programs", program,
+        Program.class);
+
+    assertEquals(responseProgram.getStatusCode(), HttpStatus.CREATED);
+  }
+
+  @Test
   public void getAllProgramsSuccess() throws Exception {
     Program program = new Program("GVT", 12, "German Volume training");
     programRepository.save(program);
