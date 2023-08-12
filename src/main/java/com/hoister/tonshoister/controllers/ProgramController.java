@@ -27,7 +27,8 @@ public class ProgramController {
 
   @PostMapping("")
   public ResponseEntity<Program> createProgram(@Valid @RequestBody Program program) {
-    return ResponseEntity.status(HttpStatus.CREATED).body(programService.createProgram(program));
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body(programService.createProgram(program));
   }
 
   @GetMapping
