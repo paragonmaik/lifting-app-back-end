@@ -64,7 +64,10 @@ public class ProgramControllerTests {
     when(programService.findAll()).thenReturn(programs);
 
     mockMvc.perform(get("/api/programs"))
-        .andExpect(status().isOk()).andExpect(jsonPath("$..name").value("GVT"));
+        .andExpect(status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$..name").value(programs.get(0).getName()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$..durationWeeks").value(programs.get(0).getDurationWeeks()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$..description").value(programs.get(0).getDescription()));
 
     verify(programService).findAll();
   }
