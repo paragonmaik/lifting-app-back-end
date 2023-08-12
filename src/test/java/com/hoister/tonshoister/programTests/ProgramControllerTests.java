@@ -1,5 +1,6 @@
 package com.hoister.tonshoister.programTests;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -40,7 +41,7 @@ public class ProgramControllerTests {
   @Test
   public void createProgramSuccess() throws Exception {
     Program program = new Program("Starting Strength", 40, "Rookie Program.");
-    when(programService.createProgram(program)).thenReturn(program);
+    when(programService.createProgram(any(Program.class))).thenReturn(program);
 
     mockMvc
         .perform(
