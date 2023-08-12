@@ -90,7 +90,10 @@ public class ProgramControllerTests {
     when(programService.findById(1)).thenReturn(program);
 
     mockMvc.perform(get("/api/programs/1"))
-        .andExpect(status().isOk()).andExpect(jsonPath("$.name").value("GVT"));
+        .andExpect(status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(program.getName()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.durationWeeks").value(program.getDurationWeeks()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(program.getDescription()));
 
     verify(programService).findById(1);
   }
