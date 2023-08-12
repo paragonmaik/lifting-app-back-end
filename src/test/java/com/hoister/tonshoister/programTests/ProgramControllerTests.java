@@ -51,6 +51,8 @@ public class ProgramControllerTests {
         .andExpect(MockMvcResultMatchers.jsonPath("$.name", CoreMatchers.is(program.getName())))
         .andExpect(MockMvcResultMatchers.jsonPath("$.durationWeeks", CoreMatchers.is(program.getDurationWeeks())))
         .andExpect(MockMvcResultMatchers.jsonPath("$.description", CoreMatchers.is(program.getDescription())));
+
+    verify(programService).createProgram(any(Program.class));
   }
 
   @Test
