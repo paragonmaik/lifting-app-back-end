@@ -6,12 +6,15 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -26,6 +29,9 @@ import com.hoister.tonshoister.services.ProgramService;
 @WebMvcTest(ProgramController.class)
 public class ProgramControllerTests {
 
+  @Autowired
+  ObjectMapper objectMapper;
+
   @MockBean
   ProgramService programService;
   @Autowired
@@ -33,17 +39,17 @@ public class ProgramControllerTests {
 
   @Test
   public void createProgramSuccess() throws Exception {
-    ObjectMapper objectMapper = new ObjectMapper();
     Program program = new Program("Starting Strength", 40, "Rookie Program.");
-
     when(programService.createProgram(program)).thenReturn(program);
 
     mockMvc
         .perform(
-            post("/api/programs").contentType("application/json").content(objectMapper.writeValueAsString(program)))
-        .andExpect(status().isCreated());
-
-    verify(programService).createProgram(ArgumentMatchers.refEq(program));
+            post("/api/programs").contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(program)))
+        .andExpect(MockMvcResultMatchers.status().isCreated())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.name", CoreMatchers.is(program.getName())))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.durationWeeks", CoreMatchers.is(program.getDurationWeeks())))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.description", CoreMatchers.is(program.getDescription())));
   }
 
   @Test
