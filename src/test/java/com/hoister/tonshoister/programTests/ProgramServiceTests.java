@@ -1,6 +1,7 @@
 package com.hoister.tonshoister.programTests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -94,4 +95,33 @@ public class ProgramServiceTests {
     verify(programRepository).findById(1);
   }
 
+  @Test
+  public void updateProgramSuccess() throws Exception {
+    Program program1 = new Program(1, "Starting Strength", 40, "Rookie Program.");
+    Program program2 = new Program(1, "5x5", 10, "five sets of five.");
+
+    when(programRepository.save(program1)).thenReturn(program1);
+    when(programRepository.existsById(1)).thenReturn(true);
+    when(programRepository.save(program2)).thenReturn(program2);
+
+    Program createdProgram = programService.createProgram(program1);
+    Program updatedProgram = programService.updateProgram(program2);
+
+    assertNotEquals(createdProgram.getName(), updatedProgram.getName());
+    verify(programRepository).save(createdProgram);
+    verify(programRepository).existsById(1);
+  }
+
+  @Test
+  public void updateProgramThrowsException() {
+    Program program = new Program(1, "5x5", 10, "five sets of five.");
+
+    when(programRepository.existsById(1)).thenReturn(false);
+
+    assertThrows(ProgramNotFoundException.class, () -> {
+      programService.updateProgram(program);
+    });
+
+    verify(programRepository).existsById(1);
+  }
 }

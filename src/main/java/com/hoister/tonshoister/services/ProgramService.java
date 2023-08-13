@@ -33,4 +33,12 @@ public class ProgramService {
   public Program findById(Integer id) throws ProgramNotFoundException {
     return programRepository.findById(id).orElseThrow(() -> new ProgramNotFoundException());
   }
+
+  public Program updateProgram(Program program) throws ProgramNotFoundException {
+    if (!programRepository.existsById(program.getId())) {
+      throw new ProgramNotFoundException();
+    }
+
+    return programRepository.save(program);
+  }
 }
