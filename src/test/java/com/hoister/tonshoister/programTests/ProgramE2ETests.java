@@ -16,7 +16,6 @@ import com.hoister.tonshoister.models.Program;
 import com.hoister.tonshoister.repositories.ProgramRepository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 import java.util.List;
@@ -39,10 +38,15 @@ public class ProgramE2ETests {
   @Test
   public void createProgramSuccess() throws Exception {
     Program program = new Program("Starting Strength", 40, "Rookie program.");
-    ResponseEntity<Program> responseProgram = testRestTemplate.postForEntity("/api/programs", program,
+    ResponseEntity<Program> response = testRestTemplate.postForEntity("/api/programs", program,
         Program.class);
+    Program responseProgram = response.getBody();
 
-    assertEquals(responseProgram.getStatusCode(), HttpStatus.CREATED);
+    assertEquals(response.getStatusCode(), HttpStatus.CREATED);
+
+    assertEquals(responseProgram.getName(), program.getName());
+    assertEquals(responseProgram.getDurationWeeks(), program.getDurationWeeks());
+    assertEquals(responseProgram.getDescription(), program.getDescription());
   }
 
   @Test
@@ -50,11 +54,16 @@ public class ProgramE2ETests {
     Program program = new Program("GVT", 12, "German Volume training");
     programRepository.save(program);
 
-    ResponseEntity<List<Program>> responseProgram = testRestTemplate
+    ResponseEntity<List<Program>> response = testRestTemplate
         .exchange("/api/programs", HttpMethod.GET, null, new ParameterizedTypeReference<List<Program>>() {
         });
+    Program responseProgram = response.getBody().get(0);
 
-    assertEquals(responseProgram.getStatusCode(), HttpStatus.OK);
+    assertEquals(response.getStatusCode(), HttpStatus.OK);
+
+    assertEquals(responseProgram.getName(), program.getName());
+    assertEquals(responseProgram.getDurationWeeks(), program.getDurationWeeks());
+    assertEquals(responseProgram.getDescription(), program.getDescription());
   }
 
   @Test
@@ -71,11 +80,15 @@ public class ProgramE2ETests {
     Program program = new Program("GVT", 12, "German Volume training");
     programRepository.save(program);
 
-    ResponseEntity<Program> responseProgram = testRestTemplate
+    ResponseEntity<Program> response = testRestTemplate
         .getForEntity("/api/programs/1", Program.class);
+    Program responseProgram = response.getBody();
 
-    assertEquals(responseProgram.getStatusCode(), HttpStatus.OK);
-    assertNotNull(responseProgram);
+    assertEquals(response.getStatusCode(), HttpStatus.OK);
+
+    assertEquals(responseProgram.getName(), program.getName());
+    assertEquals(responseProgram.getDurationWeeks(), program.getDurationWeeks());
+    assertEquals(responseProgram.getDescription(), program.getDescription());
   }
 
   @Test
