@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -107,5 +108,36 @@ public class ProgramControllerTests {
         .andExpect(jsonPath("$..message").exists());
 
         verify(programService).findById(1);
+  }
+
+  @Test
+  public void updateProgramSuccess() throws Exception {
+    Program program = new Program("5x5", 12, "Rookie Program.");
+
+    when(programService.updateProgram(any(Program.class))).thenReturn(program);
+
+    mockMvc
+        .perform(
+            put("/api/programs/1").contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(program)))
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.name", CoreMatchers.is(program.getName())))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.durationWeeks", CoreMatchers.is(program.getDurationWeeks())))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.description", CoreMatchers.is(program.getDescription())));
+
+    verify(programService).updateProgram(any(Program.class));
+  }
+
+  @Test
+  public void updateProgramThrowsException() throws Exception {
+    Program program = new Program("5x5", 12, "Rookie Program.");
+    when(programService.updateProgram(any(Program.class))).thenThrow(new ProgramNotFoundException());
+
+    mockMvc.perform(put("/api/programs/1").contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(program)))
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.message").exists());
+
+    verify(programService).updateProgram(any(Program.class));
   }
 }

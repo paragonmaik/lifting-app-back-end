@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,5 +40,11 @@ public class ProgramController {
   @GetMapping("/{id}")
   public Program getProgramById(@PathVariable Integer id) {
     return programService.findById(id);
+  }
+
+  @PutMapping("/{id}")
+  public Program updateProgram(@Valid @RequestBody Program program,
+      @PathVariable Integer id) {
+    return programService.updateProgram(program);
   }
 }
