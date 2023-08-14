@@ -1,6 +1,8 @@
 package com.hoister.tonshoister.programTests;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -19,6 +21,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -136,5 +139,29 @@ public class ProgramControllerTests {
         .andExpect(jsonPath("$.message").exists());
 
     verify(programService).updateProgram(any(Program.class));
+  }
+
+  @Test
+  public void deleteProgramSuccess() throws Exception {
+    doNothing().when(programService).deleteProgram(1);
+
+    mockMvc
+        .perform(
+            delete("/api/programs/1"))
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+
+    verify(programService).deleteProgram(1);
+  }
+
+  @Test
+  public void deleteProgramThrowsException() throws Exception {
+    doThrow(new ProgramNotFoundException()).when(programService).deleteProgram(1);
+
+    mockMvc
+        .perform(
+            delete("/api/programs/1"))
+        .andExpect(MockMvcResultMatchers.status().isNotFound());
+
+    verify(programService).deleteProgram(1);
   }
 }
