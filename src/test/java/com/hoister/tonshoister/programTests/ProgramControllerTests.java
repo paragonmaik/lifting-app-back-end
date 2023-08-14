@@ -120,10 +120,7 @@ public class ProgramControllerTests {
         .perform(
             put("/api/programs/1").contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(program)))
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.name", CoreMatchers.is(program.getName())))
-        .andExpect(MockMvcResultMatchers.jsonPath("$.durationWeeks", CoreMatchers.is(program.getDurationWeeks())))
-        .andExpect(MockMvcResultMatchers.jsonPath("$.description", CoreMatchers.is(program.getDescription())));
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
 
     verify(programService).updateProgram(any(Program.class));
   }

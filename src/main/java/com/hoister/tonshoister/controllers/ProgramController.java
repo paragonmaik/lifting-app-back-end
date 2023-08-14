@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hoister.tonshoister.models.Program;
@@ -42,9 +43,10 @@ public class ProgramController {
     return programService.findById(id);
   }
 
+  @ResponseStatus(HttpStatus.NO_CONTENT)
   @PutMapping("/{id}")
-  public Program updateProgram(@Valid @RequestBody Program program,
+  public void updateProgram(@Valid @RequestBody Program program,
       @PathVariable Integer id) {
-    return programService.updateProgram(program);
+    programService.updateProgram(program);
   }
 }
