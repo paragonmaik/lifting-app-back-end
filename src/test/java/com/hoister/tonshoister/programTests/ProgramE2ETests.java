@@ -1,5 +1,6 @@
 package com.hoister.tonshoister.programTests;
 
+import org.springframework.http.MediaType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebM
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +18,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import com.hoister.tonshoister.models.Program;
 import com.hoister.tonshoister.repositories.ProgramRepository;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
@@ -25,6 +29,8 @@ import java.util.List;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class ProgramE2ETests {
 
+  @Autowired
+  ObjectMapper objectMapper;
   @Autowired
   ProgramRepository programRepository;
   @Autowired
@@ -98,5 +104,39 @@ public class ProgramE2ETests {
         .getForEntity("/api/programs", Program.class);
 
     assertEquals(responseProgram.getStatusCode(), HttpStatus.NOT_FOUND);
+  }
+
+  @Test
+  public void updateProgramSuccess() throws Exception {
+    Program program1 = new Program("Starting Strength", 40, "Rookie program.");
+    Program program2 = new Program(1, "5x5", 10, "Rookie program.");
+    String requestBody = objectMapper.writeValueAsString(program2);
+    HttpHeaders headers = new HttpHeaders();
+
+    programRepository.save(program1);
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    HttpEntity<String> entity = new HttpEntity<String>(requestBody, headers);
+
+    ResponseEntity<Program> response = testRestTemplate.exchange("/api/programs/1",
+        HttpMethod.PUT, entity,
+        Program.class);
+
+    assertEquals(response.getStatusCode(), HttpStatus.NO_CONTENT);
+  }
+
+  @Test
+  public void updateProgramThrowsException() throws Exception {
+    Program program2 = new Program(1, "5x5", 10, "Rookie program.");
+    String requestBody = objectMapper.writeValueAsString(program2);
+    HttpHeaders headers = new HttpHeaders();
+
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    HttpEntity<String> entity = new HttpEntity<String>(requestBody, headers);
+
+    ResponseEntity<Program> response = testRestTemplate.exchange("/api/programs/1",
+        HttpMethod.PUT, entity,
+        Program.class);
+
+    assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
   }
 }
