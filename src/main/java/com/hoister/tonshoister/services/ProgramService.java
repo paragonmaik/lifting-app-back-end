@@ -41,4 +41,12 @@ public class ProgramService {
 
     return programRepository.save(program);
   }
+
+  public void deleteProgram(Integer id) throws ProgramNotFoundException {
+    if (!programRepository.existsById(id)) {
+      throw new ProgramNotFoundException();
+    }
+
+    programRepository.deleteById(id);
+  }
 }

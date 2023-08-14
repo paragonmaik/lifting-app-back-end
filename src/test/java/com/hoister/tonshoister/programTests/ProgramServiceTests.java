@@ -124,4 +124,24 @@ public class ProgramServiceTests {
 
     verify(programRepository).existsById(1);
   }
+
+  @Test
+  public void deleteProgramSuccess() throws Exception {
+    when(programRepository.existsById(1)).thenReturn(true);
+    programService.deleteProgram(1);
+    
+    verify(programRepository).existsById(1);
+    verify(programRepository).deleteById(1);
+  }
+
+  @Test
+  public void deleteProgramThrowsException() throws Exception {
+    when(programRepository.existsById(1)).thenReturn(false);
+
+    assertThrows(ProgramNotFoundException.class, () -> {
+      programService.deleteProgram(1);
+    });
+
+    verify(programRepository).existsById(1);
+  }
 }
