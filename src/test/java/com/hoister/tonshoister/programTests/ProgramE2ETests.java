@@ -139,4 +139,23 @@ public class ProgramE2ETests {
 
     assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
   }
+
+  @Test
+  public void deleteProgramSuccess() throws Exception {
+    Program program = new Program("Starting Strength", 40, "Rookie program.");
+    programRepository.save(program);
+
+    ResponseEntity<Program> response = testRestTemplate.exchange("/api/programs/1",
+        HttpMethod.DELETE, null, Program.class);
+
+    assertEquals(response.getStatusCode(), HttpStatus.NO_CONTENT);
+  }
+
+  @Test
+  public void deleteProgramThrowsException() throws Exception {
+    ResponseEntity<Program> response = testRestTemplate.exchange("/api/programs/1",
+        HttpMethod.DELETE, null, Program.class);
+
+    assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
+  }
 }
