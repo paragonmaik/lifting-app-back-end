@@ -1,6 +1,8 @@
 package com.hoister.tonshoister.models;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -9,6 +11,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
@@ -28,6 +31,9 @@ public class Workout {
   @Column(name = "date_created")
   @CreationTimestamp
   LocalDateTime dateCreated;
+
+  @ManyToMany(mappedBy = "workouts")
+  Set<Program> programs = new HashSet<>();
 
   public Workout() {
   }
