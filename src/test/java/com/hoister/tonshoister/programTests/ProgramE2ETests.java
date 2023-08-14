@@ -74,7 +74,6 @@ public class ProgramE2ETests {
 
   @Test
   public void getAllProgramsThrowsException() throws Exception {
-
     ResponseEntity<Program> responseProgram = testRestTemplate
         .getForEntity("/api/programs", Program.class);
 
@@ -126,8 +125,8 @@ public class ProgramE2ETests {
 
   @Test
   public void updateProgramThrowsException() throws Exception {
-    Program program2 = new Program(1, "5x5", 10, "Rookie program.");
-    String requestBody = objectMapper.writeValueAsString(program2);
+    Program program = new Program(1, "5x5", 10, "Rookie program.");
+    String requestBody = objectMapper.writeValueAsString(program);
     HttpHeaders headers = new HttpHeaders();
 
     headers.setContentType(MediaType.APPLICATION_JSON);
