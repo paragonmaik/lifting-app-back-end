@@ -51,6 +51,14 @@ public class Workout {
     return this.id;
   }
 
+  public Set<Program> getPrograms() {
+    return this.programs;
+  }
+
+  public void setPrograms(Set<Program> programs) {
+    this.programs = programs;
+  }
+
   public void setId(Integer id) {
     this.id = id;
   }

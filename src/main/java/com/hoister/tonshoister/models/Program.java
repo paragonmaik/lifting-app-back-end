@@ -57,6 +57,14 @@ public class Program {
     this.description = description;
   }
 
+  public Set<Workout> getWorkouts() {
+    return this.workouts;
+  }
+
+  public void setWorkouts(Set<Workout> workouts) {
+    this.workouts = workouts;
+  }
+
   public Integer getId() {
     return this.id;
   }
