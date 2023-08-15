@@ -25,8 +25,8 @@ public class Workout {
   Integer id;
   @NotBlank
   String name;
-  @Column(name = "duration_secs")
-  Integer durationSecs;
+  @Column(name = "duration_mins")
+  Integer durationMins;
   String description;
   @Column(name = "date_created")
   @CreationTimestamp
@@ -38,10 +38,11 @@ public class Workout {
   public Workout() {
   }
 
-  public Workout(Integer id, String name, Integer durationSecs, String description, LocalDateTime dateCreated) {
+  public Workout(Integer id, String name, Integer durationMins,
+      String description, LocalDateTime dateCreated) {
     this.id = id;
     this.name = name;
-    this.durationSecs = durationSecs;
+    this.durationMins = durationMins;
     this.description = description;
     this.dateCreated = dateCreated;
   }
@@ -62,12 +63,12 @@ public class Workout {
     this.name = name;
   }
 
-  public Integer getDurationSecs() {
-    return this.durationSecs;
+  public Integer getDurationMins() {
+    return this.durationMins;
   }
 
-  public void setDurationSecs(Integer durationSecs) {
-    this.durationSecs = durationSecs;
+  public void setDurationMins(Integer durationMins) {
+    this.durationMins = durationMins;
   }
 
   public String getDescription() {
