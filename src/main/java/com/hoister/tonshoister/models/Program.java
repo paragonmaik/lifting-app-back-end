@@ -51,11 +51,14 @@ public class Program {
     this.description = description;
   }
 
-  public Program(Integer id, String name, Integer durationWeeks, String description) {
+  public Program(Integer id, String name, Integer durationWeeks, String description,
+      LocalDateTime dateCreated, Set<Workout> workouts) {
     this.id = id;
     this.name = name;
     this.durationWeeks = durationWeeks;
     this.description = description;
+    this.dateCreated = dateCreated;
+    this.workouts = workouts;
   }
 
   public Set<Workout> getWorkouts() {

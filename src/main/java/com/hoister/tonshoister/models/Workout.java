@@ -39,9 +39,8 @@ public class Workout {
   public Workout() {
   }
 
-  public Workout(Integer id, String name, Integer durationMins,
+  public Workout(String name, Integer durationMins,
       String description) {
-    this.id = id;
     this.name = name;
     this.durationMins = durationMins;
     this.description = description;
