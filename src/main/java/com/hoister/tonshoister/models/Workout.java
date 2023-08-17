@@ -40,11 +40,10 @@ public class Workout {
   }
 
   public Workout(String name, Integer durationMins,
-      String description, LocalDateTime dateCreated) {
+      String description) {
     this.name = name;
     this.durationMins = durationMins;
     this.description = description;
-    this.dateCreated = dateCreated;
   }
 
   public Workout(Integer id, String name, Integer durationMins,
