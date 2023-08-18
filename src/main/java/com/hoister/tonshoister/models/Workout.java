@@ -47,6 +47,14 @@ public class Workout {
   }
 
   public Workout(Integer id, String name, Integer durationMins,
+      String description) {
+    this.id = id;
+    this.name = name;
+    this.durationMins = durationMins;
+    this.description = description;
+  }
+
+  public Workout(Integer id, String name, Integer durationMins,
       String description, LocalDateTime dateCreated) {
     this.id = id;
     this.name = name;

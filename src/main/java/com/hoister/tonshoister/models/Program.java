@@ -51,6 +51,13 @@ public class Program {
     this.description = description;
   }
 
+  public Program(Integer id, String name, Integer durationWeeks, String description) {
+    this.id = id;
+    this.name = name;
+    this.durationWeeks = durationWeeks;
+    this.description = description;
+  }
+
   public Program(Integer id, String name, Integer durationWeeks, String description,
       LocalDateTime dateCreated, Set<Workout> workouts) {
     this.id = id;
