@@ -20,6 +20,7 @@ import com.hoister.tonshoister.repositories.ProgramRepository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 import java.util.List;
@@ -50,9 +51,12 @@ public class ProgramE2ETests {
 
     assertEquals(response.getStatusCode(), HttpStatus.CREATED);
 
+    assertNotNull(responseProgram.getId());
     assertEquals(responseProgram.getName(), program.getName());
     assertEquals(responseProgram.getDurationWeeks(), program.getDurationWeeks());
     assertEquals(responseProgram.getDescription(), program.getDescription());
+    assertNotNull(responseProgram.getDateCreated());
+    assertNotNull(responseProgram.getWorkouts());
   }
 
   @Test
