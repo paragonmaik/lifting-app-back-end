@@ -108,7 +108,7 @@ public class ProgramE2ETests {
   @Test
   public void updateProgramSuccess() throws Exception {
     Program program1 = new Program("Starting Strength", 40, "Rookie program.");
-    Program program2 = new Program(1, "5x5", 10, "Rookie program.");
+    Program program2 = new Program(1, "5x5", 10, "Rookie program.", null, null);
     String requestBody = objectMapper.writeValueAsString(program2);
     HttpHeaders headers = new HttpHeaders();
 
@@ -125,7 +125,7 @@ public class ProgramE2ETests {
 
   @Test
   public void updateProgramThrowsException() throws Exception {
-    Program program = new Program(1, "5x5", 10, "Rookie program.");
+    Program program = new Program(1, "5x5", 10, "Rookie program.", null, null);
     String requestBody = objectMapper.writeValueAsString(program);
     HttpHeaders headers = new HttpHeaders();
 
