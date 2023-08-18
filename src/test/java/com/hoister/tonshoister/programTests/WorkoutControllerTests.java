@@ -4,9 +4,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -24,6 +27,7 @@ import static org.mockito.Mockito.when;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hoister.tonshoister.DTOs.DTOsMapper;
 import com.hoister.tonshoister.DTOs.WorkoutDTO;
+import com.hoister.tonshoister.advisors.WorkoutNotFoundException;
 import com.hoister.tonshoister.controllers.WorkoutController;
 import com.hoister.tonshoister.models.Program;
 import com.hoister.tonshoister.models.Workout;
@@ -73,5 +77,42 @@ public class WorkoutControllerTests {
     verify(DTOsMapper).convertToEntity(any(WorkoutDTO.class));
     verify(workoutService).createWorkout(workout, 1);
     verify(DTOsMapper).convertToDto(any(Workout.class));
+  }
+
+  @Test
+  public void getWorkoutsSuccess() throws Exception {
+    Workout workout = new Workout(1, "Workout A", 12, "A long workout.");
+    WorkoutDTO workoutDTO = new WorkoutDTO(
+        workout.getId(), workout.getName(), workout.getDurationMins(),
+        workout.getDescription(), LocalDateTime.now());
+
+    List<Workout> workouts = new ArrayList<Workout>();
+    List<WorkoutDTO> workoutsDTO = new ArrayList<WorkoutDTO>();
+    workouts.add(workout);
+    workoutsDTO.add(workoutDTO);
+
+    when(workoutService.findAll()).thenReturn(workouts);
+    when(DTOsMapper.convertToDto(any(Workout.class))).thenReturn(workoutDTO);
+
+    mockMvc.perform(get("/api/workouts"))
+        .andExpect(status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$..id").value(workoutsDTO.get(0).id()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$..name").value(workoutsDTO.get(0).name()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$..durationMins").value(workoutsDTO.get(0).durationMins()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$..description").value(workoutsDTO.get(0).description()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$..dateCreated").exists());
+
+  }
+
+  @Test
+  public void getWorkoutsThrowsException() throws Exception {
+    when(workoutService.findAll()).thenThrow(new WorkoutNotFoundException());
+
+     mockMvc.perform(get("/api/workouts"))
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$..message").exists());
+
+        verify(workoutService).findAll();    
+ 
   }
 }

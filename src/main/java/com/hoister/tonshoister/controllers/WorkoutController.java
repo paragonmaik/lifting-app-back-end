@@ -1,7 +1,10 @@
 package com.hoister.tonshoister.controllers;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,12 +30,18 @@ public class WorkoutController {
   }
 
   @PostMapping("/{programId}")
-  public ResponseEntity<WorkoutDTO> createProgram(@Valid @RequestBody WorkoutDTO workoutDTO,
+  public ResponseEntity<WorkoutDTO> createWorkouts(@Valid @RequestBody WorkoutDTO workoutDTO,
       @PathVariable Integer programId) {
     Workout createdWorkout = workoutService
         .createWorkout(DTOsMapper.convertToEntity(workoutDTO), programId);
 
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(DTOsMapper.convertToDto(createdWorkout));
+  }
+
+  @GetMapping
+  public List<WorkoutDTO> getWorkouts() {
+    return workoutService.findAll()
+        .stream().map(workout -> DTOsMapper.convertToDto(workout)).toList();
   }
 }
