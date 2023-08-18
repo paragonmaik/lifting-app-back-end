@@ -71,9 +71,12 @@ public class ProgramE2ETests {
 
     assertEquals(response.getStatusCode(), HttpStatus.OK);
 
+    assertNotNull(responseProgram.getId());
     assertEquals(responseProgram.getName(), program.getName());
     assertEquals(responseProgram.getDurationWeeks(), program.getDurationWeeks());
     assertEquals(responseProgram.getDescription(), program.getDescription());
+    assertNotNull(responseProgram.getDateCreated());
+    assertNotNull(responseProgram.getWorkouts());
   }
 
   @Test
