@@ -26,6 +26,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hoister.tonshoister.DTOs.DTOsMapper;
+import com.hoister.tonshoister.DTOs.ProgramDTO;
 import com.hoister.tonshoister.advisors.ProgramNotFoundException;
 import com.hoister.tonshoister.controllers.ProgramController;
 import com.hoister.tonshoister.models.Program;
@@ -39,41 +41,60 @@ public class ProgramControllerTests {
 
   @MockBean
   ProgramService programService;
+  @MockBean
+  DTOsMapper DTOsMapper;
   @Autowired
   MockMvc mockMvc;
 
   @Test
   public void createProgramSuccess() throws Exception {
-    Program program = new Program("Starting Strength", 40, "Rookie Program.");
+    Program program = new Program(1, "Starting Strength", 40, "Rookie Program.", null, null);
+    ProgramDTO programDTO = new ProgramDTO(program.getId(), program.getName(), program.getDurationWeeks(),
+        program.getDescription(), program.getDateCreated(), null);
+
+    when(DTOsMapper.convertToEntity(any(ProgramDTO.class))).thenReturn(program);
     when(programService.createProgram(any(Program.class))).thenReturn(program);
+    when(DTOsMapper.convertToDto(any(Program.class))).thenReturn(programDTO);
 
     mockMvc
         .perform(
             post("/api/programs").contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(program)))
         .andExpect(MockMvcResultMatchers.status().isCreated())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.name", CoreMatchers.is(program.getName())))
-        .andExpect(MockMvcResultMatchers.jsonPath("$.durationWeeks", CoreMatchers.is(program.getDurationWeeks())))
-        .andExpect(MockMvcResultMatchers.jsonPath("$.description", CoreMatchers.is(program.getDescription())));
+        .andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.is(programDTO.id())))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.name", CoreMatchers.is(programDTO.name())))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.durationWeeks", CoreMatchers.is(programDTO.durationWeeks())))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.description", CoreMatchers.is(programDTO.description())));
 
+    verify(DTOsMapper).convertToEntity(any(ProgramDTO.class));
     verify(programService).createProgram(any(Program.class));
+    verify(DTOsMapper).convertToDto(any(Program.class));
   }
 
   @Test
   public void getProgramsSuccess() throws Exception {
-    Program program = new Program("GVT", 12, "German Volume training");
+    Program program = new Program(1, "GVT", 12, "German Volume training", null, null);
+    ProgramDTO programDTO = new ProgramDTO(program.getId(), program.getName(), program.getDurationWeeks(),
+        program.getDescription(), program.getDateCreated(), null);
+
     List<Program> programs = new ArrayList<Program>();
+    List<ProgramDTO> programsDTO = new ArrayList<ProgramDTO>();
     programs.add(program);
+    programsDTO.add(programDTO);
 
     when(programService.findAll()).thenReturn(programs);
+    when(DTOsMapper.convertToDto(any(Program.class))).thenReturn(programDTO);
 
     mockMvc.perform(get("/api/programs"))
         .andExpect(status().isOk())
-        .andExpect(MockMvcResultMatchers.jsonPath("$..name").value(programs.get(0).getName()))
-        .andExpect(MockMvcResultMatchers.jsonPath("$..durationWeeks").value(programs.get(0).getDurationWeeks()))
-        .andExpect(MockMvcResultMatchers.jsonPath("$..description").value(programs.get(0).getDescription()));
+        .andExpect(MockMvcResultMatchers.jsonPath("$..id").value(programsDTO.get(0).id()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$..name").value(programsDTO.get(0).name()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$..durationWeeks").value(programsDTO.get(0).durationWeeks()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$..description").value(programsDTO.get(0).description()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$..workouts").exists());
 
     verify(programService).findAll();
+    when(DTOsMapper.convertToDto(any(Program.class))).thenReturn(programDTO);
   }
 
   @Test
@@ -89,17 +110,23 @@ public class ProgramControllerTests {
 
   @Test
   public void getProgramByIdSuccess() throws Exception {
-    Program program = new Program("GVT", 12, "German Volume training");
+    Program program = new Program(1, "GVT", 12, "German Volume training", null, null);
+    ProgramDTO programDTO = new ProgramDTO(program.getId(), program.getName(), program.getDurationWeeks(),
+        program.getDescription(), program.getDateCreated(), null);
 
     when(programService.findById(1)).thenReturn(program);
+    when(DTOsMapper.convertToDto(any(Program.class))).thenReturn(programDTO);
 
     mockMvc.perform(get("/api/programs/1"))
         .andExpect(status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.is(programDTO.id())))
         .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(program.getName()))
         .andExpect(MockMvcResultMatchers.jsonPath("$.durationWeeks").value(program.getDurationWeeks()))
-        .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(program.getDescription()));
+        .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(program.getDescription()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$..workouts").exists());
 
     verify(programService).findById(1);
+    when(DTOsMapper.convertToDto(any(Program.class))).thenReturn(programDTO);
   }
 
   @Test
@@ -115,8 +142,9 @@ public class ProgramControllerTests {
 
   @Test
   public void updateProgramSuccess() throws Exception {
-    Program program = new Program("5x5", 12, "Rookie Program.");
+    Program program = new Program(1, "5x5", 12, "Rookie Program.");
 
+    when(DTOsMapper.convertToEntity(any(ProgramDTO.class))).thenReturn(program);
     when(programService.updateProgram(any(Program.class))).thenReturn(program);
 
     mockMvc
@@ -125,12 +153,15 @@ public class ProgramControllerTests {
                 .content(objectMapper.writeValueAsString(program)))
         .andExpect(MockMvcResultMatchers.status().isNoContent());
 
+    verify(DTOsMapper).convertToEntity(any(ProgramDTO.class));
     verify(programService).updateProgram(any(Program.class));
   }
 
   @Test
   public void updateProgramThrowsException() throws Exception {
-    Program program = new Program("5x5", 12, "Rookie Program.");
+    Program program = new Program(1, "5x5", 12, "Rookie Program.");
+
+    when(DTOsMapper.convertToEntity(any(ProgramDTO.class))).thenReturn(program);
     when(programService.updateProgram(any(Program.class))).thenThrow(new ProgramNotFoundException());
 
     mockMvc.perform(put("/api/programs/1").contentType(MediaType.APPLICATION_JSON)
@@ -138,6 +169,7 @@ public class ProgramControllerTests {
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.message").exists());
 
+    verify(DTOsMapper).convertToEntity(any(ProgramDTO.class));
     verify(programService).updateProgram(any(Program.class));
   }
 
