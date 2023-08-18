@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hoister.tonshoister.DTOs.DTOsMapper;
+import com.hoister.tonshoister.DTOs.ProgramDTO;
 import com.hoister.tonshoister.models.Program;
 import com.hoister.tonshoister.services.ProgramService;
 
@@ -23,32 +25,38 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/programs")
 public class ProgramController {
   private final ProgramService programService;
+  private DTOsMapper DTOsMapper;
 
-  public ProgramController(ProgramService programService) {
+  public ProgramController(ProgramService programService, DTOsMapper DTOsMapper) {
     this.programService = programService;
+    this.DTOsMapper = DTOsMapper;
   }
 
   @PostMapping("")
-  public ResponseEntity<Program> createProgram(@Valid @RequestBody Program program) {
+  public ResponseEntity<ProgramDTO> createProgram(@Valid @RequestBody ProgramDTO programDTO) {
+    Program createdProgram = programService
+        .createProgram(DTOsMapper.convertToEntity(programDTO));
+
     return ResponseEntity.status(HttpStatus.CREATED)
-        .body(programService.createProgram(program));
+        .body(DTOsMapper.convertToDto(createdProgram));
   }
 
   @GetMapping
-  public List<Program> getPrograms() {
-    return programService.findAll();
+  public List<ProgramDTO> getPrograms() {
+    return programService.findAll()
+        .stream().map(program -> DTOsMapper.convertToDto(program)).toList();
   }
 
   @GetMapping("/{id}")
-  public Program getProgramById(@PathVariable Integer id) {
-    return programService.findById(id);
+  public ProgramDTO getProgramById(@PathVariable Integer id) {
+    return DTOsMapper.convertToDto(programService.findById(id));
   }
 
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @PutMapping("/{id}")
-  public void updateProgram(@Valid @RequestBody Program program,
+  public void updateProgram(@Valid @RequestBody ProgramDTO programDTO,
       @PathVariable Integer id) {
-    programService.updateProgram(program);
+    programService.updateProgram(DTOsMapper.convertToEntity(programDTO));
   }
 
   @ResponseStatus(HttpStatus.NO_CONTENT)
