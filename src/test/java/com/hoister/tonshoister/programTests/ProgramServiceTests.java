@@ -97,32 +97,32 @@ public class ProgramServiceTests {
 
   @Test
   public void updateProgramSuccess() throws Exception {
-    Program program1 = new Program(1, "Starting Strength", 40, "Rookie Program.");
-    Program program2 = new Program(1, "5x5", 10, "five sets of five.");
+    Program program1 = new Program(1, "Starting Strength", 40, "Rookie Program.", null, null);
+    Program program2 = new Program(1, "5x5", 10, "five sets of five.", null, null);
 
-    when(programRepository.save(program1)).thenReturn(program1);
-    when(programRepository.existsById(1)).thenReturn(true);
-    when(programRepository.save(program2)).thenReturn(program2);
+    when(programRepository.findById(1)).thenReturn(Optional.of(program1));
+    when(programRepository.save(program1)).thenReturn(program2);
 
-    Program createdProgram = programService.createProgram(program1);
-    Program updatedProgram = programService.updateProgram(program2);
+    Program updatedProgram = programService.updateProgram(program1);
 
-    assertNotEquals(createdProgram.getName(), updatedProgram.getName());
-    verify(programRepository).save(createdProgram);
-    verify(programRepository).existsById(1);
+    assertNotEquals(program1.getName(), updatedProgram.getName());
+    assertNotEquals(program1.getDurationWeeks(), updatedProgram.getDurationWeeks());
+    assertNotEquals(program1.getDescription(), updatedProgram.getDescription());
+    verify(programRepository).save(program1);
+    verify(programRepository).findById(1);
   }
 
   @Test
   public void updateProgramThrowsException() {
-    Program program = new Program(1, "5x5", 10, "five sets of five.");
+    Program program = new Program(1, "5x5", 10, "five sets of five.", null, null);
 
-    when(programRepository.existsById(1)).thenReturn(false);
+    when(programRepository.findById(1)).thenReturn(Optional.empty());
 
     assertThrows(ProgramNotFoundException.class, () -> {
       programService.updateProgram(program);
     });
 
-    verify(programRepository).existsById(1);
+    verify(programRepository).findById(1);
   }
 
   @Test
