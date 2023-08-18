@@ -3,6 +3,8 @@ package com.hoister.tonshoister.programTests;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
@@ -16,6 +18,8 @@ import com.hoister.tonshoister.repositories.WorkoutRepository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -57,5 +61,34 @@ public class WorkoutE2ETests {
     assertEquals(responseWorkout.getDurationMins(), workout.getDurationMins());
     assertEquals(responseWorkout.getDescription(), workout.getDescription());
     assertNotNull(responseWorkout.getDateCreated());
+  }
+
+  @Test
+  public void getAllWorkoutsSuccess() throws Exception {
+    Workout workout = new Workout("Workout A", 22, "Cool workout.");
+    workoutRepository.save(workout);
+
+    ResponseEntity<List<Workout>> response = testRestTemplate
+        .exchange("/api/workouts", HttpMethod.GET, null,
+            new ParameterizedTypeReference<List<Workout>>() {
+            });
+
+    Workout responseWorkout = response.getBody().get(0);
+
+    assertEquals(response.getStatusCode(), HttpStatus.OK);
+
+    assertNotNull(responseWorkout.getId());
+    assertEquals(responseWorkout.getName(), workout.getName());
+    assertEquals(responseWorkout.getDurationMins(), workout.getDurationMins());
+    assertEquals(responseWorkout.getDescription(), workout.getDescription());
+    assertNotNull(responseWorkout.getDateCreated());
+  }
+
+  @Test
+  public void getAllWorkoutsThrowsException() throws Exception {
+    ResponseEntity<Workout> responseProgram = testRestTemplate
+        .getForEntity("/api/workouts", Workout.class);
+
+    assertEquals(responseProgram.getStatusCode(), HttpStatus.NOT_FOUND);
   }
 }
