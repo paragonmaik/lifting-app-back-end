@@ -6,6 +6,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -15,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.hoister.tonshoister.advisors.ProgramNotFoundException;
+import com.hoister.tonshoister.advisors.WorkoutNotFoundException;
 import com.hoister.tonshoister.models.Program;
 import com.hoister.tonshoister.models.Workout;
 import com.hoister.tonshoister.repositories.ProgramRepository;
@@ -57,5 +60,33 @@ public class WorkoutServiceTests {
     });
 
     verify(programRepository).findById(1);
+  }
+
+  @Test
+  public void findAllWorkoutsSuccess() throws WorkoutNotFoundException {
+    Workout workout = new Workout("Workout A", 12, "A really boring one.");
+    List<Workout> workouts = new ArrayList<Workout>();
+    workouts.add(workout);
+
+    when(workoutRepository.findAll()).thenReturn(workouts);
+
+    List<Workout> requestedWorkouts = workoutRepository.findAll();
+
+    assertEquals(workouts, requestedWorkouts);
+    verify(workoutRepository).findAll();
+  }
+
+  @Test
+  public void findAllWorkoutsThrowsException() throws WorkoutNotFoundException {
+    List<Workout> workouts = new ArrayList<Workout>();
+
+    when(workoutRepository.findAll()).thenReturn(workouts);
+
+    assertThrows(WorkoutNotFoundException.class, () -> {
+      workoutService.findAll();
+    });
+
+    verify(workoutRepository).findAll();
+
   }
 }
