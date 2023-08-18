@@ -35,11 +35,14 @@ public class ProgramService {
   }
 
   public Program updateProgram(Program program) throws ProgramNotFoundException {
-    if (!programRepository.existsById(program.getId())) {
-      throw new ProgramNotFoundException();
-    }
+    Program foundProgram = programRepository.findById(program.getId())
+        .orElseThrow(() -> new ProgramNotFoundException());
 
-    return programRepository.save(program);
+    foundProgram.setName(program.getName());
+    foundProgram.setDescription(program.getDescription());
+    foundProgram.setDurationWeeks(program.getDurationWeeks());
+
+    return programRepository.save(foundProgram);
   }
 
   public void deleteProgram(Integer id) throws ProgramNotFoundException {
