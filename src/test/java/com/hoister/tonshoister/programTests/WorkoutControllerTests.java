@@ -113,6 +113,40 @@ public class WorkoutControllerTests {
         .andExpect(jsonPath("$..message").exists());
 
         verify(workoutService).findAll();    
- 
+  }
+
+  @Test
+  public void updateWorkoutSuccess() throws Exception {
+    Workout workout = new Workout(1, "Workout A", 12, "A long workout.");
+
+    when(DTOsMapper.convertToEntity(any(WorkoutDTO.class))).thenReturn(workout);
+    when(workoutService.updateWorkout(any(Workout.class))).thenReturn(workout);
+
+    mockMvc
+        .perform(
+            put("/api/workouts").contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(workout)))
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+
+    verify(DTOsMapper).convertToEntity(any(WorkoutDTO.class));
+    verify(workoutService).updateWorkout(any(Workout.class));
+  }
+
+  @Test
+  public void updateWorkoutThrowsException() throws Exception {
+    Workout workout = new Workout(1, "Workout A", 12, "A long workout.");
+
+    when(DTOsMapper.convertToEntity(any(WorkoutDTO.class))).thenReturn(workout);
+    when(workoutService.updateWorkout(any(Workout.class)))
+        .thenThrow(new WorkoutNotFoundException());
+
+    mockMvc.perform(put("/api/workouts").contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(workout)))
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.message").exists());
+
+    verify(DTOsMapper).convertToEntity(any(WorkoutDTO.class));
+    verify(workoutService).updateWorkout(any(Workout.class));
+
   }
 }
