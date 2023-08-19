@@ -46,4 +46,15 @@ public class WorkoutService {
 
     return workouts;
   }
+
+  public Workout updateWorkout(Workout workout) throws WorkoutNotFoundException {
+    Workout foundWorkout = workoutRepository.findById(workout.getId())
+        .orElseThrow(() -> new WorkoutNotFoundException());
+
+    foundWorkout.setName(workout.getName());
+    foundWorkout.setDescription(workout.getDescription());
+    foundWorkout.setDurationMins(workout.getDurationMins());
+
+    return workoutRepository.save(foundWorkout);
+  }
 }

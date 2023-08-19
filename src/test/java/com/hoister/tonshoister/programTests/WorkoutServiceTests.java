@@ -1,6 +1,7 @@
 package com.hoister.tonshoister.programTests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -87,6 +88,38 @@ public class WorkoutServiceTests {
     });
 
     verify(workoutRepository).findAll();
+
+  }
+
+  @Test
+  public void updateWorkoutSuccess() throws WorkoutNotFoundException {
+    Workout workout1 = new Workout(1, "Workout A", 20, "Rookie workout.", null);
+    Workout workout2 = new Workout(1, "Workout B", 10, "Intense workout.", null);
+
+    when(workoutRepository.findById(1)).thenReturn(Optional.of(workout1));
+    when(workoutRepository.save(workout1)).thenReturn(workout2);
+
+    Workout updatedWorkout = workoutService.updateWorkout(workout1);
+
+    assertNotEquals(workout1.getName(), updatedWorkout.getName());
+    assertNotEquals(workout1.getDurationMins(), updatedWorkout.getDurationMins());
+    assertNotEquals(workout1.getDescription(), updatedWorkout.getDescription());
+
+    verify(workoutRepository).save(workout1);
+    verify(workoutRepository).findById(1);
+  }
+
+  @Test
+  public void updateWorkoutThrowsException() throws WorkoutNotFoundException {
+    Workout workout = new Workout(1, "Workout A", 20, "Rookie workout.", null);
+
+    when(workoutRepository.findById(1)).thenReturn(Optional.empty());
+
+    assertThrows(WorkoutNotFoundException.class, () -> {
+      workoutService.updateWorkout(workout);
+    });
+
+    verify(workoutRepository).findById(1);
 
   }
 }
