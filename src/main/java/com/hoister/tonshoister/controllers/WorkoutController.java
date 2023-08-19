@@ -49,7 +49,7 @@ public class WorkoutController {
 
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @PutMapping
-  public void updateProgram(@Valid @RequestBody WorkoutDTO workoutDTO) {
+  public void updateWorkout(@Valid @RequestBody WorkoutDTO workoutDTO) {
     workoutService.updateWorkout(DTOsMapper.convertToEntity(workoutDTO));
   }
 }
