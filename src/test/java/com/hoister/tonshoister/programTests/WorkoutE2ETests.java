@@ -25,7 +25,6 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -101,4 +100,37 @@ public class WorkoutE2ETests {
 
     assertEquals(responseProgram.getStatusCode(), HttpStatus.NOT_FOUND);
   }
+
+  @Test
+  public void updateWorkoutSuccess() throws Exception {
+    Workout workout = new Workout(1, "Workout B", 12, "Cool workout.");
+    String requestBody = objectMapper.writeValueAsString(workout);
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+
+    HttpEntity<String> entity = new HttpEntity<String>(requestBody, headers);
+    ResponseEntity<Workout> response = testRestTemplate.exchange("/api/workouts",
+        HttpMethod.PUT, entity,
+        Workout.class);
+
+    assertEquals(response.getStatusCode(), HttpStatus.NO_CONTENT);
+  }
+
+  @Test
+  public void updateWorkoutThrowsException() throws Exception {
+    Workout workout = new Workout(2, "Workout B", 12, "Cool workout.");
+    String requestBody = objectMapper.writeValueAsString(workout);
+    HttpHeaders headers = new HttpHeaders();
+
+    headers.setContentType(MediaType.APPLICATION_JSON);
+
+    HttpEntity<String> entity = new HttpEntity<String>(requestBody, headers);
+
+    ResponseEntity<Workout> response = testRestTemplate.exchange("/api/workouts",
+        HttpMethod.PUT, entity,
+        Workout.class);
+
+    assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
+  }
+
 }
