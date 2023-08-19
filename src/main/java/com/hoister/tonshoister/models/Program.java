@@ -36,7 +36,8 @@ public class Program {
   @CreationTimestamp
   LocalDateTime dateCreated;
 
-  @ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
+  @ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE,
+      CascadeType.PERSIST, CascadeType.REFRESH }, fetch = FetchType.LAZY)
   @JoinTable(name = "program_workout", joinColumns = {
       @JoinColumn(name = "program_id") }, inverseJoinColumns = {
           @JoinColumn(name = "workout_id") })
