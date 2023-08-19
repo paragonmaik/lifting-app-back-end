@@ -149,7 +149,7 @@ public class ProgramControllerTests {
 
     mockMvc
         .perform(
-            put("/api/programs/1").contentType(MediaType.APPLICATION_JSON)
+            put("/api/programs").contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(program)))
         .andExpect(MockMvcResultMatchers.status().isNoContent());
 
@@ -164,7 +164,7 @@ public class ProgramControllerTests {
     when(DTOsMapper.convertToEntity(any(ProgramDTO.class))).thenReturn(program);
     when(programService.updateProgram(any(Program.class))).thenThrow(new ProgramNotFoundException());
 
-    mockMvc.perform(put("/api/programs/1").contentType(MediaType.APPLICATION_JSON)
+    mockMvc.perform(put("/api/programs").contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(program)))
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.message").exists());

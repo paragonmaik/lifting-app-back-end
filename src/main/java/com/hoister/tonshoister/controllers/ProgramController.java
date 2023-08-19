@@ -53,9 +53,8 @@ public class ProgramController {
   }
 
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  @PutMapping("/{id}")
-  public void updateProgram(@Valid @RequestBody ProgramDTO programDTO,
-      @PathVariable Integer id) {
+  @PutMapping
+  public void updateProgram(@Valid @RequestBody ProgramDTO programDTO) {
     programService.updateProgram(DTOsMapper.convertToEntity(programDTO));
   }
 

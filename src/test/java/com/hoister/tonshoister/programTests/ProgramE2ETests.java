@@ -126,7 +126,7 @@ public class ProgramE2ETests {
     headers.setContentType(MediaType.APPLICATION_JSON);
     HttpEntity<String> entity = new HttpEntity<String>(requestBody, headers);
 
-    ResponseEntity<Program> response = testRestTemplate.exchange("/api/programs/1",
+    ResponseEntity<Program> response = testRestTemplate.exchange("/api/programs",
         HttpMethod.PUT, entity,
         Program.class);
 
@@ -142,7 +142,7 @@ public class ProgramE2ETests {
     headers.setContentType(MediaType.APPLICATION_JSON);
     HttpEntity<String> entity = new HttpEntity<String>(requestBody, headers);
 
-    ResponseEntity<Program> response = testRestTemplate.exchange("/api/programs/1",
+    ResponseEntity<Program> response = testRestTemplate.exchange("/api/programs",
         HttpMethod.PUT, entity,
         Program.class);
 
