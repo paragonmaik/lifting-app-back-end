@@ -4,8 +4,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebM
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 
@@ -22,6 +25,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -42,15 +46,19 @@ public class WorkoutE2ETests {
   @BeforeEach
   public void setUp() {
     Program program = new Program(1, "5x5", 52, "A really long program.");
+    Workout workout = new Workout("Workout A", 12, "Strength workout.");
 
     workoutRepository.deleteAll();
+
+    workoutRepository.save(workout);
     programRepository.save(program);
   }
 
   @Test
   public void createWorkoutSuccess() {
-    Workout workout = new Workout("Workout A", 12, "Strength workout.");
-    ResponseEntity<Workout> response = testRestTemplate.postForEntity("/api/workouts/1", workout,
+    Workout workout = new Workout("Workout B", 12, "Strength workout.");
+    ResponseEntity<Workout> response = testRestTemplate.postForEntity(
+        "/api/workouts/1", workout,
         Workout.class);
     Workout responseWorkout = response.getBody();
 
@@ -65,7 +73,7 @@ public class WorkoutE2ETests {
 
   @Test
   public void getAllWorkoutsSuccess() throws Exception {
-    Workout workout = new Workout("Workout A", 22, "Cool workout.");
+    Workout workout = new Workout("Workout B", 22, "Cool workout.");
     workoutRepository.save(workout);
 
     ResponseEntity<List<Workout>> response = testRestTemplate
@@ -73,7 +81,7 @@ public class WorkoutE2ETests {
             new ParameterizedTypeReference<List<Workout>>() {
             });
 
-    Workout responseWorkout = response.getBody().get(0);
+    Workout responseWorkout = response.getBody().get(1);
 
     assertEquals(response.getStatusCode(), HttpStatus.OK);
 
@@ -86,6 +94,8 @@ public class WorkoutE2ETests {
 
   @Test
   public void getAllWorkoutsThrowsException() throws Exception {
+    workoutRepository.deleteAll();
+
     ResponseEntity<Workout> responseProgram = testRestTemplate
         .getForEntity("/api/workouts", Workout.class);
 
