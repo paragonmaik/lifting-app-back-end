@@ -57,4 +57,12 @@ public class WorkoutService {
 
     return workoutRepository.save(foundWorkout);
   }
+
+  public void deleteWorkout(Integer id) throws WorkoutNotFoundException {
+    if (!workoutRepository.existsById(id)) {
+      throw new WorkoutNotFoundException();
+    }
+
+    workoutRepository.deleteById(id);
+  }
 }

@@ -120,6 +120,25 @@ public class WorkoutServiceTests {
     });
 
     verify(workoutRepository).findById(1);
+  }
 
+  @Test
+  public void deleteWorkoutSuccess() throws Exception {
+    when(workoutRepository.existsById(1)).thenReturn(true);
+    workoutService.deleteWorkout(1);
+    
+    verify(workoutRepository).existsById(1);
+    verify(workoutRepository).deleteById(1);
+  }
+
+  @Test
+  public void deleteWorkoutThrowsException() throws Exception {
+    when(workoutRepository.existsById(1)).thenReturn(false);
+
+    assertThrows(WorkoutNotFoundException.class, () -> {
+      workoutService.deleteWorkout(1);
+    });
+
+    verify(workoutRepository).existsById(1);
   }
 }
