@@ -1,15 +1,12 @@
 package com.hoister.tonshoister.programTests;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.hamcrest.CoreMatchers;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -18,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
@@ -29,9 +25,7 @@ import com.hoister.tonshoister.DTOs.DTOsMapper;
 import com.hoister.tonshoister.DTOs.WorkoutDTO;
 import com.hoister.tonshoister.advisors.WorkoutNotFoundException;
 import com.hoister.tonshoister.controllers.WorkoutController;
-import com.hoister.tonshoister.models.Program;
 import com.hoister.tonshoister.models.Workout;
-import com.hoister.tonshoister.services.ProgramService;
 import com.hoister.tonshoister.services.WorkoutService;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -147,6 +141,29 @@ public class WorkoutControllerTests {
 
     verify(DTOsMapper).convertToEntity(any(WorkoutDTO.class));
     verify(workoutService).updateWorkout(any(Workout.class));
+  }
 
+  @Test
+  public void deleteWorkoutSuccess() throws Exception {
+    doNothing().when(workoutService).deleteWorkout(1);
+
+    mockMvc
+        .perform(
+            delete("/api/workouts/1"))
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+
+    verify(workoutService).deleteWorkout(1);
+  }
+
+  @Test
+  public void deleteWorkoutThrowsException() throws Exception {
+    doThrow(new WorkoutNotFoundException()).when(workoutService).deleteWorkout(1);
+
+    mockMvc
+        .perform(
+            delete("/api/workouts/1"))
+        .andExpect(MockMvcResultMatchers.status().isNotFound());
+
+    verify(workoutService).deleteWorkout(1);
   }
 }
