@@ -65,12 +65,21 @@ public class Workout {
   }
 
   public Workout(Integer id, String name, Integer durationMins,
-      String description, LocalDateTime dateCreated) {
+      String description, LocalDateTime dateCreated, Set<Exercise> exercises) {
     this.id = id;
     this.name = name;
     this.durationMins = durationMins;
     this.description = description;
     this.dateCreated = dateCreated;
+    this.exercises = exercises;
+  }
+
+  public Set<Exercise> getExercises() {
+    return this.exercises;
+  }
+
+  public void setExercises(Set<Exercise> exercises) {
+    this.exercises = exercises;
   }
 
   public Integer getId() {
