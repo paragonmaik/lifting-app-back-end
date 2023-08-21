@@ -68,6 +68,8 @@ public class WorkoutE2ETests {
     assertEquals(responseWorkout.getDurationMins(), workout.getDurationMins());
     assertEquals(responseWorkout.getDescription(), workout.getDescription());
     assertNotNull(responseWorkout.getDateCreated());
+    assertNotNull(responseWorkout.getExercises());
+
   }
 
   @Test
@@ -89,6 +91,7 @@ public class WorkoutE2ETests {
     assertEquals(responseWorkout.getDurationMins(), workout.getDurationMins());
     assertEquals(responseWorkout.getDescription(), workout.getDescription());
     assertNotNull(responseWorkout.getDateCreated());
+    assertNotNull(responseWorkout.getExercises());
   }
 
   @Test
