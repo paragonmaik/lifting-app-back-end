@@ -19,7 +19,7 @@ public class ExerciseService {
     this.workoutRepository = workoutRepository;
   }
 
-  public Exercise creatExercise(Exercise exercise, Integer workoutId)
+  public Exercise createExercise(Exercise exercise, Integer workoutId)
       throws WorkoutNotFoundException {
 
     Workout workout = workoutRepository.findById(workoutId)
