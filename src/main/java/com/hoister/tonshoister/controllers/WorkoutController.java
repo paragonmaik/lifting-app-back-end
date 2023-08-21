@@ -33,7 +33,7 @@ public class WorkoutController {
   }
 
   @PostMapping("/{programId}")
-  public ResponseEntity<WorkoutDTO> createWorkouts(@Valid @RequestBody WorkoutDTO workoutDTO,
+  public ResponseEntity<WorkoutDTO> createWorkout(@Valid @RequestBody WorkoutDTO workoutDTO,
       @PathVariable Integer programId) {
     Workout createdWorkout = workoutService
         .createWorkout(DTOsMapper.convertToEntity(workoutDTO), programId);
