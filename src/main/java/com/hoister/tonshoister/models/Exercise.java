@@ -17,12 +17,6 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
-enum GoalType {
-  ENDURANCE,
-  HYPERTROPHY,
-  STRENGTH
-}
-
 @Entity
 @Table
 public class Exercise {

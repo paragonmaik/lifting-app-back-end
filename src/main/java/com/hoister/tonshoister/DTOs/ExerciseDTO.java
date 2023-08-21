@@ -2,11 +2,7 @@ package com.hoister.tonshoister.DTOs;
 
 import java.time.LocalDateTime;
 
-enum GoalType {
-  ENDURANCE,
-  HYPERTROPHY,
-  STRENGTH
-}
+import com.hoister.tonshoister.models.GoalType;
 
 public record ExerciseDTO(
     Integer id,
