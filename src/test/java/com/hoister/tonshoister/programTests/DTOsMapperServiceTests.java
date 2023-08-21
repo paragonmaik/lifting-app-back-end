@@ -11,8 +11,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.hoister.tonshoister.DTOs.DTOsMapper;
+import com.hoister.tonshoister.DTOs.ExerciseDTO;
 import com.hoister.tonshoister.DTOs.ProgramDTO;
 import com.hoister.tonshoister.DTOs.WorkoutDTO;
+import com.hoister.tonshoister.models.Exercise;
+import com.hoister.tonshoister.models.GoalType;
 import com.hoister.tonshoister.models.Program;
 import com.hoister.tonshoister.models.Workout;
 
@@ -72,7 +75,7 @@ public class DTOsMapperServiceTests {
   }
 
   @Test
-  public void convertDTOtoWorkout() {
+  public void convertDTOToWorkout() {
     WorkoutDTO workoutDTO = new WorkoutDTO(null, "Workout A", 70,
         "A really long workout", null);
 
@@ -83,5 +86,40 @@ public class DTOsMapperServiceTests {
     assertEquals(workout.getDescription(), workoutDTO.description());
 
     assertInstanceOf(Workout.class, workout);
+  }
+
+  @Test
+  public void convertExerciseToDTO() {
+    Exercise exercise = new Exercise(1, "High Bar Back Squat", 210, GoalType.STRENGTH, 150,
+        "Squat deep.", LocalDateTime.now());
+
+    ExerciseDTO exerciseDTO = DTOsMapper.convertToDto(exercise);
+
+    assertEquals(exercise.getId(), exerciseDTO.id());
+    assertEquals(exercise.getName(), exerciseDTO.name());
+    assertEquals(exercise.getLoad(), exerciseDTO.load());
+    assertEquals(exercise.getGoal(), exerciseDTO.goal());
+    assertEquals(exercise.getRestSeconds(), exerciseDTO.restSeconds());
+    assertEquals(exercise.getInstructions(), exerciseDTO.instructions());
+    assertEquals(exercise.getDateCreated(), exerciseDTO.dateCreated());
+
+    assertInstanceOf(ExerciseDTO.class, exerciseDTO);
+  }
+
+  @Test
+  public void convertDTOToExercise() {
+    ExerciseDTO exerciseDTO = new ExerciseDTO(1, "High Bar Back Squat", 210, GoalType.STRENGTH, 150,
+        "Squat deep.", LocalDateTime.now());
+
+    Exercise exercise = DTOsMapper.convertToEntity(exerciseDTO);
+
+    assertEquals(exercise.getName(), exerciseDTO.name());
+    assertEquals(exercise.getLoad(), exerciseDTO.load());
+    assertEquals(exercise.getGoal(), exerciseDTO.goal());
+    assertEquals(exercise.getRestSeconds(), exerciseDTO.restSeconds());
+    assertEquals(exercise.getInstructions(), exerciseDTO.instructions());
+
+    assertInstanceOf(Exercise.class, exercise);
+
   }
 }
