@@ -17,7 +17,7 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
-enum Goal {
+enum GoalType {
   ENDURANCE,
   HYPERTROPHY,
   STRENGTH
@@ -35,7 +35,7 @@ public class Exercise {
   @NotBlank
   Integer load;
   @NotBlank
-  Goal goal;
+  GoalType goal;
   @Column(name = "rest_seconds")
   Integer restSeconds;
   String instructions;
