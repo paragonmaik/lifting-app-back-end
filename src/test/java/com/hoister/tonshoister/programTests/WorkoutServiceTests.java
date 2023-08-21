@@ -93,8 +93,10 @@ public class WorkoutServiceTests {
 
   @Test
   public void updateWorkoutSuccess() throws WorkoutNotFoundException {
-    Workout workout1 = new Workout(1, "Workout A", 20, "Rookie workout.", null);
-    Workout workout2 = new Workout(1, "Workout B", 10, "Intense workout.", null);
+    Workout workout1 = new Workout(
+        1, "Workout A", 20, "Rookie workout.", null, null);
+    Workout workout2 = new Workout(
+        1, "Workout B", 10, "Intense workout.", null, null);
 
     when(workoutRepository.findById(1)).thenReturn(Optional.of(workout1));
     when(workoutRepository.save(workout1)).thenReturn(workout2);
@@ -111,7 +113,8 @@ public class WorkoutServiceTests {
 
   @Test
   public void updateWorkoutThrowsException() throws WorkoutNotFoundException {
-    Workout workout = new Workout(1, "Workout A", 20, "Rookie workout.", null);
+    Workout workout = new Workout(
+        1, "Workout A", 20, "Rookie workout.", null, null);
 
     when(workoutRepository.findById(1)).thenReturn(Optional.empty());
 
