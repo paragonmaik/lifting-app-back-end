@@ -38,12 +38,18 @@ public class DTOsMapper {
 
   // Workouts
   public WorkoutDTO convertToDto(Workout workout) {
+    Set<ExerciseDTO> exercises = new HashSet<>();
+    for (Exercise exercise : workout.getExercises()) {
+      exercises.add(convertToDto(exercise));
+    }
+
     return new WorkoutDTO(
         workout.getId(),
         workout.getName(),
         workout.getDurationMins(),
         workout.getDescription(),
-        workout.getDateCreated());
+        workout.getDateCreated(),
+        exercises);
   }
 
   public Workout convertToEntity(WorkoutDTO workoutDTO) {

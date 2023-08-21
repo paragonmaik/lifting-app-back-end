@@ -61,7 +61,9 @@ public class DTOsMapperServiceTests {
 
   @Test
   public void convertWorkoutToDTO() {
-    Workout workout = new Workout(1, "Workout A", 70, "Long workout.", LocalDateTime.now());
+    Set<Exercise> exercises = new HashSet<>();
+    Workout workout = new Workout(
+        1, "Workout A", 70, "Long workout.", LocalDateTime.now(), exercises);
 
     WorkoutDTO workoutDTO = DTOsMapper.convertToDto(workout);
 
@@ -77,7 +79,7 @@ public class DTOsMapperServiceTests {
   @Test
   public void convertDTOToWorkout() {
     WorkoutDTO workoutDTO = new WorkoutDTO(null, "Workout A", 70,
-        "A really long workout", null);
+        "A really long workout", null, null);
 
     Workout workout = DTOsMapper.convertToEntity(workoutDTO);
 
