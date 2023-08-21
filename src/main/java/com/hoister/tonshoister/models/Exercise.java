@@ -46,4 +46,37 @@ public class Exercise {
   @ManyToMany(mappedBy = "exercises", fetch = FetchType.LAZY)
   Set<Workout> workouts = new HashSet<>();
 
+  public Exercise() {
+  }
+
+  public Exercise(String name, Integer load, GoalType goal, Integer restSeconds,
+      String instructions) {
+    this.name = name;
+    this.load = load;
+    this.goal = goal;
+    this.restSeconds = restSeconds;
+    this.instructions = instructions;
+  }
+
+  public Exercise(Integer id, String name, Integer load, GoalType goal,
+      Integer restSeconds, String instructions) {
+    this.id = id;
+    this.name = name;
+    this.load = load;
+    this.goal = goal;
+    this.restSeconds = restSeconds;
+    this.instructions = instructions;
+  }
+
+  public Exercise(Integer id, String name, Integer load, GoalType goal, Integer restSeconds, String instructions,
+      LocalDateTime dateCreated) {
+    this.id = id;
+    this.name = name;
+    this.load = load;
+    this.goal = goal;
+    this.restSeconds = restSeconds;
+    this.instructions = instructions;
+    this.dateCreated = dateCreated;
+  }
+
 }
