@@ -53,7 +53,7 @@ public class WorkoutControllerTests {
     Workout workout = new Workout(1, "Workout A", 12, "A long workout.");
     WorkoutDTO workoutDTO = new WorkoutDTO(
         workout.getId(), workout.getName(), workout.getDurationMins(),
-        workout.getDescription(), LocalDateTime.now());
+        workout.getDescription(), LocalDateTime.now(), null);
 
     when(DTOsMapper.convertToEntity(any(WorkoutDTO.class))).thenReturn(workout);
     when(workoutService.createWorkout(workout, 1)).thenReturn(workout);
@@ -78,7 +78,7 @@ public class WorkoutControllerTests {
     Workout workout = new Workout(1, "Workout A", 12, "A long workout.");
     WorkoutDTO workoutDTO = new WorkoutDTO(
         workout.getId(), workout.getName(), workout.getDurationMins(),
-        workout.getDescription(), LocalDateTime.now());
+        workout.getDescription(), LocalDateTime.now(), null);
 
     List<Workout> workouts = new ArrayList<Workout>();
     List<WorkoutDTO> workoutsDTO = new ArrayList<WorkoutDTO>();
@@ -94,7 +94,8 @@ public class WorkoutControllerTests {
         .andExpect(MockMvcResultMatchers.jsonPath("$..name").value(workoutsDTO.get(0).name()))
         .andExpect(MockMvcResultMatchers.jsonPath("$..durationMins").value(workoutsDTO.get(0).durationMins()))
         .andExpect(MockMvcResultMatchers.jsonPath("$..description").value(workoutsDTO.get(0).description()))
-        .andExpect(MockMvcResultMatchers.jsonPath("$..dateCreated").exists());
+        .andExpect(MockMvcResultMatchers.jsonPath("$..dateCreated").exists())
+        .andExpect(MockMvcResultMatchers.jsonPath("$..exercises").exists());
 
   }
 
