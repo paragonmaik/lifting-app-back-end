@@ -68,7 +68,8 @@ public class Exercise {
     this.instructions = instructions;
   }
 
-  public Exercise(Integer id, String name, Integer load, GoalType goal, Integer restSeconds, String instructions,
+  public Exercise(Integer id, String name, Integer load, GoalType goal,
+      Integer restSeconds, String instructions,
       LocalDateTime dateCreated) {
     this.id = id;
     this.name = name;
@@ -79,4 +80,67 @@ public class Exercise {
     this.dateCreated = dateCreated;
   }
 
+  public Integer getId() {
+    return this.id;
+  }
+
+  public void setId(Integer id) {
+    this.id = id;
+  }
+
+  public String getName() {
+    return this.name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public Integer getLoad() {
+    return this.load;
+  }
+
+  public void setLoad(Integer load) {
+    this.load = load;
+  }
+
+  public GoalType getGoal() {
+    return this.goal;
+  }
+
+  public void setGoal(GoalType goal) {
+    this.goal = goal;
+  }
+
+  public Integer getRestSeconds() {
+    return this.restSeconds;
+  }
+
+  public void setRestSeconds(Integer restSeconds) {
+    this.restSeconds = restSeconds;
+  }
+
+  public String getInstructions() {
+    return this.instructions;
+  }
+
+  public void setInstructions(String instructions) {
+    this.instructions = instructions;
+  }
+
+  public LocalDateTime getDateCreated() {
+    return this.dateCreated;
+  }
+
+  public void setDateCreated(LocalDateTime dateCreated) {
+    this.dateCreated = dateCreated;
+  }
+
+  public Set<Workout> getWorkouts() {
+    return this.workouts;
+  }
+
+  public void setWorkouts(Set<Workout> workouts) {
+    this.workouts = workouts;
+  }
 }
