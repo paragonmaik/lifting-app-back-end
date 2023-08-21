@@ -16,6 +16,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table
@@ -26,9 +27,9 @@ public class Exercise {
   Integer id;
   @NotBlank
   String name;
-  @NotBlank
+  @NotNull
   Integer load;
-  @NotBlank
+  @NotNull
   GoalType goal;
   @Column(name = "rest_seconds")
   Integer restSeconds;
