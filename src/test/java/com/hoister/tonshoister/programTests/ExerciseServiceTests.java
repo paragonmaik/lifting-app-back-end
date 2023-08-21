@@ -41,7 +41,7 @@ public class ExerciseServiceTests {
     when(workoutRepository.findById(1)).thenReturn(Optional.of(workout));
     when(exerciseRepository.save(exercise)).thenReturn(exercise);
 
-    Exercise createdExercise = exerciseService.creatExercise(exercise, 1);
+    Exercise createdExercise = exerciseService.createExercise(exercise, 1);
 
     assertEquals(exercise, createdExercise);
 
@@ -56,7 +56,7 @@ public class ExerciseServiceTests {
     when(workoutRepository.findById(1)).thenReturn(Optional.empty());
 
     assertThrows(WorkoutNotFoundException.class, () -> {
-      exerciseService.creatExercise(exercise, 1);
+      exerciseService.createExercise(exercise, 1);
     });
 
     verify(workoutRepository).findById(1);
