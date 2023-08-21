@@ -97,7 +97,8 @@ public class ProgramServiceTests {
 
   @Test
   public void updateProgramSuccess() throws Exception {
-    Program program1 = new Program(1, "Starting Strength", 40, "Rookie Program.", null, null);
+    Program program1 = new Program(
+        1, "Starting Strength", 40, "Rookie Program.", null, null);
     Program program2 = new Program(1, "5x5", 10, "five sets of five.", null, null);
 
     when(programRepository.findById(1)).thenReturn(Optional.of(program1));
