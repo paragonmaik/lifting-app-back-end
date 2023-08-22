@@ -3,6 +3,7 @@ package com.hoister.tonshoister.programTests;
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -10,6 +11,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -91,7 +93,41 @@ public class ExerciseServiceTests {
     });
 
     verify(exerciseRepository).findAll();
-
   }
 
+  @Test
+  public void updateExerciseSuccess() throws ExerciseNotFoundException {
+    Exercise exercise1 = new Exercise(
+        1, "High Bar Squat", 120, GoalType.STRENGTH, 150, "Bar rests at the traps.");
+    Exercise exercise2 = new Exercise(
+        1, "Front Squat", 100, GoalType.HYPERTROPHY, 180, "No instructions.");
+
+    when(exerciseRepository.findById(1)).thenReturn(Optional.of(exercise1));
+    when(exerciseRepository.save(exercise1)).thenReturn(exercise2);
+
+    Exercise updatedExercise = exerciseService.updateExercise(exercise1);
+
+    assertNotEquals(exercise1.getName(), updatedExercise.getName());
+    assertNotEquals(exercise1.getLoad(), updatedExercise.getLoad());
+    assertNotEquals(exercise1.getGoal(), updatedExercise.getGoal());
+    assertNotEquals(exercise1.getRestSeconds(), updatedExercise.getRestSeconds());
+    assertNotEquals(exercise1.getInstructions(), updatedExercise.getInstructions());
+
+    verify(exerciseRepository).save(exercise1);
+    verify(exerciseRepository).findById(1);
+  }
+
+  @Test
+  public void updateExerciseThrowsException() throws ExerciseNotFoundException {
+    Exercise exercise = new Exercise(
+        1, "High Bar Squat", 120, GoalType.STRENGTH, 150, "Bar rests at the traps.");
+
+    when(exerciseRepository.findById(1)).thenReturn(Optional.empty());
+
+    assertThrows(ExerciseNotFoundException.class, () -> {
+      exerciseService.updateExercise(exercise);
+    });
+
+    verify(exerciseRepository).findById(1);
+  }
 }

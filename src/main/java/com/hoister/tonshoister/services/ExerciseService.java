@@ -45,4 +45,17 @@ public class ExerciseService {
 
     return exercises;
   }
+
+  public Exercise updateExercise(Exercise exercise) throws ExerciseNotFoundException {
+    Exercise foundExercise = exerciseRepository.findById(exercise.getId())
+        .orElseThrow(() -> new ExerciseNotFoundException());
+
+    foundExercise.setName(exercise.getName());
+    foundExercise.setLoad(exercise.getLoad());
+    foundExercise.setGoal(exercise.getGoal());
+    foundExercise.setRestSeconds(exercise.getRestSeconds());
+    foundExercise.setInstructions(exercise.getInstructions());
+
+    return exerciseRepository.save(foundExercise);
+  }
 }
