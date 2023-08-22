@@ -142,7 +142,21 @@ public class ExerciseE2ETests {
         Exercise.class);
 
     assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
-
   }
 
+  @Test
+  public void deleteExerciseSuccess() throws Exception {
+    ResponseEntity<Exercise> response = testRestTemplate.exchange("/api/exercises/1",
+        HttpMethod.DELETE, null, Exercise.class);
+
+    assertEquals(response.getStatusCode(), HttpStatus.NO_CONTENT);
+  }
+
+  @Test
+  public void deleteExerciseThrowsException() throws Exception {
+    ResponseEntity<Exercise> response = testRestTemplate.exchange("/api/exercises/2",
+        HttpMethod.DELETE, null, Exercise.class);
+
+    assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
+  }
 }
