@@ -20,7 +20,16 @@ public class ControllersAdvisor {
   @ExceptionHandler(WorkoutNotFoundException.class)
   public ResponseEntity<ErrorDetails> exceptionWorkoutNotFoundHandler() {
     ErrorDetails errorDetails = new ErrorDetails();
-    errorDetails.setMessage("No workouts found");
+    errorDetails.setMessage("No workouts found!");
+
+    return ResponseEntity
+        .status(HttpStatus.NOT_FOUND).body(errorDetails);
+  }
+
+  @ExceptionHandler(ExerciseNotFoundException.class)
+  public ResponseEntity<ErrorDetails> exceptionExerciseNotFoundHandler() {
+    ErrorDetails errorDetails = new ErrorDetails();
+    errorDetails.setMessage("No exercises found!");
 
     return ResponseEntity
         .status(HttpStatus.NOT_FOUND).body(errorDetails);
