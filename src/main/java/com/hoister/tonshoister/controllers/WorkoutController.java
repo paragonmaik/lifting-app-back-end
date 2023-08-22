@@ -56,7 +56,7 @@ public class WorkoutController {
 
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @DeleteMapping("/{id}")
-  public void deleteWorkout(@Valid @PathVariable Integer id) {
+  public void deleteWorkout(@PathVariable Integer id) {
     workoutService.deleteWorkout(id);
   }
 }
