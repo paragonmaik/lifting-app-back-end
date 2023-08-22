@@ -130,4 +130,25 @@ public class ExerciseServiceTests {
 
     verify(exerciseRepository).findById(1);
   }
+
+  @Test
+  public void deleteExerciseSuccess() throws Exception {
+    when(exerciseRepository.existsById(1)).thenReturn(true);
+    exerciseService.deleteExercise(1);
+    
+    verify(exerciseRepository).existsById(1);
+    verify(exerciseRepository).deleteById(1);
+  }
+
+  @Test
+  public void deleteExerciseThrowsException() throws Exception {
+    when(exerciseRepository.existsById(1)).thenReturn(false);
+
+    assertThrows(ExerciseNotFoundException.class, () -> {
+    exerciseService.deleteExercise(1);
+    });
+
+    verify(exerciseRepository).existsById(1);
+  }
+
 }

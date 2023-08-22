@@ -58,4 +58,12 @@ public class ExerciseService {
 
     return exerciseRepository.save(foundExercise);
   }
+
+  public void deleteExercise(Integer id) throws ExerciseNotFoundException {
+    if (!exerciseRepository.existsById(id)) {
+      throw new ExerciseNotFoundException();
+    }
+
+    exerciseRepository.deleteById(id);
+  }
 }
