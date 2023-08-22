@@ -1,7 +1,9 @@
 package com.hoister.tonshoister.services;
 
+import java.util.List;
 import org.springframework.stereotype.Service;
 
+import com.hoister.tonshoister.advisors.ExerciseNotFoundException;
 import com.hoister.tonshoister.advisors.WorkoutNotFoundException;
 import com.hoister.tonshoister.models.Exercise;
 import com.hoister.tonshoister.models.Workout;
@@ -32,5 +34,15 @@ public class ExerciseService {
     workoutRepository.save(workout);
 
     return createdExercise;
+  }
+
+  public List<Exercise> findAll() {
+    List<Exercise> exercises = exerciseRepository.findAll();
+
+    if (exercises.isEmpty()) {
+      throw new ExerciseNotFoundException();
+    }
+
+    return exercises;
   }
 }
