@@ -3,8 +3,11 @@ package com.hoister.tonshoister.programTests;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 
@@ -105,6 +108,41 @@ public class ExerciseE2ETests {
         .getForEntity("/api/exercises", Exercise.class);
 
     assertEquals(responseExercise.getStatusCode(), HttpStatus.NOT_FOUND);
+  }
+
+  @Test
+  public void updateExerciseSuccess() throws Exception {
+    Exercise exercise = new Exercise(
+        1, "Deadlift", 150, GoalType.STRENGTH, 180, "No instructions.");
+
+    String requestBody = objectMapper.writeValueAsString(exercise);
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+
+    HttpEntity<String> entity = new HttpEntity<String>(requestBody, headers);
+    ResponseEntity<Exercise> response = testRestTemplate.exchange("/api/exercises",
+        HttpMethod.PUT, entity,
+        Exercise.class);
+
+    assertEquals(response.getStatusCode(), HttpStatus.NO_CONTENT);
+  }
+
+  @Test
+  public void updateExerciseThrowsException() throws Exception {
+    Exercise exercise = new Exercise(
+        2, "Deadlift", 150, GoalType.STRENGTH, 180, "No instructions.");
+
+    String requestBody = objectMapper.writeValueAsString(exercise);
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+
+    HttpEntity<String> entity = new HttpEntity<String>(requestBody, headers);
+    ResponseEntity<Exercise> response = testRestTemplate.exchange("/api/exercises",
+        HttpMethod.PUT, entity,
+        Exercise.class);
+
+    assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
+
   }
 
 }
