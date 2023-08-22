@@ -1,6 +1,9 @@
 package com.hoister.tonshoister.programTests;
 
 import java.util.List;
+
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -148,5 +151,29 @@ public class ExerciseControllerTests {
                 .content(objectMapper.writeValueAsString(exercise)))
         .andExpect(MockMvcResultMatchers.status().isNotFound())
         .andExpect(jsonPath("$.message").exists());
+  }
+
+  @Test
+  public void deleteWorkoutSuccess() throws Exception {
+    doNothing().when(exerciseService).deleteExercise(1);
+
+    mockMvc
+        .perform(
+            delete("/api/exercises/1"))
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+
+    verify(exerciseService).deleteExercise(1);
+  }
+
+  @Test
+  public void deleteWorkoutThrowsException() throws Exception {
+    doThrow(new ExerciseNotFoundException()).when(exerciseService).deleteExercise(1);
+
+    mockMvc
+        .perform(
+            delete("/api/exercises/1"))
+        .andExpect(MockMvcResultMatchers.status().isNotFound());
+
+    verify(exerciseService).deleteExercise(1);
   }
 }
