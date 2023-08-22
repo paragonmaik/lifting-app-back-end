@@ -1,4 +1,4 @@
-package com.hoister.tonshoister.programTests;
+package com.hoister.tonshoister.program;
 
 import org.springframework.http.MediaType;
 import org.junit.jupiter.api.BeforeEach;

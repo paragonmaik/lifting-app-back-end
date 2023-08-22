@@ -1,4 +1,4 @@
-package com.hoister.tonshoister.programTests;
+package com.hoister.tonshoister.exercise;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.hoister.tonshoister.programTests;
+package com.hoister.tonshoister.program;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
