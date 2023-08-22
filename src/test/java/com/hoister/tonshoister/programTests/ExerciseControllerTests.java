@@ -68,7 +68,8 @@ public class ExerciseControllerTests {
         .andExpect(MockMvcResultMatchers.jsonPath("$.load", CoreMatchers.is(exerciseDTO.load())))
         .andExpect(MockMvcResultMatchers.jsonPath("$.goal", CoreMatchers.is(exerciseDTO.goal().toString())))
         .andExpect(MockMvcResultMatchers.jsonPath("$.restSeconds", CoreMatchers.is(exerciseDTO.restSeconds())))
-        .andExpect(MockMvcResultMatchers.jsonPath("$.instructions", CoreMatchers.is(exerciseDTO.instructions())));
+        .andExpect(
+            MockMvcResultMatchers.jsonPath("$.instructions", CoreMatchers.is(exerciseDTO.instructions())));
 
     verify(DTOsMapper).convertToEntity(any(ExerciseDTO.class));
     verify(exerciseService).createExercise(exercise, 1);
@@ -112,5 +113,40 @@ public class ExerciseControllerTests {
         .andExpect(jsonPath("$..message").exists());
 
     verify(exerciseService).findAll();    
+  }
+
+  @Test
+  public void updateExerciseSuccess() throws Exception {
+    Exercise exercise = new Exercise(
+        1, "High Bar Squat", 120, GoalType.STRENGTH, 150, "No instructions.");
+
+    when(DTOsMapper.convertToEntity(any(ExerciseDTO.class))).thenReturn(exercise);
+    when(exerciseService.updateExercise(any(Exercise.class))).thenReturn(exercise);
+
+    mockMvc
+        .perform(
+            put("/api/exercises").contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(exercise)))
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+
+    verify(DTOsMapper).convertToEntity(any(ExerciseDTO.class));
+    verify(exerciseService).updateExercise(any(Exercise.class));
+  }
+
+  @Test
+  public void updateExerciseThrowsException() throws Exception {
+    Exercise exercise = new Exercise(
+        1, "High Bar Squat", 120, GoalType.STRENGTH, 150, "No instructions.");
+
+    when(DTOsMapper.convertToEntity(any(ExerciseDTO.class))).thenReturn(exercise);
+    when(exerciseService.updateExercise(any(Exercise.class)))
+        .thenThrow(new ExerciseNotFoundException());
+
+    mockMvc
+        .perform(
+            put("/api/exercises").contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(exercise)))
+        .andExpect(MockMvcResultMatchers.status().isNotFound())
+        .andExpect(jsonPath("$.message").exists());
   }
 }
