@@ -2,6 +2,8 @@ package com.hoister.tonshoister.programTests;
 
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
@@ -16,6 +18,8 @@ import com.hoister.tonshoister.repositories.WorkoutRepository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -56,16 +60,51 @@ public class ExerciseE2ETests {
     ResponseEntity<Exercise> response = testRestTemplate.postForEntity(
         "/api/exercises/1", exercise,
         Exercise.class);
-    Exercise responseWorkout = response.getBody();
+    Exercise responseExercise = response.getBody();
 
     assertEquals(response.getStatusCode(), HttpStatus.CREATED);
 
-    assertNotNull(responseWorkout.getId());
-    assertEquals(responseWorkout.getName(), exercise.getName());
-    assertEquals(responseWorkout.getLoad(), exercise.getLoad());
-    assertEquals(responseWorkout.getGoal(), exercise.getGoal());
-    assertEquals(responseWorkout.getRestSeconds(), exercise.getRestSeconds());
-    assertEquals(responseWorkout.getInstructions(), exercise.getInstructions());
-    assertNotNull(responseWorkout.getDateCreated());
+    assertNotNull(responseExercise.getId());
+    assertEquals(responseExercise.getName(), exercise.getName());
+    assertEquals(responseExercise.getLoad(), exercise.getLoad());
+    assertEquals(responseExercise.getGoal(), exercise.getGoal());
+    assertEquals(responseExercise.getRestSeconds(), exercise.getRestSeconds());
+    assertEquals(responseExercise.getInstructions(), exercise.getInstructions());
+    assertNotNull(responseExercise.getDateCreated());
   }
+
+  @Test
+  public void getAllExercisesSuccess() {
+    Exercise exercise = new Exercise(
+        2, "Deadlift", 150, GoalType.STRENGTH, 180, "No instructions.");
+    exerciseRepository.save(exercise);
+
+    ResponseEntity<List<Exercise>> response = testRestTemplate
+        .exchange("/api/exercises", HttpMethod.GET, null,
+            new ParameterizedTypeReference<List<Exercise>>() {
+            });
+
+    Exercise responseExercise = response.getBody().get(1);
+
+    assertEquals(response.getStatusCode(), HttpStatus.OK);
+
+    assertNotNull(responseExercise.getId());
+    assertEquals(responseExercise.getName(), exercise.getName());
+    assertEquals(responseExercise.getLoad(), exercise.getLoad());
+    assertEquals(responseExercise.getGoal(), exercise.getGoal());
+    assertEquals(responseExercise.getRestSeconds(), exercise.getRestSeconds());
+    assertEquals(responseExercise.getInstructions(), exercise.getInstructions());
+    assertNotNull(responseExercise.getDateCreated());
+  }
+
+  @Test
+  public void getAllExercisesThrowsException() throws Exception {
+    exerciseRepository.deleteAll();
+
+    ResponseEntity<Exercise> responseExercise = testRestTemplate
+        .getForEntity("/api/exercises", Exercise.class);
+
+    assertEquals(responseExercise.getStatusCode(), HttpStatus.NOT_FOUND);
+  }
+
 }
