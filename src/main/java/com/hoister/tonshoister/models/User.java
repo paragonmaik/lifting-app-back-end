@@ -47,6 +47,34 @@ public class User implements UserDetails {
       return List.of(new SimpleGrantedAuthority("ROLE_USER"));
   }
 
+  public String getId() {
+    return this.id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public String getLogin() {
+    return this.login;
+  }
+
+  public void setLogin(String login) {
+    this.login = login;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  public UserRole getRole() {
+    return this.role;
+  }
+
+  public void setRole(UserRole role) {
+    this.role = role;
+  }
+
   @Override
   public String getPassword() {
     return password;
