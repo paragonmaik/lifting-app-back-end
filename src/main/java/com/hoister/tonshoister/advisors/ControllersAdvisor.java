@@ -34,4 +34,14 @@ public class ControllersAdvisor {
     return ResponseEntity
         .status(HttpStatus.NOT_FOUND).body(errorDetails);
   }
+
+  @ExceptionHandler(UserAlreadyRegisteredException.class)
+  public ResponseEntity<ErrorDetails> exceptionUserAlreadyRegisteredHandler() {
+    ErrorDetails errorDetails = new ErrorDetails();
+    errorDetails.setMessage("User already registered");
+    // TODO: replace later with ambiguous message and status code
+
+    return ResponseEntity
+        .status(HttpStatus.CONFLICT).body(errorDetails);
+  }
 }
