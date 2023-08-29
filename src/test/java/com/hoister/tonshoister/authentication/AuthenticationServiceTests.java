@@ -1,10 +1,7 @@
 package com.hoister.tonshoister.authentication;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -12,8 +9,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
 
 import com.hoister.tonshoister.DTOs.AuthenticationDTO;
-import com.hoister.tonshoister.DTOs.RegisterDTO;
-import com.hoister.tonshoister.advisors.UserAlreadyRegisteredException;
 import com.hoister.tonshoister.models.User;
 import com.hoister.tonshoister.models.UserRole;
 import com.hoister.tonshoister.repositories.UserRepository;
