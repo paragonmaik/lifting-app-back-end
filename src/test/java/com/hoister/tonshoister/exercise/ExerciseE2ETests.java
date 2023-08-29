@@ -12,8 +12,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hoister.tonshoister.DTOs.AuthenticationDTO;
+import com.hoister.tonshoister.DTOs.LoginResponseDTO;
 import com.hoister.tonshoister.models.Exercise;
 import com.hoister.tonshoister.models.GoalType;
+import com.hoister.tonshoister.models.User;
+import com.hoister.tonshoister.models.UserRole;
 import com.hoister.tonshoister.models.Workout;
 import com.hoister.tonshoister.repositories.ExerciseRepository;
 import com.hoister.tonshoister.repositories.WorkoutRepository;
@@ -33,6 +37,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebM
 @AutoConfigureWebMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class ExerciseE2ETests {
+  private String token;
 
   @Autowired
   ObjectMapper objectMapper;
@@ -42,6 +47,21 @@ public class ExerciseE2ETests {
   WorkoutRepository workoutRepository;
   @Autowired
   TestRestTemplate testRestTemplate;
+
+  @BeforeEach
+  public void setUser() {
+    User user = new User("arnold", "gettothechoppa", UserRole.USER);
+    testRestTemplate.postForEntity("/api/auth/register", user,
+        Void.class);
+
+    AuthenticationDTO auth = new AuthenticationDTO(user.getLogin(), user.getPassword());
+
+    ResponseEntity<LoginResponseDTO> loginResponse = testRestTemplate.postForEntity(
+        "/api/auth/login", auth,
+        LoginResponseDTO.class);
+
+    token = "Bearer " + loginResponse.getBody().token();
+  }
 
   @BeforeEach
   public void setUp() {
@@ -56,13 +76,20 @@ public class ExerciseE2ETests {
   }
 
   @Test
-  public void createExerciseSuccess() {
+  public void createExerciseSuccess() throws Exception {
     Exercise exercise = new Exercise(
         2, "Deadlift", 150, GoalType.STRENGTH, 180, "No instructions.");
 
-    ResponseEntity<Exercise> response = testRestTemplate.postForEntity(
-        "/api/exercises/1", exercise,
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setBearerAuth(token);
+
+    HttpEntity<String> entity = new HttpEntity<String>(
+        objectMapper.writeValueAsString(exercise), headers);
+    ResponseEntity<Exercise> response = testRestTemplate.exchange("/api/exercises/1",
+        HttpMethod.POST, entity,
         Exercise.class);
+
     Exercise responseExercise = response.getBody();
 
     assertEquals(response.getStatusCode(), HttpStatus.CREATED);
@@ -77,13 +104,19 @@ public class ExerciseE2ETests {
   }
 
   @Test
-  public void getAllExercisesSuccess() {
+  public void getAllExercisesSuccess() throws Exception {
     Exercise exercise = new Exercise(
         2, "Deadlift", 150, GoalType.STRENGTH, 180, "No instructions.");
     exerciseRepository.save(exercise);
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setBearerAuth(token);
+
+    HttpEntity<String> entity = new HttpEntity<String>(
+        objectMapper.writeValueAsString(exercise), headers);
 
     ResponseEntity<List<Exercise>> response = testRestTemplate
-        .exchange("/api/exercises", HttpMethod.GET, null,
+        .exchange("/api/exercises", HttpMethod.GET, entity,
             new ParameterizedTypeReference<List<Exercise>>() {
             });
 
@@ -103,9 +136,14 @@ public class ExerciseE2ETests {
   @Test
   public void getAllExercisesThrowsException() throws Exception {
     exerciseRepository.deleteAll();
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setBearerAuth(token);
+
+    HttpEntity<String> entity = new HttpEntity<String>(null, headers);
 
     ResponseEntity<Exercise> responseExercise = testRestTemplate
-        .getForEntity("/api/exercises", Exercise.class);
+        .exchange("/api/exercises", HttpMethod.GET, entity, Exercise.class);
 
     assertEquals(responseExercise.getStatusCode(), HttpStatus.NOT_FOUND);
   }
@@ -115,11 +153,12 @@ public class ExerciseE2ETests {
     Exercise exercise = new Exercise(
         1, "Deadlift", 150, GoalType.STRENGTH, 180, "No instructions.");
 
-    String requestBody = objectMapper.writeValueAsString(exercise);
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setBearerAuth(token);
 
-    HttpEntity<String> entity = new HttpEntity<String>(requestBody, headers);
+    HttpEntity<String> entity = new HttpEntity<String>(
+        objectMapper.writeValueAsString(exercise), headers);
     ResponseEntity<Exercise> response = testRestTemplate.exchange("/api/exercises",
         HttpMethod.PUT, entity,
         Exercise.class);
@@ -132,11 +171,12 @@ public class ExerciseE2ETests {
     Exercise exercise = new Exercise(
         2, "Deadlift", 150, GoalType.STRENGTH, 180, "No instructions.");
 
-    String requestBody = objectMapper.writeValueAsString(exercise);
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setBearerAuth(token);
 
-    HttpEntity<String> entity = new HttpEntity<String>(requestBody, headers);
+    HttpEntity<String> entity = new HttpEntity<String>(
+        objectMapper.writeValueAsString(exercise), headers);
     ResponseEntity<Exercise> response = testRestTemplate.exchange("/api/exercises",
         HttpMethod.PUT, entity,
         Exercise.class);
@@ -146,16 +186,22 @@ public class ExerciseE2ETests {
 
   @Test
   public void deleteExerciseSuccess() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.setBearerAuth(token);
+
     ResponseEntity<Exercise> response = testRestTemplate.exchange("/api/exercises/1",
-        HttpMethod.DELETE, null, Exercise.class);
+        HttpMethod.DELETE, new HttpEntity<String>(null, headers), Exercise.class);
 
     assertEquals(response.getStatusCode(), HttpStatus.NO_CONTENT);
   }
 
   @Test
   public void deleteExerciseThrowsException() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.setBearerAuth(token);
+
     ResponseEntity<Exercise> response = testRestTemplate.exchange("/api/exercises/2",
-        HttpMethod.DELETE, null, Exercise.class);
+        HttpMethod.DELETE, new HttpEntity<String>(null, headers), Exercise.class);
 
     assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
   }
