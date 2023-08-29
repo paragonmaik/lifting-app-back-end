@@ -2,6 +2,7 @@ package com.hoister.tonshoister.services;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hoister.tonshoister.advisors.ProgramNotFoundException;
@@ -10,11 +11,9 @@ import com.hoister.tonshoister.repositories.ProgramRepository;
 
 @Service
 public class ProgramService {
-  private final ProgramRepository programRepository;
 
-  public ProgramService(ProgramRepository programRepository) {
-    this.programRepository = programRepository;
-  }
+  @Autowired
+  private ProgramRepository programRepository;
 
   public Program createProgram(Program program) {
     return programRepository.save(program);

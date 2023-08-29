@@ -2,6 +2,7 @@ package com.hoister.tonshoister.controllers;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,13 +25,11 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/programs")
 public class ProgramController {
-  private final ProgramService programService;
-  private DTOsMapper DTOsMapper;
 
-  public ProgramController(ProgramService programService, DTOsMapper DTOsMapper) {
-    this.programService = programService;
-    this.DTOsMapper = DTOsMapper;
-  }
+  @Autowired
+  private ProgramService programService;
+  @Autowired
+  private DTOsMapper DTOsMapper;
 
   @PostMapping("")
   public ResponseEntity<ProgramDTO> createProgram(@Valid @RequestBody ProgramDTO programDTO) {
