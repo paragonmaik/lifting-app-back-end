@@ -1,6 +1,8 @@
 package com.hoister.tonshoister.services;
 
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hoister.tonshoister.advisors.ExerciseNotFoundException;
@@ -12,8 +14,11 @@ import com.hoister.tonshoister.repositories.WorkoutRepository;
 
 @Service
 public class ExerciseService {
-  private final ExerciseRepository exerciseRepository;
-  private final WorkoutRepository workoutRepository;
+
+  @Autowired
+  private ExerciseRepository exerciseRepository;
+  @Autowired
+  private WorkoutRepository workoutRepository;
 
   public ExerciseService(ExerciseRepository exerciseRepository,
       WorkoutRepository workoutRepository) {
