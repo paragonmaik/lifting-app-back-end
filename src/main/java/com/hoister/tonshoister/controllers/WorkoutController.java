@@ -2,6 +2,7 @@ package com.hoister.tonshoister.controllers;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,8 +25,11 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/workouts")
 public class WorkoutController {
-  private final WorkoutService workoutService;
-  private final DTOsMapper DTOsMapper;
+
+  @Autowired
+  private WorkoutService workoutService;
+  @Autowired
+  private DTOsMapper DTOsMapper;
 
   public WorkoutController(WorkoutService workoutService, DTOsMapper DTOsMapper) {
     this.workoutService = workoutService;

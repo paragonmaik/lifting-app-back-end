@@ -2,6 +2,7 @@ package com.hoister.tonshoister.services;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hoister.tonshoister.advisors.ProgramNotFoundException;
@@ -13,8 +14,11 @@ import com.hoister.tonshoister.repositories.WorkoutRepository;
 
 @Service
 public class WorkoutService {
-  private final WorkoutRepository workoutRepository;
-  private final ProgramRepository programRepository;
+
+  @Autowired
+  private WorkoutRepository workoutRepository;
+  @Autowired
+  private ProgramRepository programRepository;
 
   public WorkoutService(WorkoutRepository workoutRepository,
       ProgramRepository programRepository) {
