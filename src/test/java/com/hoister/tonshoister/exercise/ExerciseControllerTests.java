@@ -24,6 +24,8 @@ import com.hoister.tonshoister.advisors.ExerciseNotFoundException;
 import com.hoister.tonshoister.controllers.ExerciseController;
 import com.hoister.tonshoister.models.Exercise;
 import com.hoister.tonshoister.models.GoalType;
+import com.hoister.tonshoister.repositories.UserRepository;
+import com.hoister.tonshoister.security.TokenService;
 import com.hoister.tonshoister.services.ExerciseService;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -44,6 +46,10 @@ public class ExerciseControllerTests {
   @Autowired
   ObjectMapper objectMapper;
 
+  @MockBean
+  UserRepository userRepository;
+  @MockBean
+  TokenService tokenService;
   @MockBean
   ExerciseService exerciseService;
   @MockBean
