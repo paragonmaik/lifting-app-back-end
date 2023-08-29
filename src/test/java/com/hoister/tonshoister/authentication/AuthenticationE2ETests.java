@@ -18,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hoister.tonshoister.DTOs.AuthenticationDTO;
+import com.hoister.tonshoister.DTOs.LoginResponseDTO;
 import com.hoister.tonshoister.DTOs.RegisterDTO;
 import com.hoister.tonshoister.models.User;
 import com.hoister.tonshoister.models.UserRole;
@@ -40,7 +42,8 @@ public class AuthenticationE2ETests {
     User user = new User(
         "ronnie", "lightweightbabeeee", UserRole.ADMIN);
 
-    userRepository.save(user);
+    testRestTemplate.postForEntity("/api/auth/register", user,
+        Void.class);
   }
 
   @Test
@@ -76,5 +79,42 @@ public class AuthenticationE2ETests {
         RegisterDTO.class);
 
     assertEquals(response.getStatusCode(), HttpStatus.CONFLICT);
+  }
+
+  @Test
+  public void loginUserSuccess() throws Exception {
+    AuthenticationDTO authDTO = new AuthenticationDTO(
+        "ronnie", "lightweightbabeeee");
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+
+    HttpEntity<String> entity = new HttpEntity<String>(
+        objectMapper.writeValueAsString(authDTO), headers);
+
+    ResponseEntity<LoginResponseDTO> response = testRestTemplate.exchange("/api/auth/login",
+        HttpMethod.POST, entity,
+        LoginResponseDTO.class);
+
+    assertEquals(response.getStatusCode(), HttpStatus.OK);
+  }
+
+  @Test
+  public void loginUserThrowsException() throws Exception {
+    AuthenticationDTO authDTO = new AuthenticationDTO(
+        "ronnie", "everybodywannabeabodybuilder");
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+
+    HttpEntity<String> entity = new HttpEntity<String>(
+        objectMapper.writeValueAsString(authDTO), headers);
+
+    ResponseEntity<LoginResponseDTO> response = testRestTemplate.exchange("/api/auth/login",
+        HttpMethod.POST, entity,
+        LoginResponseDTO.class);
+
+    assertEquals(response.getStatusCode(), HttpStatus.FORBIDDEN);
+
   }
 }
