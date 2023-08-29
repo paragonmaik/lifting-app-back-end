@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.hoister.tonshoister.models.Exercise;
 import com.hoister.tonshoister.models.Program;
+import com.hoister.tonshoister.models.User;
 import com.hoister.tonshoister.models.Workout;
 
 @Service
@@ -80,5 +81,13 @@ public class DTOsMapper {
         exerciseDTO.goal(),
         exerciseDTO.restSeconds(),
         exerciseDTO.instructions());
+  }
+
+  // Authentication
+  public User convertToEntity(RegisterDTO registerDTO) {
+    return new User(
+        registerDTO.login(),
+        registerDTO.password(),
+        registerDTO.role());
   }
 }
