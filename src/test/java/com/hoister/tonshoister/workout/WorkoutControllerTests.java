@@ -27,6 +27,8 @@ import com.hoister.tonshoister.DTOs.WorkoutDTO;
 import com.hoister.tonshoister.advisors.WorkoutNotFoundException;
 import com.hoister.tonshoister.controllers.WorkoutController;
 import com.hoister.tonshoister.models.Workout;
+import com.hoister.tonshoister.repositories.UserRepository;
+import com.hoister.tonshoister.security.TokenService;
 import com.hoister.tonshoister.services.WorkoutService;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -43,6 +45,10 @@ public class WorkoutControllerTests {
   @Autowired
   ObjectMapper objectMapper;
 
+  @MockBean
+  TokenService tokenService;
+  @MockBean
+  UserRepository userRepository;
   @MockBean
   WorkoutService workoutService;
   @MockBean
