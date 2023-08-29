@@ -144,7 +144,7 @@ public class ExerciseServiceTests {
     when(exerciseRepository.existsById(1)).thenReturn(false);
 
     assertThrows(ExerciseNotFoundException.class, () -> {
-    exerciseService.deleteExercise(1);
+      exerciseService.deleteExercise(1);
     });
 
     verify(exerciseRepository).existsById(1);
