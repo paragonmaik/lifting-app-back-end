@@ -13,7 +13,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hoister.tonshoister.DTOs.AuthenticationDTO;
+import com.hoister.tonshoister.DTOs.LoginResponseDTO;
 import com.hoister.tonshoister.models.Program;
+import com.hoister.tonshoister.models.User;
+import com.hoister.tonshoister.models.UserRole;
 import com.hoister.tonshoister.models.Workout;
 import com.hoister.tonshoister.repositories.ProgramRepository;
 import com.hoister.tonshoister.repositories.WorkoutRepository;
@@ -32,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @AutoConfigureWebMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class WorkoutE2ETests {
+  private String token;
 
   @Autowired
   ObjectMapper objectMapper;
@@ -41,6 +46,21 @@ public class WorkoutE2ETests {
   ProgramRepository programRepository;
   @Autowired
   TestRestTemplate testRestTemplate;
+
+  @BeforeEach
+  public void setUser() {
+    User user = new User("arnold", "gettothechoppa", UserRole.USER);
+    testRestTemplate.postForEntity("/api/auth/register", user,
+        Void.class);
+
+    AuthenticationDTO auth = new AuthenticationDTO(user.getLogin(), user.getPassword());
+
+    ResponseEntity<LoginResponseDTO> loginResponse = testRestTemplate.postForEntity(
+        "/api/auth/login", auth,
+        LoginResponseDTO.class);
+
+    token = "Bearer " + loginResponse.getBody().token();
+  }
 
   @BeforeEach
   public void setUp() {
@@ -54,10 +74,18 @@ public class WorkoutE2ETests {
   }
 
   @Test
-  public void createWorkoutSuccess() {
+  public void createWorkoutSuccess() throws Exception {
     Workout workout = new Workout("Workout B", 12, "Strength workout.");
-    ResponseEntity<Workout> response = testRestTemplate.postForEntity(
-        "/api/workouts/1", workout,
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setBearerAuth(token);
+
+    HttpEntity<String> entity = new HttpEntity<String>(
+        objectMapper.writeValueAsString(workout), headers);
+
+    ResponseEntity<Workout> response = testRestTemplate.exchange(
+        "/api/workouts/1", HttpMethod.POST, entity,
         Workout.class);
     Workout responseWorkout = response.getBody();
 
@@ -77,8 +105,13 @@ public class WorkoutE2ETests {
     Workout workout = new Workout("Workout B", 22, "Cool workout.");
     workoutRepository.save(workout);
 
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setBearerAuth(token);
+    HttpEntity<String> entity = new HttpEntity<String>(null, headers);
+
     ResponseEntity<List<Workout>> response = testRestTemplate
-        .exchange("/api/workouts", HttpMethod.GET, null,
+        .exchange("/api/workouts", HttpMethod.GET, entity,
             new ParameterizedTypeReference<List<Workout>>() {
             });
 
@@ -97,19 +130,27 @@ public class WorkoutE2ETests {
   @Test
   public void getAllWorkoutsThrowsException() throws Exception {
     workoutRepository.deleteAll();
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setBearerAuth(token);
 
-    ResponseEntity<Workout> responseProgram = testRestTemplate
-        .getForEntity("/api/workouts", Workout.class);
+    HttpEntity<String> entity = new HttpEntity<String>(null, headers);
 
-    assertEquals(responseProgram.getStatusCode(), HttpStatus.NOT_FOUND);
+    ResponseEntity<Workout> response = testRestTemplate
+        .exchange("/api/workouts", HttpMethod.GET, entity,
+            Workout.class);
+
+    assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
   }
 
   @Test
   public void updateWorkoutSuccess() throws Exception {
     Workout workout = new Workout(1, "Workout B", 12, "Cool workout.");
     String requestBody = objectMapper.writeValueAsString(workout);
+
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setBearerAuth(token);
 
     HttpEntity<String> entity = new HttpEntity<String>(requestBody, headers);
     ResponseEntity<Workout> response = testRestTemplate.exchange("/api/workouts",
@@ -123,9 +164,10 @@ public class WorkoutE2ETests {
   public void updateWorkoutThrowsException() throws Exception {
     Workout workout = new Workout(2, "Workout B", 12, "Cool workout.");
     String requestBody = objectMapper.writeValueAsString(workout);
-    HttpHeaders headers = new HttpHeaders();
 
+    HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setBearerAuth(token);
 
     HttpEntity<String> entity = new HttpEntity<String>(requestBody, headers);
 
@@ -138,16 +180,28 @@ public class WorkoutE2ETests {
 
   @Test
   public void deleteWorkoutSuccess() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setBearerAuth(token);
+
+    HttpEntity<String> entity = new HttpEntity<String>(null, headers);
+
     ResponseEntity<Workout> response = testRestTemplate.exchange("/api/workouts/1",
-        HttpMethod.DELETE, null, Workout.class);
+        HttpMethod.DELETE, entity, Workout.class);
 
     assertEquals(response.getStatusCode(), HttpStatus.NO_CONTENT);
   }
 
   @Test
   public void deleteWorkoutThrowsException() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setBearerAuth(token);
+
+    HttpEntity<String> entity = new HttpEntity<String>(null, headers);
+
     ResponseEntity<Workout> response = testRestTemplate.exchange("/api/workouts/2",
-        HttpMethod.DELETE, null, Workout.class);
+        HttpMethod.DELETE, entity, Workout.class);
 
     assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
 
