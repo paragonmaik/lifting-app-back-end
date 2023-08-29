@@ -32,6 +32,8 @@ import com.hoister.tonshoister.DTOs.ProgramDTO;
 import com.hoister.tonshoister.advisors.ProgramNotFoundException;
 import com.hoister.tonshoister.controllers.ProgramController;
 import com.hoister.tonshoister.models.Program;
+import com.hoister.tonshoister.repositories.UserRepository;
+import com.hoister.tonshoister.security.TokenService;
 import com.hoister.tonshoister.services.ProgramService;
 
 @AutoConfigureMockMvc(addFilters = false)
@@ -41,6 +43,10 @@ public class ProgramControllerTests {
   @Autowired
   ObjectMapper objectMapper;
 
+  @MockBean
+  TokenService tokenService;
+  @MockBean
+  UserRepository userRepository;
   @MockBean
   ProgramService programService;
   @MockBean
