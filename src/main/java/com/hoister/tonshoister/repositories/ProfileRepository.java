@@ -4,5 +4,5 @@ import org.springframework.data.repository.ListCrudRepository;
 
 import com.hoister.tonshoister.models.Profile;
 
-public interface ProfileRepository extends ListCrudRepository<Profile, Integer> {
+public interface ProfileRepository extends ListCrudRepository<Profile, String> {
 }
