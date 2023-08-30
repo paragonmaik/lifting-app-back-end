@@ -16,6 +16,8 @@ import com.hoister.tonshoister.security.TokenService;
 public class AuthenticationService {
 
   @Autowired
+  ProfileService profileService;
+  @Autowired
   private UserService userService;
   @Autowired
   private AuthenticationManager authenticationManager;
@@ -28,9 +30,12 @@ public class AuthenticationService {
     }
 
     String encryptedPassword = new BCryptPasswordEncoder().encode(user.getPassword());
-    User newUser = new User(user.getLogin(), encryptedPassword, user.getRole());
 
-    userService.saveUser(newUser);
+    user.setPassword(encryptedPassword);
+    user.setProfile(null);
+
+    userService.saveUser(user);
+    profileService.createProfile(user);
   }
 
   public String loginUser(AuthenticationDTO data) {
