@@ -95,7 +95,9 @@ public class DTOsMapper {
   // Profile
   public Profile convertToEntity(ProfileDTO profileDTO) {
     return new Profile(
+        profileDTO.id(),
         profileDTO.weight(),
-        profileDTO.height());
+        profileDTO.height(),
+        profileDTO.user());
   }
 }

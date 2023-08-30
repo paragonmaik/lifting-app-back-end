@@ -146,6 +146,7 @@ public class DTOsMapperServiceTests {
         "uuid", 75, 175, null);
     Profile profile = DTOsMapper.convertToEntity(profileDTO);
 
+    assertEquals(profile.getId(), profileDTO.id());
     assertEquals(profile.getWeight(), profileDTO.weight());
     assertEquals(profile.getHeight(), profileDTO.height());
   }
