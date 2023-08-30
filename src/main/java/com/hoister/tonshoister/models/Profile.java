@@ -26,6 +26,11 @@ public class Profile {
   public Profile() {
   }
 
+  public Profile(Integer weight, Integer height) {
+    this.weight = weight;
+    this.height = height;
+  }
+
   public Profile(String id, Integer weight, Integer height, User user) {
     this.id = id;
     this.weight = weight;
