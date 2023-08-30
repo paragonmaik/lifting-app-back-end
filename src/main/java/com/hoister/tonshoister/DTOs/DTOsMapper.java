@@ -6,6 +6,7 @@ import java.util.Set;
 import org.springframework.stereotype.Service;
 
 import com.hoister.tonshoister.models.Exercise;
+import com.hoister.tonshoister.models.Profile;
 import com.hoister.tonshoister.models.Program;
 import com.hoister.tonshoister.models.User;
 import com.hoister.tonshoister.models.Workout;
@@ -89,5 +90,12 @@ public class DTOsMapper {
         registerDTO.login(),
         registerDTO.password(),
         registerDTO.role());
+  }
+
+  // Profile
+  public Profile convertToEntity(ProfileDTO profileDTO) {
+    return new Profile(
+        profileDTO.weight(),
+        profileDTO.height());
   }
 }

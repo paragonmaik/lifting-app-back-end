@@ -12,11 +12,16 @@ import org.junit.jupiter.api.Test;
 
 import com.hoister.tonshoister.DTOs.DTOsMapper;
 import com.hoister.tonshoister.DTOs.ExerciseDTO;
+import com.hoister.tonshoister.DTOs.ProfileDTO;
 import com.hoister.tonshoister.DTOs.ProgramDTO;
+import com.hoister.tonshoister.DTOs.RegisterDTO;
 import com.hoister.tonshoister.DTOs.WorkoutDTO;
 import com.hoister.tonshoister.models.Exercise;
 import com.hoister.tonshoister.models.GoalType;
+import com.hoister.tonshoister.models.Profile;
 import com.hoister.tonshoister.models.Program;
+import com.hoister.tonshoister.models.User;
+import com.hoister.tonshoister.models.UserRole;
 import com.hoister.tonshoister.models.Workout;
 
 public class DTOsMapperServiceTests {
@@ -122,6 +127,26 @@ public class DTOsMapperServiceTests {
     assertEquals(exercise.getInstructions(), exerciseDTO.instructions());
 
     assertInstanceOf(Exercise.class, exercise);
+  }
 
+  @Test
+  public void convertDTOToUser() {
+    RegisterDTO registerDTO = new RegisterDTO(
+        "arnold", "gettothechoppah", UserRole.ADMIN);
+    User user = DTOsMapper.convertToEntity(registerDTO);
+
+    assertEquals(user.getLogin(), registerDTO.login());
+    assertEquals(user.getPassword(), registerDTO.password());
+    assertEquals(user.getRole(), registerDTO.role());
+  }
+
+  @Test
+  public void convertDTOToProfile() {
+    ProfileDTO profileDTO = new ProfileDTO(
+        "uuid", 75, 175, null);
+    Profile profile = DTOsMapper.convertToEntity(profileDTO);
+
+    assertEquals(profile.getWeight(), profileDTO.weight());
+    assertEquals(profile.getHeight(), profileDTO.height());
   }
 }
