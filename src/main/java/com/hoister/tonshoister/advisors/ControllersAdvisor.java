@@ -44,4 +44,13 @@ public class ControllersAdvisor {
     return ResponseEntity
         .status(HttpStatus.CONFLICT).body(errorDetails);
   }
+
+  @ExceptionHandler(ProfileNotFoundException.class)
+  public ResponseEntity<ErrorDetails> exceptionProfileNotFoundHandler() {
+    ErrorDetails errorDetails = new ErrorDetails();
+    errorDetails.setMessage("Profile not found!");
+
+    return ResponseEntity
+        .status(HttpStatus.NOT_FOUND).body(errorDetails);
+  }
 }
