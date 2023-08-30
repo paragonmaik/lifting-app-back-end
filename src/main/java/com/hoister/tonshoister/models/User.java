@@ -7,21 +7,31 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
+
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
+  @Column(name = "id")
   private String id;
   private String login;
   private String password;
   private UserRole role;
+
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+  @PrimaryKeyJoinColumn
+  private Profile profile;
 
   public User() {
   }
@@ -32,11 +42,13 @@ public class User implements UserDetails {
     this.role = role;
   }
 
-  public User(String id, String login, String password, UserRole role) {
+  public User(String id, String login, String password,
+      UserRole role, Profile profile) {
     this.id = id;
     this.login = login;
     this.password = password;
     this.role = role;
+    this.profile = profile;
   }
 
   @Override
@@ -45,6 +57,14 @@ public class User implements UserDetails {
       return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
     else
       return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+  }
+
+  public Profile getProfile() {
+    return this.profile;
+  }
+
+  public void setProfile(Profile profile) {
+    this.profile = profile;
   }
 
   public String getId() {
