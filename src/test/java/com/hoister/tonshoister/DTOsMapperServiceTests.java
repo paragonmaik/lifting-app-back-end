@@ -52,7 +52,7 @@ public class DTOsMapperServiceTests {
 
   @Test
   public void convertDTOToProgram() {
-    ProgramDTO programDTO = new ProgramDTO(null, "Squat Everyday", 10,
+    ProgramDTO programDTO = new ProgramDTO(null, null, "Squat Everyday", 10,
         "A tough program.", null, null);
 
     Program program = DTOsMapper.convertToEntity(programDTO);

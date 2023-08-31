@@ -23,6 +23,7 @@ public class DTOsMapper {
 
     return new ProgramDTO(
         program.getId(),
+        program.getUserId(),
         program.getName(),
         program.getDurationWeeks(),
         program.getDescription(),
