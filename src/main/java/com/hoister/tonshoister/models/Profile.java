@@ -38,7 +38,11 @@ public class Profile {
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
   @JoinColumn(name = "user_id")
-  private Set<Workout> workout = new HashSet<>();
+  private Set<Workout> workouts = new HashSet<>();
+
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+  @JoinColumn(name = "user_id")
+  private Set<Exercise> exercises = new HashSet<>();
 
   public Profile(Integer weight, Integer height) {
     this.weight = weight;
