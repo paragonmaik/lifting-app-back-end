@@ -34,6 +34,7 @@ public class DTOsMapper {
   public Program convertToEntity(ProgramDTO programDTO) {
     return new Program(
         programDTO.id(),
+        programDTO.userId(),
         programDTO.name(),
         programDTO.durationWeeks(),
         programDTO.description());
