@@ -38,7 +38,7 @@ public class WorkoutServiceTests {
   @Test
   public void createWorkoutSuccess() {
     Workout workout = new Workout("Workout A", 10, "A really tough workout.");
-    Program program = new Program(1, "5x5", 52, null);
+    Program program = new Program(1, null, "5x5", 52, null);
 
     when(programRepository.findById(1)).thenReturn(Optional.of(program));
     when(workoutRepository.save(workout)).thenReturn(workout);
