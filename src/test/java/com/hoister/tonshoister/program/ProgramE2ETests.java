@@ -79,7 +79,7 @@ public class ProgramE2ETests {
         objectMapper.writeValueAsString(program), headers);
 
     ResponseEntity<Program> response = testRestTemplate.exchange(
-        "/api/programs/create/" + userId, HttpMethod.POST, entity, Program.class);
+        "/api/programs/" + userId, HttpMethod.POST, entity, Program.class);
 
     Program responseProgram = response.getBody();
 

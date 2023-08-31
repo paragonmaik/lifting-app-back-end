@@ -68,7 +68,7 @@ public class ProgramControllerTests {
 
     mockMvc
         .perform(
-            post("/api/programs/create/nonexistantuuid").contentType(MediaType.APPLICATION_JSON)
+            post("/api/programs/nonexistantuuid").contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(program)))
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.is(programDTO.id())))

@@ -31,7 +31,7 @@ public class ProgramController {
   @Autowired
   private DTOsMapper DTOsMapper;
 
-  @PostMapping("/create/{userId}")
+  @PostMapping("/{userId}")
   public ResponseEntity<ProgramDTO> createProgram(@Valid @RequestBody ProgramDTO programDTO,
       @PathVariable String userId) {
     var tempProgram = DTOsMapper.convertToEntity(programDTO);
