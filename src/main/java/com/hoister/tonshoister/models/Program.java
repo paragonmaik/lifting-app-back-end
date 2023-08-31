@@ -27,6 +27,8 @@ public class Program {
   @SequenceGenerator(name = "program_sequence", sequenceName = "program_sequence", allocationSize = 1)
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "program_sequence")
   Integer id;
+  @Column(name = "user_id")
+  String userId;
   @NotBlank
   String name;
   @Column(name = "duration_weeks")
@@ -67,6 +69,18 @@ public class Program {
     this.description = description;
     this.dateCreated = dateCreated;
     this.workouts = workouts;
+  }
+
+  public void setId(Integer id) {
+    this.id = id;
+  }
+
+  public String getUserId() {
+    return this.userId;
+  }
+
+  public void setUserId(String userId) {
+    this.userId = userId;
   }
 
   public Set<Workout> getWorkouts() {
