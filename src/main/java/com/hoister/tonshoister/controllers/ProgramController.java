@@ -31,10 +31,14 @@ public class ProgramController {
   @Autowired
   private DTOsMapper DTOsMapper;
 
-  @PostMapping("")
-  public ResponseEntity<ProgramDTO> createProgram(@Valid @RequestBody ProgramDTO programDTO) {
+  @PostMapping("/create/{userId}")
+  public ResponseEntity<ProgramDTO> createProgram(@Valid @RequestBody ProgramDTO programDTO,
+      @PathVariable String userId) {
+    var tempProgram = DTOsMapper.convertToEntity(programDTO);
+    tempProgram.setUserId(userId);
+
     Program createdProgram = programService
-        .createProgram(DTOsMapper.convertToEntity(programDTO));
+        .createProgram(tempProgram);
 
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(DTOsMapper.convertToDto(createdProgram));

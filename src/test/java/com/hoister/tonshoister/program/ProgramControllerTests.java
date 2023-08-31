@@ -57,7 +57,9 @@ public class ProgramControllerTests {
   @Test
   public void createProgramSuccess() throws Exception {
     Program program = new Program(1, "Starting Strength", 40, "Rookie Program.", null, null);
-    ProgramDTO programDTO = new ProgramDTO(program.getId(), program.getName(), program.getDurationWeeks(),
+    ProgramDTO programDTO = new ProgramDTO(program.getId(),
+        program.getUserId(), program.getName(),
+        program.getDurationWeeks(),
         program.getDescription(), program.getDateCreated(), null);
 
     when(DTOsMapper.convertToEntity(any(ProgramDTO.class))).thenReturn(program);
@@ -66,7 +68,7 @@ public class ProgramControllerTests {
 
     mockMvc
         .perform(
-            post("/api/programs").contentType(MediaType.APPLICATION_JSON)
+            post("/api/programs/create/nonexistantuuid").contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(program)))
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.is(programDTO.id())))
@@ -82,7 +84,8 @@ public class ProgramControllerTests {
   @Test
   public void getProgramsSuccess() throws Exception {
     Program program = new Program(1, "GVT", 12, "German Volume training", null, null);
-    ProgramDTO programDTO = new ProgramDTO(program.getId(), program.getName(), program.getDurationWeeks(),
+    ProgramDTO programDTO = new ProgramDTO(program.getId(), program.getUserId(), program.getName(),
+        program.getDurationWeeks(),
         program.getDescription(), program.getDateCreated(), null);
 
     List<Program> programs = new ArrayList<Program>();
@@ -119,7 +122,9 @@ public class ProgramControllerTests {
   @Test
   public void getProgramByIdSuccess() throws Exception {
     Program program = new Program(1, "GVT", 12, "German Volume training", null, null);
-    ProgramDTO programDTO = new ProgramDTO(program.getId(), program.getName(), program.getDurationWeeks(),
+    ProgramDTO programDTO = new ProgramDTO(program.getId(), program.getUserId(),
+        program.getName(),
+        program.getDurationWeeks(),
         program.getDescription(), program.getDateCreated(), null);
 
     when(programService.findById(1)).thenReturn(program);
@@ -150,7 +155,7 @@ public class ProgramControllerTests {
 
   @Test
   public void updateProgramSuccess() throws Exception {
-    Program program = new Program(1, "5x5", 12, "Rookie Program.");
+    Program program = new Program(1, null, "5x5", 12, "Rookie Program.");
 
     when(DTOsMapper.convertToEntity(any(ProgramDTO.class))).thenReturn(program);
     when(programService.updateProgram(any(Program.class))).thenReturn(program);
@@ -167,7 +172,7 @@ public class ProgramControllerTests {
 
   @Test
   public void updateProgramThrowsException() throws Exception {
-    Program program = new Program(1, "5x5", 12, "Rookie Program.");
+    Program program = new Program(1, null, "5x5", 12, "Rookie Program.");
 
     when(DTOsMapper.convertToEntity(any(ProgramDTO.class))).thenReturn(program);
     when(programService.updateProgram(any(Program.class))).thenThrow(new ProgramNotFoundException());

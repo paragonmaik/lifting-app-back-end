@@ -21,7 +21,7 @@ import com.hoister.tonshoister.models.Program;
 import com.hoister.tonshoister.models.User;
 import com.hoister.tonshoister.models.UserRole;
 import com.hoister.tonshoister.repositories.ProgramRepository;
-
+import com.hoister.tonshoister.repositories.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -34,7 +34,10 @@ import java.util.List;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class ProgramE2ETests {
   private String token;
+  private String userId;
 
+  @Autowired
+  UserRepository userRepository;
   @Autowired
   ObjectMapper objectMapper;
   @Autowired
@@ -47,6 +50,7 @@ public class ProgramE2ETests {
     User user = new User("arnold", "gettothechoppa", UserRole.USER);
     testRestTemplate.postForEntity("/api/auth/register", user,
         Void.class);
+    User foundUser = (User) userRepository.findByLogin(user.getLogin());
 
     AuthenticationDTO auth = new AuthenticationDTO(user.getLogin(), user.getPassword());
 
@@ -55,6 +59,7 @@ public class ProgramE2ETests {
         LoginResponseDTO.class);
 
     token = "Bearer " + loginResponse.getBody().token();
+    userId = foundUser.getId();
   }
 
   @BeforeEach
@@ -74,7 +79,7 @@ public class ProgramE2ETests {
         objectMapper.writeValueAsString(program), headers);
 
     ResponseEntity<Program> response = testRestTemplate.exchange(
-        "/api/programs", HttpMethod.POST, entity, Program.class);
+        "/api/programs/create/" + userId, HttpMethod.POST, entity, Program.class);
 
     Program responseProgram = response.getBody();
 
