@@ -54,8 +54,9 @@ public class Program {
     this.description = description;
   }
 
-  public Program(Integer id, String name, Integer durationWeeks, String description) {
+  public Program(Integer id, String userId, String name, Integer durationWeeks, String description) {
     this.id = id;
+    this.userId = userId;
     this.name = name;
     this.durationWeeks = durationWeeks;
     this.description = description;
