@@ -1,10 +1,16 @@
 package com.hoister.tonshoister.models;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -25,6 +31,10 @@ public class Profile {
 
   public Profile() {
   }
+
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+  @JoinColumn(name = "user_id")
+  private Set<Program> programs = new HashSet<>();
 
   public Profile(Integer weight, Integer height) {
     this.weight = weight;
