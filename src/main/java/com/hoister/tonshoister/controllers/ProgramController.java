@@ -44,13 +44,13 @@ public class ProgramController {
         .body(DTOsMapper.convertToDto(createdProgram));
   }
 
-  @GetMapping
-  public List<ProgramDTO> getPrograms() {
-    return programService.findAll()
+  @GetMapping("/{userId}")
+  public List<ProgramDTO> getPrograms(@PathVariable String userId) {
+    return programService.findAllByUserId(userId)
         .stream().map(program -> DTOsMapper.convertToDto(program)).toList();
   }
 
-  @GetMapping("/{id}")
+  @GetMapping("/temp/{id}")
   public ProgramDTO getProgramById(@PathVariable Integer id) {
     return DTOsMapper.convertToDto(programService.findById(id));
   }

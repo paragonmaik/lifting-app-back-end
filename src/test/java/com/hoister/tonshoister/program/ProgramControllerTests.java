@@ -83,6 +83,7 @@ public class ProgramControllerTests {
 
   @Test
   public void getProgramsSuccess() throws Exception {
+    String userId = "uuid";
     Program program = new Program(1, "GVT", 12, "German Volume training", null, null);
     ProgramDTO programDTO = new ProgramDTO(program.getId(), program.getUserId(), program.getName(),
         program.getDurationWeeks(),
@@ -93,10 +94,10 @@ public class ProgramControllerTests {
     programs.add(program);
     programsDTO.add(programDTO);
 
-    when(programService.findAll()).thenReturn(programs);
+    when(programService.findAllByUserId(userId)).thenReturn(programs);
     when(DTOsMapper.convertToDto(any(Program.class))).thenReturn(programDTO);
 
-    mockMvc.perform(get("/api/programs"))
+    mockMvc.perform(get("/api/programs/" + userId))
         .andExpect(status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$..id").value(programsDTO.get(0).id()))
         .andExpect(MockMvcResultMatchers.jsonPath("$..name").value(programsDTO.get(0).name()))
@@ -104,19 +105,20 @@ public class ProgramControllerTests {
         .andExpect(MockMvcResultMatchers.jsonPath("$..description").value(programsDTO.get(0).description()))
         .andExpect(MockMvcResultMatchers.jsonPath("$..workouts").exists());
 
-    verify(programService).findAll();
+    verify(programService).findAllByUserId(userId);
     when(DTOsMapper.convertToDto(any(Program.class))).thenReturn(programDTO);
   }
 
   @Test
   public void getProgramsThrowsException() throws Exception {
-    when(programService.findAll()).thenThrow(new ProgramNotFoundException());
+    String userId = "uuid";
+    when(programService.findAllByUserId(userId)).thenThrow(new ProgramNotFoundException());
 
-     mockMvc.perform(get("/api/programs"))
+    mockMvc.perform(get("/api/programs/" + userId))
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$..message").exists());
 
-        verify(programService).findAll();    
+    verify(programService).findAllByUserId(userId);
   }
 
   @Test
@@ -130,7 +132,7 @@ public class ProgramControllerTests {
     when(programService.findById(1)).thenReturn(program);
     when(DTOsMapper.convertToDto(any(Program.class))).thenReturn(programDTO);
 
-    mockMvc.perform(get("/api/programs/1"))
+    mockMvc.perform(get("/api/programs/temp/1"))
         .andExpect(status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.is(programDTO.id())))
         .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(program.getName()))
@@ -146,7 +148,7 @@ public class ProgramControllerTests {
   public void getProgramByIdThrowsException() throws Exception {
     when(programService.findById(1)).thenThrow(new ProgramNotFoundException());
 
-     mockMvc.perform(get("/api/programs/1"))
+     mockMvc.perform(get("/api/programs/temp/1"))
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$..message").exists());
 
