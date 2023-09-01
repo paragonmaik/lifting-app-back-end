@@ -45,28 +45,30 @@ public class ProgramServiceTests {
   @Test
   public void findAllProgramsSuccess() throws ProgramNotFoundException {
     Program program = new Program("GVT", 12, "German Volume training");
+    String userId = "uuid";
     List<Program> programs = new ArrayList<Program>();
     programs.add(program);
 
-    when(programRepository.findAll()).thenReturn(programs);
+    when(programRepository.findAllByUserId(userId)).thenReturn(programs);
 
-    List<Program> requestedPrograms = programService.findAll();
+    List<Program> requestedPrograms = programService.findAllByUserId(userId);
 
     assertEquals(programs, requestedPrograms);
-    verify(programRepository).findAll();
+    verify(programRepository).findAllByUserId(userId);
   }
 
   @Test
   public void findAllProgramsThrowsException() {
     List<Program> programs = new ArrayList<Program>();
+    String userId = "uuid";
 
-    when(programRepository.findAll()).thenReturn(programs);
+    when(programRepository.findAllByUserId(userId)).thenReturn(programs);
 
     assertThrows(ProgramNotFoundException.class, () -> {
-      programService.findAll();
+      programService.findAllByUserId(userId);
     });
 
-    verify(programRepository).findAll();
+    verify(programRepository).findAllByUserId(userId);
   }
 
   @Test
