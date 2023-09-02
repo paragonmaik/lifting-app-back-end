@@ -1,12 +1,17 @@
 package com.hoister.tonshoister.advisors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.hoister.tonshoister.services.PrincipalService;
+
 @RestControllerAdvice
 public class ControllersAdvisor {
+  @Autowired
+  PrincipalService principalService;
 
   @ExceptionHandler(ProgramNotFoundException.class)
   public ResponseEntity<ErrorDetails> exceptionProgramNotFoundHandler() {
@@ -54,12 +59,12 @@ public class ControllersAdvisor {
         .status(HttpStatus.NOT_FOUND).body(errorDetails);
   }
 
-  @ExceptionHandler(UnauthorizedUserException.class)
+  @ExceptionHandler(UserIdDoNotMatchException.class)
   public ResponseEntity<ErrorDetails> exceptionUnauthorizedUserHandler() {
     ErrorDetails errorDetails = new ErrorDetails();
     errorDetails.setMessage("User not allowed to access this resource.");
 
     return ResponseEntity
-        .status(HttpStatus.UNAUTHORIZED).body(errorDetails);
+        .status(HttpStatus.FORBIDDEN).body(errorDetails);
   }
 }
