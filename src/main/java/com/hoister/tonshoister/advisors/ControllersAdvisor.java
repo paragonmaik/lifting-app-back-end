@@ -38,7 +38,7 @@ public class ControllersAdvisor {
   @ExceptionHandler(UserAlreadyRegisteredException.class)
   public ResponseEntity<ErrorDetails> exceptionUserAlreadyRegisteredHandler() {
     ErrorDetails errorDetails = new ErrorDetails();
-    errorDetails.setMessage("User already registered");
+    errorDetails.setMessage("User already registered!");
     // TODO: replace later with ambiguous message and status code
 
     return ResponseEntity
@@ -52,5 +52,14 @@ public class ControllersAdvisor {
 
     return ResponseEntity
         .status(HttpStatus.NOT_FOUND).body(errorDetails);
+  }
+
+  @ExceptionHandler(UnauthorizedUserException.class)
+  public ResponseEntity<ErrorDetails> exceptionUnauthorizedUserHandler() {
+    ErrorDetails errorDetails = new ErrorDetails();
+    errorDetails.setMessage("User not allowed to access this resource.");
+
+    return ResponseEntity
+        .status(HttpStatus.UNAUTHORIZED).body(errorDetails);
   }
 }
