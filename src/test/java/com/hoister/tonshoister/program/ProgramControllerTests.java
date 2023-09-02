@@ -34,6 +34,7 @@ import com.hoister.tonshoister.controllers.ProgramController;
 import com.hoister.tonshoister.models.Program;
 import com.hoister.tonshoister.repositories.UserRepository;
 import com.hoister.tonshoister.security.TokenService;
+import com.hoister.tonshoister.services.PrincipalService;
 import com.hoister.tonshoister.services.ProgramService;
 
 @AutoConfigureMockMvc(addFilters = false)
@@ -43,6 +44,8 @@ public class ProgramControllerTests {
   @Autowired
   ObjectMapper objectMapper;
 
+  @MockBean
+  PrincipalService principalService;
   @MockBean
   TokenService tokenService;
   @MockBean
@@ -68,7 +71,7 @@ public class ProgramControllerTests {
 
     mockMvc
         .perform(
-            post("/api/programs/nonexistantuuid").contentType(MediaType.APPLICATION_JSON)
+            post("/api/programs").contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(program)))
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.is(programDTO.id())))
