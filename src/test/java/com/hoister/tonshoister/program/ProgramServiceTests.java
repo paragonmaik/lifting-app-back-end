@@ -54,9 +54,10 @@ public class ProgramServiceTests {
     List<Program> programs = new ArrayList<Program>();
     programs.add(program);
 
+    when(principalService.getAuthUserId()).thenReturn(userId);
     when(programRepository.findAllByUserId(userId)).thenReturn(programs);
 
-    List<Program> requestedPrograms = programService.findAllByUserId(userId);
+    List<Program> requestedPrograms = programService.findAllByUserId();
 
     assertEquals(programs, requestedPrograms);
     verify(programRepository).findAllByUserId(userId);
@@ -67,10 +68,11 @@ public class ProgramServiceTests {
     List<Program> programs = new ArrayList<Program>();
     String userId = "uuid";
 
+    when(principalService.getAuthUserId()).thenReturn(userId);
     when(programRepository.findAllByUserId(userId)).thenReturn(programs);
 
     assertThrows(ProgramNotFoundException.class, () -> {
-      programService.findAllByUserId(userId);
+      programService.findAllByUserId();
     });
 
     verify(programRepository).findAllByUserId(userId);

@@ -22,8 +22,9 @@ public class ProgramService {
     return programRepository.save(program);
   }
 
-  public List<Program> findAllByUserId(String userId) throws ProgramNotFoundException {
-    List<Program> programsList = programRepository.findAllByUserId(userId);
+  public List<Program> findAllByUserId() throws ProgramNotFoundException {
+    List<Program> programsList = programRepository
+        .findAllByUserId(principalService.getAuthUserId());
 
     if (programsList.isEmpty()) {
       throw new ProgramNotFoundException();
