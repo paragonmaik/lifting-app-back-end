@@ -9,7 +9,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.hoister.tonshoister.models.User;
 import com.hoister.tonshoister.repositories.UserRepository;
+import com.hoister.tonshoister.services.PrincipalService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -19,6 +21,8 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
 
+  @Autowired
+  PrincipalService principalService;
   @Autowired
   TokenService tokenService;
   @Autowired
@@ -36,6 +40,7 @@ public class SecurityFilter extends OncePerRequestFilter {
       UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, null,
           user.getAuthorities());
 
+      principalService.setAuthUser((User) user);
       SecurityContextHolder.getContext().setAuthentication(auth);
     }
     filterChain.doFilter(request, response);
