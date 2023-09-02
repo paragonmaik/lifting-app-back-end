@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hoister.tonshoister.advisors.ProgramNotFoundException;
-import com.hoister.tonshoister.advisors.UnauthorizedUserException;
+import com.hoister.tonshoister.advisors.UserIdDoNotMatchException;
 import com.hoister.tonshoister.models.Program;
 import com.hoister.tonshoister.repositories.ProgramRepository;
 
@@ -42,8 +42,8 @@ public class ProgramService {
     Program foundProgram = programRepository.findById(program.getId())
         .orElseThrow(() -> new ProgramNotFoundException());
 
-    if (foundProgram.getUserId() != principalService.getAuthUserId()) {
-      throw new UnauthorizedUserException();
+    if (!foundProgram.getUserId().equals(principalService.getAuthUserId())) {
+      throw new UserIdDoNotMatchException();
     }
 
     foundProgram.setName(program.getName());

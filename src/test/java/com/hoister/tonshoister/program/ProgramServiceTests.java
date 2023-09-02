@@ -17,7 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.hoister.tonshoister.advisors.ProgramNotFoundException;
-import com.hoister.tonshoister.advisors.UnauthorizedUserException;
+import com.hoister.tonshoister.advisors.UserIdDoNotMatchException;
 import com.hoister.tonshoister.models.Program;
 import com.hoister.tonshoister.repositories.ProgramRepository;
 import com.hoister.tonshoister.services.PrincipalService;
@@ -107,10 +107,12 @@ public class ProgramServiceTests {
 
   @Test
   public void updateProgramSuccess() throws Exception {
+    String userId = "uuid";
     Program program1 = new Program(
-        1, "Starting Strength", 40, "Rookie Program.", null, null);
-    Program program2 = new Program(1, "5x5", 10, "five sets of five.", null, null);
+        1, userId, "Starting Strength", 40, "Rookie Program.");
+    Program program2 = new Program(1, userId, "5x5", 10, "five sets of five.");
 
+    when(principalService.getAuthUserId()).thenReturn(userId);
     when(programRepository.findById(1)).thenReturn(Optional.of(program1));
     when(programRepository.save(program1)).thenReturn(program2);
 
@@ -141,7 +143,7 @@ public class ProgramServiceTests {
     Program program = new Program(1, "uuid", "5x5", 1, "five sets of five.");
     when(programRepository.findById(1)).thenReturn(Optional.of(program));
 
-    assertThrows(UnauthorizedUserException.class, () -> {
+    assertThrows(UserIdDoNotMatchException.class, () -> {
       programService.updateProgram(program);
     });
 
