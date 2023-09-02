@@ -108,7 +108,7 @@ public class ProgramE2ETests {
     HttpEntity<String> entity = new HttpEntity<String>(null, headers);
 
     ResponseEntity<List<Program>> response = testRestTemplate
-        .exchange("/api/programs/" + userId, HttpMethod.GET, entity,
+        .exchange("/api/programs", HttpMethod.GET, entity,
             new ParameterizedTypeReference<List<Program>>() {
             });
     Program responseProgram = response.getBody().get(0);
@@ -131,7 +131,7 @@ public class ProgramE2ETests {
     HttpEntity<String> entity = new HttpEntity<String>(null, headers);
 
     ResponseEntity<Program> response = testRestTemplate
-        .exchange("/api/programs/" + userId, HttpMethod.GET, entity,
+        .exchange("/api/programs", HttpMethod.GET, entity,
             Program.class);
 
     assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
