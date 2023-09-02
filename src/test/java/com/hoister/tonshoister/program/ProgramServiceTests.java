@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.hoister.tonshoister.advisors.ProgramNotFoundException;
+import com.hoister.tonshoister.advisors.UnauthorizedUserException;
 import com.hoister.tonshoister.models.Program;
 import com.hoister.tonshoister.repositories.ProgramRepository;
 import com.hoister.tonshoister.services.PrincipalService;
@@ -129,6 +130,18 @@ public class ProgramServiceTests {
     when(programRepository.findById(1)).thenReturn(Optional.empty());
 
     assertThrows(ProgramNotFoundException.class, () -> {
+      programService.updateProgram(program);
+    });
+
+    verify(programRepository).findById(1);
+  }
+
+  @Test
+  public void updateProgramThrowsUnauthorizedException() {
+    Program program = new Program(1, "uuid", "5x5", 1, "five sets of five.");
+    when(programRepository.findById(1)).thenReturn(Optional.of(program));
+
+    assertThrows(UnauthorizedUserException.class, () -> {
       programService.updateProgram(program);
     });
 

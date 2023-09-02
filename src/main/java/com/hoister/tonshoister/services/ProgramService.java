@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hoister.tonshoister.advisors.ProgramNotFoundException;
+import com.hoister.tonshoister.advisors.UnauthorizedUserException;
 import com.hoister.tonshoister.models.Program;
 import com.hoister.tonshoister.repositories.ProgramRepository;
 
@@ -40,6 +41,10 @@ public class ProgramService {
   public Program updateProgram(Program program) throws ProgramNotFoundException {
     Program foundProgram = programRepository.findById(program.getId())
         .orElseThrow(() -> new ProgramNotFoundException());
+
+    if (foundProgram.getUserId() != principalService.getAuthUserId()) {
+      throw new UnauthorizedUserException();
+    }
 
     foundProgram.setName(program.getName());
     foundProgram.setDescription(program.getDescription());
