@@ -22,6 +22,7 @@ import com.hoister.tonshoister.models.User;
 import com.hoister.tonshoister.models.UserRole;
 import com.hoister.tonshoister.repositories.ProgramRepository;
 import com.hoister.tonshoister.repositories.UserRepository;
+import com.hoister.tonshoister.services.PrincipalService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -36,6 +37,8 @@ public class ProgramE2ETests {
   private String token;
   private String userId;
 
+  @Autowired
+  PrincipalService principalService;
   @Autowired
   UserRepository userRepository;
   @Autowired
@@ -79,7 +82,7 @@ public class ProgramE2ETests {
         objectMapper.writeValueAsString(program), headers);
 
     ResponseEntity<Program> response = testRestTemplate.exchange(
-        "/api/programs/" + userId, HttpMethod.POST, entity, Program.class);
+        "/api/programs", HttpMethod.POST, entity, Program.class);
 
     Program responseProgram = response.getBody();
 
