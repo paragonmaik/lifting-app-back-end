@@ -96,6 +96,7 @@ public class ProgramE2ETests {
   @Test
   public void getAllProgramsSuccess() throws Exception {
     Program program = new Program("GVT", 12, "German Volume training");
+    program.setUserId(userId);
     programRepository.save(program);
 
     HttpHeaders headers = new HttpHeaders();
@@ -104,7 +105,7 @@ public class ProgramE2ETests {
     HttpEntity<String> entity = new HttpEntity<String>(null, headers);
 
     ResponseEntity<List<Program>> response = testRestTemplate
-        .exchange("/api/programs", HttpMethod.GET, entity,
+        .exchange("/api/programs/" + userId, HttpMethod.GET, entity,
             new ParameterizedTypeReference<List<Program>>() {
             });
     Program responseProgram = response.getBody().get(0);
@@ -127,7 +128,7 @@ public class ProgramE2ETests {
     HttpEntity<String> entity = new HttpEntity<String>(null, headers);
 
     ResponseEntity<Program> response = testRestTemplate
-        .exchange("/api/programs", HttpMethod.GET, entity,
+        .exchange("/api/programs/" + userId, HttpMethod.GET, entity,
             Program.class);
 
     assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
@@ -144,7 +145,7 @@ public class ProgramE2ETests {
     HttpEntity<String> entity = new HttpEntity<String>(null, headers);
 
     ResponseEntity<Program> response = testRestTemplate
-        .exchange("/api/programs/1", HttpMethod.GET, entity,
+        .exchange("/api/programs/temp/1", HttpMethod.GET, entity,
             Program.class);
 
     Program responseProgram = response.getBody();
@@ -167,7 +168,7 @@ public class ProgramE2ETests {
     HttpEntity<String> entity = new HttpEntity<String>(null, headers);
 
     ResponseEntity<Program> response = testRestTemplate
-        .exchange("/api/programs/1", HttpMethod.GET, entity,
+        .exchange("/api/programs/temp/1", HttpMethod.GET, entity,
             Program.class);
 
     assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
