@@ -86,7 +86,6 @@ public class ProgramControllerTests {
 
   @Test
   public void getProgramsSuccess() throws Exception {
-    String userId = "uuid";
     Program program = new Program(1, "GVT", 12, "German Volume training", null, null);
     ProgramDTO programDTO = new ProgramDTO(program.getId(), program.getUserId(), program.getName(),
         program.getDurationWeeks(),
@@ -97,10 +96,10 @@ public class ProgramControllerTests {
     programs.add(program);
     programsDTO.add(programDTO);
 
-    when(programService.findAllByUserId(userId)).thenReturn(programs);
+    when(programService.findAllByUserId()).thenReturn(programs);
     when(DTOsMapper.convertToDto(any(Program.class))).thenReturn(programDTO);
 
-    mockMvc.perform(get("/api/programs/" + userId))
+    mockMvc.perform(get("/api/programs"))
         .andExpect(status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$..id").value(programsDTO.get(0).id()))
         .andExpect(MockMvcResultMatchers.jsonPath("$..name").value(programsDTO.get(0).name()))
@@ -108,20 +107,19 @@ public class ProgramControllerTests {
         .andExpect(MockMvcResultMatchers.jsonPath("$..description").value(programsDTO.get(0).description()))
         .andExpect(MockMvcResultMatchers.jsonPath("$..workouts").exists());
 
-    verify(programService).findAllByUserId(userId);
+    verify(programService).findAllByUserId();
     when(DTOsMapper.convertToDto(any(Program.class))).thenReturn(programDTO);
   }
 
   @Test
   public void getProgramsThrowsException() throws Exception {
-    String userId = "uuid";
-    when(programService.findAllByUserId(userId)).thenThrow(new ProgramNotFoundException());
+    when(programService.findAllByUserId()).thenThrow(new ProgramNotFoundException());
 
-    mockMvc.perform(get("/api/programs/" + userId))
+    mockMvc.perform(get("/api/programs"))
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$..message").exists());
 
-    verify(programService).findAllByUserId(userId);
+    verify(programService).findAllByUserId();
   }
 
   @Test

@@ -40,9 +40,9 @@ public class ProgramController {
         .body(DTOsMapper.convertToDto(createdProgram));
   }
 
-  @GetMapping("/{userId}")
-  public List<ProgramDTO> getPrograms(@PathVariable String userId) {
-    return programService.findAllByUserId(userId)
+  @GetMapping
+  public List<ProgramDTO> getPrograms() {
+    return programService.findAllByUserId()
         .stream().map(program -> DTOsMapper.convertToDto(program)).toList();
   }
 
