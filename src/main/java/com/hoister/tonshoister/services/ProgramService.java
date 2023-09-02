@@ -13,9 +13,12 @@ import com.hoister.tonshoister.repositories.ProgramRepository;
 public class ProgramService {
 
   @Autowired
+  private PrincipalService principalService;
+  @Autowired
   private ProgramRepository programRepository;
 
   public Program createProgram(Program program) {
+    program.setUserId(principalService.getAuthUserId());
     return programRepository.save(program);
   }
 

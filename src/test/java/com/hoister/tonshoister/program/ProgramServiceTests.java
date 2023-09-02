@@ -19,11 +19,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.hoister.tonshoister.advisors.ProgramNotFoundException;
 import com.hoister.tonshoister.models.Program;
 import com.hoister.tonshoister.repositories.ProgramRepository;
+import com.hoister.tonshoister.services.PrincipalService;
 import com.hoister.tonshoister.services.ProgramService;
 
 @ExtendWith(MockitoExtension.class)
 public class ProgramServiceTests {
 
+  @Mock
+  PrincipalService principalService;
   @Mock
   ProgramRepository programRepository;
   @InjectMocks
@@ -32,7 +35,9 @@ public class ProgramServiceTests {
   @Test
   public void createProgramSuccess() {
     Program program = new Program("Starting Strength", 40, "Rookie Program.");
+    String userId = "uuid";
 
+    when(principalService.getAuthUserId()).thenReturn(userId);
     when(programRepository.save(program)).thenReturn(program);
 
     Program createdProgram = programService.createProgram(program);
