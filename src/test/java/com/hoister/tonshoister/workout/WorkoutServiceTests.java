@@ -23,11 +23,14 @@ import com.hoister.tonshoister.models.Program;
 import com.hoister.tonshoister.models.Workout;
 import com.hoister.tonshoister.repositories.ProgramRepository;
 import com.hoister.tonshoister.repositories.WorkoutRepository;
+import com.hoister.tonshoister.services.PrincipalService;
 import com.hoister.tonshoister.services.WorkoutService;
 
 @ExtendWith(MockitoExtension.class)
 public class WorkoutServiceTests {
 
+  @Mock
+  PrincipalService principalService;
   @Mock
   WorkoutRepository workoutRepository;
   @Mock
@@ -39,7 +42,9 @@ public class WorkoutServiceTests {
   public void createWorkoutSuccess() {
     Workout workout = new Workout("Workout A", 10, "A really tough workout.");
     Program program = new Program(1, null, "5x5", 52, null);
+    String userId = "uuid";
 
+    when(principalService.getAuthUserId()).thenReturn(userId);
     when(programRepository.findById(1)).thenReturn(Optional.of(program));
     when(workoutRepository.save(workout)).thenReturn(workout);
 
