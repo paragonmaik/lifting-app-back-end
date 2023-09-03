@@ -230,4 +230,16 @@ public class ProgramControllerTests {
 
     verify(programService).deleteProgram(1);
   }
+
+  @Test
+  public void deleteProgramThrowsUserIdsDoNotMatchException() throws Exception {
+    doThrow(new UserIdDoesNotMatchException()).when(programService).deleteProgram(1);
+
+    mockMvc
+        .perform(
+            delete("/api/programs/1"))
+        .andExpect(MockMvcResultMatchers.status().isForbidden());
+
+    verify(programService).deleteProgram(1);
+  }
 }
