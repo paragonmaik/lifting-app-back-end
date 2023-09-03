@@ -73,27 +73,30 @@ public class WorkoutServiceTests {
     Workout workout = new Workout("Workout A", 12, "A really boring one.");
     List<Workout> workouts = new ArrayList<Workout>();
     workouts.add(workout);
+    String userId = "uuid";
 
-    when(workoutRepository.findAll()).thenReturn(workouts);
+    when(principalService.getAuthUserId()).thenReturn(userId);
+    when(workoutRepository.findAllByUserId(userId)).thenReturn(workouts);
 
-    List<Workout> requestedWorkouts = workoutRepository.findAll();
+    List<Workout> requestedWorkouts = workoutService.findAllByUserId();
 
     assertEquals(workouts, requestedWorkouts);
-    verify(workoutRepository).findAll();
+    verify(workoutRepository).findAllByUserId(userId);
   }
 
   @Test
   public void findAllWorkoutsThrowsException() throws WorkoutNotFoundException {
     List<Workout> workouts = new ArrayList<Workout>();
+    String userId = "uuid";
 
-    when(workoutRepository.findAll()).thenReturn(workouts);
+    when(principalService.getAuthUserId()).thenReturn(userId);
+    when(workoutRepository.findAllByUserId(userId)).thenReturn(workouts);
 
     assertThrows(WorkoutNotFoundException.class, () -> {
-      workoutService.findAll();
+      workoutService.findAllByUserId();
     });
 
-    verify(workoutRepository).findAll();
-
+    verify(workoutRepository).findAllByUserId(userId);
   }
 
   @Test
