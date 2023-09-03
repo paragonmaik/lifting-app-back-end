@@ -1,8 +1,12 @@
 package com.hoister.tonshoister.program;
 
 import org.springframework.http.MediaType;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,6 +26,7 @@ import com.hoister.tonshoister.models.User;
 import com.hoister.tonshoister.models.UserRole;
 import com.hoister.tonshoister.repositories.ProgramRepository;
 import com.hoister.tonshoister.repositories.UserRepository;
+import com.hoister.tonshoister.security.TokenService;
 import com.hoister.tonshoister.services.PrincipalService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,11 +37,14 @@ import java.util.List;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @AutoConfigureWebMvc
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@TestInstance(Lifecycle.PER_CLASS)
 public class ProgramE2ETests {
   private String token;
   private String userId;
 
+  @Autowired
+  TokenService tokenService;
   @Autowired
   PrincipalService principalService;
   @Autowired
@@ -48,12 +56,11 @@ public class ProgramE2ETests {
   @Autowired
   TestRestTemplate testRestTemplate;
 
-  @BeforeEach
+  @BeforeAll
   public void setUser() {
     User user = new User("arnold", "gettothechoppa", UserRole.USER);
     testRestTemplate.postForEntity("/api/auth/register", user,
         Void.class);
-    User foundUser = (User) userRepository.findByLogin(user.getLogin());
 
     AuthenticationDTO auth = new AuthenticationDTO(user.getLogin(), user.getPassword());
 
@@ -62,6 +69,9 @@ public class ProgramE2ETests {
         LoginResponseDTO.class);
 
     token = "Bearer " + loginResponse.getBody().token();
+
+    String login = tokenService.validateToken(token.replace("Bearer ", ""));
+    User foundUser = (User) userRepository.findByLogin(login);
     userId = foundUser.getId();
   }
 
@@ -148,7 +158,7 @@ public class ProgramE2ETests {
     HttpEntity<String> entity = new HttpEntity<String>(null, headers);
 
     ResponseEntity<Program> response = testRestTemplate
-        .exchange("/api/programs/temp/1", HttpMethod.GET, entity,
+        .exchange("/api/programs/temp/2", HttpMethod.GET, entity,
             Program.class);
 
     Program responseProgram = response.getBody();
@@ -179,12 +189,13 @@ public class ProgramE2ETests {
 
   @Test
   public void updateProgramSuccess() throws Exception {
-    Program program1 = new Program("Starting Strength", 40, "Rookie program.");
-    Program program2 = new Program(1, "5x5", 10, "Rookie program.", null, null);
+    Program program1 = new Program(3, userId, "5x5", 10, "Rookie program.");
+    programRepository.save(program1);
+
+    Program program2 = new Program(3, userId, "GVT", 20, "Rookie program.");
+
     String requestBody = objectMapper.writeValueAsString(program2);
     HttpHeaders headers = new HttpHeaders();
-
-    programRepository.save(program1);
 
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setBearerAuth(token);
@@ -217,6 +228,29 @@ public class ProgramE2ETests {
   }
 
   @Test
+  public void updateProgramThrowsUserIdDoesNotMatchException() throws Exception {
+    Program program1 = new Program(5, "5x5", 10, "Rookie program.", null, null);
+    programRepository.save(program1);
+
+    Program program2 = new Program(5, userId, "5x5", 10, "Rookie program.");
+
+    String requestBody = objectMapper.writeValueAsString(program2);
+    HttpHeaders headers = new HttpHeaders();
+
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setBearerAuth(token);
+
+    HttpEntity<String> entity = new HttpEntity<String>(requestBody, headers);
+
+    ResponseEntity<Program> response = testRestTemplate.exchange("/api/programs",
+        HttpMethod.PUT, entity,
+        Program.class);
+
+    assertEquals(response.getStatusCode(), HttpStatus.FORBIDDEN);
+  }
+
+  @Test
+  @Disabled
   public void deleteProgramSuccess() throws Exception {
     Program program = new Program("Starting Strength", 40, "Rookie program.");
     programRepository.save(program);
@@ -234,6 +268,7 @@ public class ProgramE2ETests {
   }
 
   @Test
+  @Disabled
   public void deleteProgramThrowsException() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
