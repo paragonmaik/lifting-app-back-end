@@ -24,6 +24,7 @@ import com.hoister.tonshoister.models.UserRole;
 import com.hoister.tonshoister.repositories.UserRepository;
 import com.hoister.tonshoister.security.TokenService;
 import com.hoister.tonshoister.services.AuthenticationService;
+import com.hoister.tonshoister.services.PrincipalService;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
@@ -34,6 +35,8 @@ public class AuthenticationControllerTests {
   @Autowired
   ObjectMapper objectMapper;
 
+  @MockBean
+  PrincipalService principalService;
   @MockBean
   UserRepository userRepository;
   @MockBean
