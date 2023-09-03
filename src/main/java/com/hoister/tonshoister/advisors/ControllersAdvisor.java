@@ -59,7 +59,7 @@ public class ControllersAdvisor {
         .status(HttpStatus.NOT_FOUND).body(errorDetails);
   }
 
-  @ExceptionHandler(UserIdDoNotMatchException.class)
+  @ExceptionHandler(UserIdDoesNotMatchException.class)
   public ResponseEntity<ErrorDetails> exceptionUnauthorizedUserHandler() {
     ErrorDetails errorDetails = new ErrorDetails();
     errorDetails.setMessage("User not allowed to access this resource.");

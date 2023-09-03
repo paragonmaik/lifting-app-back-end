@@ -30,7 +30,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hoister.tonshoister.DTOs.DTOsMapper;
 import com.hoister.tonshoister.DTOs.ProgramDTO;
 import com.hoister.tonshoister.advisors.ProgramNotFoundException;
-import com.hoister.tonshoister.advisors.UserIdDoNotMatchException;
+import com.hoister.tonshoister.advisors.UserIdDoesNotMatchException;
 import com.hoister.tonshoister.controllers.ProgramController;
 import com.hoister.tonshoister.models.Program;
 import com.hoister.tonshoister.repositories.UserRepository;
@@ -196,7 +196,7 @@ public class ProgramControllerTests {
 
     when(DTOsMapper.convertToEntity(any(ProgramDTO.class))).thenReturn(program);
     when(programService.updateProgram(any(Program.class)))
-        .thenThrow(new UserIdDoNotMatchException());
+        .thenThrow(new UserIdDoesNotMatchException());
 
     mockMvc.perform(put("/api/programs").contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(program)))

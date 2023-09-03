@@ -17,7 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.hoister.tonshoister.advisors.ProgramNotFoundException;
-import com.hoister.tonshoister.advisors.UserIdDoNotMatchException;
+import com.hoister.tonshoister.advisors.UserIdDoesNotMatchException;
 import com.hoister.tonshoister.models.Program;
 import com.hoister.tonshoister.repositories.ProgramRepository;
 import com.hoister.tonshoister.services.PrincipalService;
@@ -143,7 +143,7 @@ public class ProgramServiceTests {
     Program program = new Program(1, "uuid", "5x5", 1, "five sets of five.");
     when(programRepository.findById(1)).thenReturn(Optional.of(program));
 
-    assertThrows(UserIdDoNotMatchException.class, () -> {
+    assertThrows(UserIdDoesNotMatchException.class, () -> {
       programService.updateProgram(program);
     });
 
