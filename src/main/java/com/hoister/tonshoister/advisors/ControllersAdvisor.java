@@ -1,17 +1,12 @@
 package com.hoister.tonshoister.advisors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.hoister.tonshoister.services.PrincipalService;
-
 @RestControllerAdvice
 public class ControllersAdvisor {
-  @Autowired
-  PrincipalService principalService;
 
   @ExceptionHandler(ProgramNotFoundException.class)
   public ResponseEntity<ErrorDetails> exceptionProgramNotFoundHandler() {
