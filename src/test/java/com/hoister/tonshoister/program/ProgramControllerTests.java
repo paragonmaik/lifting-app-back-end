@@ -30,6 +30,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hoister.tonshoister.DTOs.DTOsMapper;
 import com.hoister.tonshoister.DTOs.ProgramDTO;
 import com.hoister.tonshoister.advisors.ProgramNotFoundException;
+import com.hoister.tonshoister.advisors.UserIdDoNotMatchException;
 import com.hoister.tonshoister.controllers.ProgramController;
 import com.hoister.tonshoister.models.Program;
 import com.hoister.tonshoister.repositories.UserRepository;
@@ -183,6 +184,23 @@ public class ProgramControllerTests {
     mockMvc.perform(put("/api/programs").contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(program)))
         .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.message").exists());
+
+    verify(DTOsMapper).convertToEntity(any(ProgramDTO.class));
+    verify(programService).updateProgram(any(Program.class));
+  }
+
+  @Test
+  public void updateProgramThrowsUserIdsDoNotMatchException() throws Exception {
+    Program program = new Program(1, "uuid", "5x5", 12, "Rookie Program.");
+
+    when(DTOsMapper.convertToEntity(any(ProgramDTO.class))).thenReturn(program);
+    when(programService.updateProgram(any(Program.class)))
+        .thenThrow(new UserIdDoNotMatchException());
+
+    mockMvc.perform(put("/api/programs").contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(program)))
+        .andExpect(status().isForbidden())
         .andExpect(jsonPath("$.message").exists());
 
     verify(DTOsMapper).convertToEntity(any(ProgramDTO.class));
