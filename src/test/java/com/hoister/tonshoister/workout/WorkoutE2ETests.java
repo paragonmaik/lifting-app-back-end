@@ -20,7 +20,9 @@ import com.hoister.tonshoister.models.User;
 import com.hoister.tonshoister.models.UserRole;
 import com.hoister.tonshoister.models.Workout;
 import com.hoister.tonshoister.repositories.ProgramRepository;
+import com.hoister.tonshoister.repositories.UserRepository;
 import com.hoister.tonshoister.repositories.WorkoutRepository;
+import com.hoister.tonshoister.security.TokenService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -28,16 +30,25 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @AutoConfigureWebMvc
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@TestInstance(Lifecycle.PER_CLASS)
 public class WorkoutE2ETests {
   private String token;
+  private String userId;
 
+  @Autowired
+  UserRepository userRepository;
+  @Autowired
+  TokenService tokenService;
   @Autowired
   ObjectMapper objectMapper;
   @Autowired
@@ -47,7 +58,7 @@ public class WorkoutE2ETests {
   @Autowired
   TestRestTemplate testRestTemplate;
 
-  @BeforeEach
+  @BeforeAll
   public void setUser() {
     User user = new User("arnold", "gettothechoppa", UserRole.USER);
     testRestTemplate.postForEntity("/api/auth/register", user,
@@ -60,6 +71,10 @@ public class WorkoutE2ETests {
         LoginResponseDTO.class);
 
     token = "Bearer " + loginResponse.getBody().token();
+
+    String login = tokenService.validateToken(token.replace("Bearer ", ""));
+    User foundUser = (User) userRepository.findByLogin(login);
+    userId = foundUser.getId();
   }
 
   @BeforeEach
@@ -103,6 +118,7 @@ public class WorkoutE2ETests {
   @Test
   public void getAllWorkoutsSuccess() throws Exception {
     Workout workout = new Workout("Workout B", 22, "Cool workout.");
+    workout.setUserId(userId);
     workoutRepository.save(workout);
 
     HttpHeaders headers = new HttpHeaders();
@@ -115,7 +131,7 @@ public class WorkoutE2ETests {
             new ParameterizedTypeReference<List<Workout>>() {
             });
 
-    Workout responseWorkout = response.getBody().get(1);
+    Workout responseWorkout = response.getBody().get(0);
 
     assertEquals(response.getStatusCode(), HttpStatus.OK);
 
