@@ -152,21 +152,36 @@ public class ProgramServiceTests {
 
   @Test
   public void deleteProgramSuccess() throws Exception {
-    when(programRepository.existsById(1)).thenReturn(true);
+    Program program = new Program(1, "uuid", "5x5", 1, "five sets of five.");
+
+    when(principalService.getAuthUserId()).thenReturn("uuid");
+    when(programRepository.findById(1)).thenReturn(Optional.of(program));
     programService.deleteProgram(1);
-    
-    verify(programRepository).existsById(1);
+
+    verify(programRepository).findById(1);
     verify(programRepository).deleteById(1);
   }
 
   @Test
   public void deleteProgramThrowsException() throws Exception {
-    when(programRepository.existsById(1)).thenReturn(false);
+    when(programRepository.findById(1)).thenReturn(Optional.empty());
 
     assertThrows(ProgramNotFoundException.class, () -> {
       programService.deleteProgram(1);
     });
 
-    verify(programRepository).existsById(1);
+    verify(programRepository).findById(1);
+  }
+
+  @Test
+  public void deleteProgramUserIdDoesNotMatchException() {
+    Program program = new Program(1, "uuid", "5x5", 1, "five sets of five.");
+    when(programRepository.findById(1)).thenReturn(Optional.of(program));
+
+    assertThrows(UserIdDoesNotMatchException.class, () -> {
+      programService.deleteProgram(1);
+    });
+
+    verify(programRepository).findById(1);
   }
 }

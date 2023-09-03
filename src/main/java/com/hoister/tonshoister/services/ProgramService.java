@@ -54,10 +54,12 @@ public class ProgramService {
   }
 
   public void deleteProgram(Integer id) throws ProgramNotFoundException {
-    if (!programRepository.existsById(id)) {
-      throw new ProgramNotFoundException();
-    }
+    Program foundProgram = programRepository.findById(id)
+        .orElseThrow(() -> new ProgramNotFoundException());
 
+    if (!foundProgram.getUserId().equals(principalService.getAuthUserId())) {
+      throw new UserIdDoesNotMatchException();
+    }
     programRepository.deleteById(id);
   }
 }
