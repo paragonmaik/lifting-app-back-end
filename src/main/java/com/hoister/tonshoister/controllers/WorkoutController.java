@@ -31,11 +31,6 @@ public class WorkoutController {
   @Autowired
   private DTOsMapper DTOsMapper;
 
-  public WorkoutController(WorkoutService workoutService, DTOsMapper DTOsMapper) {
-    this.workoutService = workoutService;
-    this.DTOsMapper = DTOsMapper;
-  }
-
   @PostMapping("/{programId}")
   public ResponseEntity<WorkoutDTO> createWorkout(@Valid @RequestBody WorkoutDTO workoutDTO,
       @PathVariable Integer programId) {

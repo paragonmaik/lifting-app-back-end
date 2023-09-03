@@ -29,6 +29,7 @@ import com.hoister.tonshoister.controllers.WorkoutController;
 import com.hoister.tonshoister.models.Workout;
 import com.hoister.tonshoister.repositories.UserRepository;
 import com.hoister.tonshoister.security.TokenService;
+import com.hoister.tonshoister.services.PrincipalService;
 import com.hoister.tonshoister.services.WorkoutService;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -44,7 +45,8 @@ public class WorkoutControllerTests {
 
   @Autowired
   ObjectMapper objectMapper;
-
+  @MockBean
+  PrincipalService principalService;
   @MockBean
   TokenService tokenService;
   @MockBean
@@ -60,7 +62,7 @@ public class WorkoutControllerTests {
   public void createWorkoutSuccess() throws Exception {
     Workout workout = new Workout(1, "Workout A", 12, "A long workout.");
     WorkoutDTO workoutDTO = new WorkoutDTO(
-        workout.getId(), workout.getName(), workout.getDurationMins(),
+        workout.getId(), workout.getUserId(), workout.getName(), workout.getDurationMins(),
         workout.getDescription(), LocalDateTime.now(), null);
 
     when(DTOsMapper.convertToEntity(any(WorkoutDTO.class))).thenReturn(workout);
@@ -85,7 +87,7 @@ public class WorkoutControllerTests {
   public void getWorkoutsSuccess() throws Exception {
     Workout workout = new Workout(1, "Workout A", 12, "A long workout.");
     WorkoutDTO workoutDTO = new WorkoutDTO(
-        workout.getId(), workout.getName(), workout.getDurationMins(),
+        workout.getId(), workout.getUserId(), workout.getName(), workout.getDurationMins(),
         workout.getDescription(), LocalDateTime.now(), null);
 
     List<Workout> workouts = new ArrayList<Workout>();
