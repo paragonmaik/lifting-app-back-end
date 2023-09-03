@@ -3,7 +3,6 @@ package com.hoister.tonshoister.program;
 import org.springframework.http.MediaType;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -250,9 +249,8 @@ public class ProgramE2ETests {
   }
 
   @Test
-  @Disabled
   public void deleteProgramSuccess() throws Exception {
-    Program program = new Program("Starting Strength", 40, "Rookie program.");
+    Program program = new Program(6, userId, "Starting Strength", 40, "Rookie program.");
     programRepository.save(program);
 
     HttpHeaders headers = new HttpHeaders();
@@ -261,14 +259,14 @@ public class ProgramE2ETests {
 
     HttpEntity<String> entity = new HttpEntity<String>(null, headers);
 
-    ResponseEntity<Program> response = testRestTemplate.exchange("/api/programs/1",
+    ResponseEntity<Program> response = testRestTemplate.exchange(
+        "/api/programs/" + program.getId(),
         HttpMethod.DELETE, entity, Program.class);
 
     assertEquals(response.getStatusCode(), HttpStatus.NO_CONTENT);
   }
 
   @Test
-  @Disabled
   public void deleteProgramThrowsException() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
@@ -280,5 +278,23 @@ public class ProgramE2ETests {
         HttpMethod.DELETE, entity, Program.class);
 
     assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
+  }
+
+  @Test
+  public void deleteProgramThrowsUserIdsDoNotMatchException() throws Exception {
+    Program program = new Program(7, "Starting Strength", 40, "Rookie program.", null, null);
+    programRepository.save(program);
+
+    String requestBody = objectMapper.writeValueAsString(program);
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setBearerAuth(token);
+
+    HttpEntity<String> entity = new HttpEntity<String>(requestBody, headers);
+
+    ResponseEntity<Program> response = testRestTemplate.exchange("/api/programs/" + program.getId(),
+        HttpMethod.DELETE, entity, Program.class);
+
+    assertEquals(response.getStatusCode(), HttpStatus.FORBIDDEN);
   }
 }
