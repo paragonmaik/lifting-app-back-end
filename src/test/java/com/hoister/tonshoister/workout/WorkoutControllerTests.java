@@ -95,7 +95,7 @@ public class WorkoutControllerTests {
     workouts.add(workout);
     workoutsDTO.add(workoutDTO);
 
-    when(workoutService.findAll()).thenReturn(workouts);
+    when(workoutService.findAllByUserId()).thenReturn(workouts);
     when(DTOsMapper.convertToDto(any(Workout.class))).thenReturn(workoutDTO);
 
     mockMvc.perform(get("/api/workouts"))
@@ -111,13 +111,13 @@ public class WorkoutControllerTests {
 
   @Test
   public void getWorkoutsThrowsException() throws Exception {
-    when(workoutService.findAll()).thenThrow(new WorkoutNotFoundException());
+    when(workoutService.findAllByUserId()).thenThrow(new WorkoutNotFoundException());
 
      mockMvc.perform(get("/api/workouts"))
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$..message").exists());
 
-        verify(workoutService).findAll();    
+        verify(workoutService).findAllByUserId();    
   }
 
   @Test

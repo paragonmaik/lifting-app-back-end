@@ -34,7 +34,7 @@ public class WorkoutController {
 
   @GetMapping
   public List<WorkoutDTO> getWorkouts() {
-    return workoutService.findAll()
+    return workoutService.findAllByUserId()
         .stream().map(workout -> DTOsMapper.convertToDto(workout)).toList();
   }
 
