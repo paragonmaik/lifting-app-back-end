@@ -83,7 +83,7 @@ public class DTOsMapperServiceTests {
 
   @Test
   public void convertDTOToWorkout() {
-    WorkoutDTO workoutDTO = new WorkoutDTO(null, "Workout A", 70,
+    WorkoutDTO workoutDTO = new WorkoutDTO(null, "userid", "Workout A", 70,
         "A really long workout", null, null);
 
     Workout workout = DTOsMapper.convertToEntity(workoutDTO);

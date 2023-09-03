@@ -49,6 +49,7 @@ public class DTOsMapper {
 
     return new WorkoutDTO(
         workout.getId(),
+        workout.getUserId(),
         workout.getName(),
         workout.getDurationMins(),
         workout.getDescription(),
