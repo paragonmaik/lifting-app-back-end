@@ -167,15 +167,19 @@ public class ExerciseE2ETests {
 
   @Test
   public void updateExerciseSuccess() throws Exception {
-    Exercise exercise = new Exercise(
-        1, "Deadlift", 150, GoalType.STRENGTH, 180, "No instructions.");
+    Exercise exercise1 = new Exercise(
+        "Deadlift", 150, GoalType.STRENGTH, 180, "No instructions.");
+    exercise1.setUserId(userId);
+    Integer exerciseId = exerciseRepository.save(exercise1).getId();
+    Exercise exercise2 = new Exercise(
+        exerciseId, "Romanian Deadlift", 120, GoalType.STRENGTH, 150, "No instructions.");
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setBearerAuth(token);
 
     HttpEntity<String> entity = new HttpEntity<String>(
-        objectMapper.writeValueAsString(exercise), headers);
+        objectMapper.writeValueAsString(exercise2), headers);
     ResponseEntity<Exercise> response = testRestTemplate.exchange("/api/exercises",
         HttpMethod.PUT, entity,
         Exercise.class);
@@ -199,6 +203,27 @@ public class ExerciseE2ETests {
         Exercise.class);
 
     assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
+  }
+
+  @Test
+  public void updateExerciseThrowsUserIdDoesNotMatchException() throws Exception {
+    Exercise exercise1 = new Exercise(
+        "Deadlift", 150, GoalType.STRENGTH, 180, "No instructions.");
+    Integer exerciseId = exerciseRepository.save(exercise1).getId();
+    Exercise exercise2 = new Exercise(
+        exerciseId, "Romanian Deadlift", 120, GoalType.STRENGTH, 150, "No instructions.");
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setBearerAuth(token);
+
+    HttpEntity<String> entity = new HttpEntity<String>(
+        objectMapper.writeValueAsString(exercise2), headers);
+    ResponseEntity<Exercise> response = testRestTemplate.exchange("/api/exercises",
+        HttpMethod.PUT, entity,
+        Exercise.class);
+
+    assertEquals(response.getStatusCode(), HttpStatus.FORBIDDEN);
   }
 
   @Test
