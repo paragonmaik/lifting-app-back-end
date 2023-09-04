@@ -109,7 +109,7 @@ public class ExerciseControllerTests {
     exercises.add(exercise);
     exercisesDTO.add(exerciseDTO);
 
-    when(exerciseService.findAll()).thenReturn(exercises);
+    when(exerciseService.findAllByUserId()).thenReturn(exercises);
     when(DTOsMapper.convertToDto(any(Exercise.class))).thenReturn(exerciseDTO);
 
     mockMvc.perform(get("/api/exercises"))
@@ -128,13 +128,13 @@ public class ExerciseControllerTests {
 
   @Test
   public void getExercisesThrowsException() throws Exception {
-    when(exerciseService.findAll()).thenThrow(new ExerciseNotFoundException());
+    when(exerciseService.findAllByUserId()).thenThrow(new ExerciseNotFoundException());
 
     mockMvc.perform(get("/api/exercises"))
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$..message").exists());
 
-    verify(exerciseService).findAll();    
+    verify(exerciseService).findAllByUserId();    
   }
 
   @Test
