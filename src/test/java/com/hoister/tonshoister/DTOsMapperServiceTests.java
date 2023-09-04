@@ -69,7 +69,7 @@ public class DTOsMapperServiceTests {
   public void convertWorkoutToDTO() {
     Set<Exercise> exercises = new HashSet<>();
     Workout workout = new Workout(
-        1, "Workout A", 70, "Long workout.", LocalDateTime.now(), exercises);
+        1, null, "Workout A", 70, "Long workout.", LocalDateTime.now(), null, exercises);
 
     WorkoutDTO workoutDTO = DTOsMapper.convertToDto(workout);
 

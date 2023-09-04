@@ -41,14 +41,16 @@ public class DTOsMapper {
         programDTO.durationWeeks(),
         programDTO.description(),
         programDTO.dateCreated(),
-        null);
+        new HashSet<Workout>());
   }
 
   // Workouts
   public WorkoutDTO convertToDto(Workout workout) {
     Set<ExerciseDTO> exercises = new HashSet<>();
-    for (Exercise exercise : workout.getExercises()) {
-      exercises.add(convertToDto(exercise));
+    if (workout.getExercises() != null) {
+      for (Exercise exercise : workout.getExercises()) {
+        exercises.add(convertToDto(exercise));
+      }
     }
 
     return new WorkoutDTO(
@@ -64,9 +66,13 @@ public class DTOsMapper {
   public Workout convertToEntity(WorkoutDTO workoutDTO) {
     return new Workout(
         workoutDTO.id(),
+        workoutDTO.userId(),
         workoutDTO.name(),
         workoutDTO.durationMins(),
-        workoutDTO.description());
+        workoutDTO.description(),
+        workoutDTO.dateCreated(),
+        new HashSet<Program>(),
+        new HashSet<Exercise>());
   }
 
   // Exercises
