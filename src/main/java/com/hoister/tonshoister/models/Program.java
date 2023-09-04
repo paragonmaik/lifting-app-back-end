@@ -6,18 +6,7 @@ import java.util.Set;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
@@ -26,45 +15,32 @@ public class Program {
   @Id
   @SequenceGenerator(name = "program_sequence", sequenceName = "program_sequence", allocationSize = 1)
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "program_sequence")
-  Integer id;
+  private Integer id;
   @Column(name = "user_id")
-  String userId;
+  private String userId;
   @NotBlank
-  String name;
+  private String name;
   @Column(name = "duration_weeks")
-  Integer durationWeeks;
-  String description;
+  private Integer durationWeeks;
+  private String description;
   @Column(name = "date_created")
   @CreationTimestamp
-  LocalDateTime dateCreated;
+  private LocalDateTime dateCreated;
 
   @ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE,
       CascadeType.PERSIST, CascadeType.REFRESH }, fetch = FetchType.LAZY)
   @JoinTable(name = "program_workout", joinColumns = {
       @JoinColumn(name = "program_id") }, inverseJoinColumns = {
           @JoinColumn(name = "workout_id") })
-  Set<Workout> workouts = new HashSet<>();
+  private Set<Workout> workouts = new HashSet<>();
 
   public Program() {
   }
 
-  public Program(String name, Integer durationWeeks, String description) {
-    this.name = name;
-    this.durationWeeks = durationWeeks;
-    this.description = description;
-  }
-
-  public Program(Integer id, String userId, String name, Integer durationWeeks, String description) {
-    this.id = id;
-    this.userId = userId;
-    this.name = name;
-    this.durationWeeks = durationWeeks;
-    this.description = description;
-  }
-
-  public Program(Integer id, String name, Integer durationWeeks, String description,
+  public Program(Integer id, String userId, String name, Integer durationWeeks, String description,
       LocalDateTime dateCreated, Set<Workout> workouts) {
     this.id = id;
+    this.userId = userId;
     this.name = name;
     this.durationWeeks = durationWeeks;
     this.description = description;
@@ -127,5 +103,4 @@ public class Program {
   public void setDateCreated(LocalDateTime dateCreated) {
     this.dateCreated = dateCreated;
   }
-
 }
