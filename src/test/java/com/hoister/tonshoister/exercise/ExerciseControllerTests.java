@@ -213,4 +213,16 @@ public class ExerciseControllerTests {
 
     verify(exerciseService).deleteExercise(1);
   }
+
+  @Test
+  public void deleteExerciseThrowsUserIdsDoNotMatchException() throws Exception {
+    doThrow(new UserIdDoesNotMatchException()).when(exerciseService).deleteExercise(1);
+
+    mockMvc
+        .perform(
+            delete("/api/exercises/1"))
+        .andExpect(MockMvcResultMatchers.status().isForbidden());
+
+    verify(exerciseService).deleteExercise(1);
+  }
 }
