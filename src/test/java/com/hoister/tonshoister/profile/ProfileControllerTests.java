@@ -25,6 +25,7 @@ import com.hoister.tonshoister.controllers.ProfileController;
 import com.hoister.tonshoister.models.Profile;
 import com.hoister.tonshoister.repositories.UserRepository;
 import com.hoister.tonshoister.security.TokenService;
+import com.hoister.tonshoister.services.PrincipalService;
 import com.hoister.tonshoister.services.ProfileService;
 
 @AutoConfigureMockMvc(addFilters = false)
@@ -34,6 +35,8 @@ public class ProfileControllerTests {
   @Autowired
   ObjectMapper objectMapper;
 
+  @MockBean
+  PrincipalService principalService;
   @MockBean
   UserRepository userRepository;
   @MockBean
