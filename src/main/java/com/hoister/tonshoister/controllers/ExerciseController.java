@@ -42,7 +42,7 @@ public class ExerciseController {
 
   @GetMapping
   public List<ExerciseDTO> getExercises() {
-    return exerciseService.findAll()
+    return exerciseService.findAllByUserId()
         .stream().map(exercise -> DTOsMapper.convertToDto(exercise)).toList();
   }
 
