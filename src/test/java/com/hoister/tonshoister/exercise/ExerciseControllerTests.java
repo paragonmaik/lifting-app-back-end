@@ -27,6 +27,7 @@ import com.hoister.tonshoister.models.GoalType;
 import com.hoister.tonshoister.repositories.UserRepository;
 import com.hoister.tonshoister.security.TokenService;
 import com.hoister.tonshoister.services.ExerciseService;
+import com.hoister.tonshoister.services.PrincipalService;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -47,6 +48,8 @@ public class ExerciseControllerTests {
   ObjectMapper objectMapper;
 
   @MockBean
+  PrincipalService principalService;
+  @MockBean
   UserRepository userRepository;
   @MockBean
   TokenService tokenService;
@@ -62,7 +65,7 @@ public class ExerciseControllerTests {
     Exercise exercise = new Exercise(
         1, "High Bar Squat", 120, GoalType.STRENGTH, 150, "No instructions.");
     ExerciseDTO exerciseDTO = new ExerciseDTO(
-        exercise.getId(), exercise.getName(), exercise.getLoad(),
+        exercise.getId(), exercise.getUserId(), exercise.getName(), exercise.getLoad(),
         exercise.getGoal(), exercise.getRestSeconds(), exercise.getInstructions(),
         exercise.getDateCreated());
 
@@ -97,7 +100,7 @@ public class ExerciseControllerTests {
     Exercise exercise = new Exercise(
         1, "High Bar Squat", 120, GoalType.STRENGTH, 150, "No instructions.");
     ExerciseDTO exerciseDTO = new ExerciseDTO(
-        exercise.getId(), exercise.getName(), exercise.getLoad(),
+        exercise.getId(), exercise.getUserId(), exercise.getName(), exercise.getLoad(),
         exercise.getGoal(), exercise.getRestSeconds(), exercise.getInstructions(),
         exercise.getDateCreated());
 
