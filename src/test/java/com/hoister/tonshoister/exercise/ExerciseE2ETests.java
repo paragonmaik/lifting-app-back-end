@@ -20,7 +20,9 @@ import com.hoister.tonshoister.models.User;
 import com.hoister.tonshoister.models.UserRole;
 import com.hoister.tonshoister.models.Workout;
 import com.hoister.tonshoister.repositories.ExerciseRepository;
+import com.hoister.tonshoister.repositories.UserRepository;
 import com.hoister.tonshoister.repositories.WorkoutRepository;
+import com.hoister.tonshoister.security.TokenService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -28,17 +30,27 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @AutoConfigureWebMvc
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@TestInstance(Lifecycle.PER_CLASS)
 public class ExerciseE2ETests {
   private String token;
+  private String userId;
 
+  @Autowired
+  UserRepository userRepository;
+  @Autowired
+  TokenService tokenService;
   @Autowired
   ObjectMapper objectMapper;
   @Autowired
@@ -48,7 +60,7 @@ public class ExerciseE2ETests {
   @Autowired
   TestRestTemplate testRestTemplate;
 
-  @BeforeEach
+  @BeforeAll
   public void setUser() {
     User user = new User("arnold", "gettothechoppa", UserRole.USER);
     testRestTemplate.postForEntity("/api/auth/register", user,
@@ -61,11 +73,15 @@ public class ExerciseE2ETests {
         LoginResponseDTO.class);
 
     token = "Bearer " + loginResponse.getBody().token();
+
+    String login = tokenService.validateToken(token.replace("Bearer ", ""));
+    User foundUser = (User) userRepository.findByLogin(login);
+    userId = foundUser.getId();
   }
 
   @BeforeEach
   public void setUp() {
-    Workout workout = new Workout(1, "Workout A", 70, "A long workout.");
+    Workout workout = new Workout("Workout A", 70, "A long workout.");
     Exercise exercise = new Exercise(
         1, "High Bar Squat", 120, GoalType.STRENGTH, 150, "No instructions.");
 
