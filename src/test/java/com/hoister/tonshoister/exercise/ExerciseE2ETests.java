@@ -32,7 +32,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -123,7 +122,9 @@ public class ExerciseE2ETests {
   public void getAllExercisesSuccess() throws Exception {
     Exercise exercise = new Exercise(
         2, "Deadlift", 150, GoalType.STRENGTH, 180, "No instructions.");
+    exercise.setUserId(userId);
     exerciseRepository.save(exercise);
+
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setBearerAuth(token);
@@ -136,7 +137,7 @@ public class ExerciseE2ETests {
             new ParameterizedTypeReference<List<Exercise>>() {
             });
 
-    Exercise responseExercise = response.getBody().get(1);
+    Exercise responseExercise = response.getBody().get(0);
 
     assertEquals(response.getStatusCode(), HttpStatus.OK);
 
