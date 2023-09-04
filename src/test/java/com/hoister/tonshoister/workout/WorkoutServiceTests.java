@@ -1,11 +1,7 @@
 package com.hoister.tonshoister.workout;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +9,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.hoister.tonshoister.advisors.ProgramNotFoundException;
@@ -156,21 +151,39 @@ public class WorkoutServiceTests {
 
   @Test
   public void deleteWorkoutSuccess() throws Exception {
-    when(workoutRepository.existsById(1)).thenReturn(true);
+    Workout workout = new Workout("Workout A", 20, "Rookie workout.");
+    workout.setUserId("uuid");
+
+    when(principalService.getAuthUserId()).thenReturn("uuid");
+    when(workoutRepository.findById(1)).thenReturn(Optional.of(workout));
     workoutService.deleteWorkout(1);
-    
-    verify(workoutRepository).existsById(1);
+
+    verify(workoutRepository).findById(1);
     verify(workoutRepository).deleteById(1);
   }
 
   @Test
   public void deleteWorkoutThrowsException() throws Exception {
-    when(workoutRepository.existsById(1)).thenReturn(false);
+    when(workoutRepository.findById(1)).thenReturn(Optional.empty());
 
     assertThrows(WorkoutNotFoundException.class, () -> {
       workoutService.deleteWorkout(1);
     });
 
-    verify(workoutRepository).existsById(1);
+    verify(workoutRepository).findById(1);
+  }
+
+  @Test
+  public void deleteProgramThrowsUserIdsDoNotMatchException() throws Exception {
+    Workout workout = new Workout("Workout A", 20, "Rookie workout.");
+    workout.setUserId("uuid");
+    when(workoutRepository.findById(1)).thenReturn(Optional.of(workout));
+
+    assertThrows(UserIdDoesNotMatchException.class, () -> {
+      workoutService.deleteWorkout(1);
+    });
+
+    verify(workoutRepository).findById(1);
+
   }
 }

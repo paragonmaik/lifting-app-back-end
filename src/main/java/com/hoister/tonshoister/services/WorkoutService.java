@@ -66,10 +66,12 @@ public class WorkoutService {
   }
 
   public void deleteWorkout(Integer id) throws WorkoutNotFoundException {
-    if (!workoutRepository.existsById(id)) {
-      throw new WorkoutNotFoundException();
-    }
+    Workout foundWorkout = workoutRepository.findById(id)
+        .orElseThrow(() -> new WorkoutNotFoundException());
 
+    if (!foundWorkout.getUserId().equals(principalService.getAuthUserId())) {
+      throw new UserIdDoesNotMatchException();
+    }
     workoutRepository.deleteById(id);
   }
 }
