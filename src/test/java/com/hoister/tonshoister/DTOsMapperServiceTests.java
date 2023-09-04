@@ -36,11 +36,12 @@ public class DTOsMapperServiceTests {
   public void convertProgramToDTO() {
     Set<Workout> workouts = new HashSet<>();
     Program program = new Program(
-        1, "Squat Everyday", 52, "Keep squatting.", LocalDateTime.now(), workouts);
+        1, "uuid", "Squat Everyday", 52, "Keep squatting.", LocalDateTime.now(), workouts);
 
     ProgramDTO programDTO = DTOsMapper.convertToDto(program);
 
     assertEquals(program.getId(), programDTO.id());
+    assertEquals(program.getUserId(), programDTO.userId());
     assertEquals(program.getName(), programDTO.name());
     assertEquals(program.getDurationWeeks(), programDTO.durationWeeks());
     assertEquals(program.getDescription(), programDTO.description());

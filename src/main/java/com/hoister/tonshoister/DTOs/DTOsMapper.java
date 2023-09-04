@@ -17,8 +17,10 @@ public class DTOsMapper {
   // Programs
   public ProgramDTO convertToDto(Program program) {
     Set<WorkoutDTO> workouts = new HashSet<>();
-    for (Workout workout : program.getWorkouts()) {
-      workouts.add(convertToDto(workout));
+    if (program.getWorkouts() != null) {
+      for (Workout workout : program.getWorkouts()) {
+        workouts.add(convertToDto(workout));
+      }
     }
 
     return new ProgramDTO(
@@ -37,7 +39,9 @@ public class DTOsMapper {
         programDTO.userId(),
         programDTO.name(),
         programDTO.durationWeeks(),
-        programDTO.description());
+        programDTO.description(),
+        programDTO.dateCreated(),
+        null);
   }
 
   // Workouts
