@@ -18,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.hoister.tonshoister.advisors.ExerciseNotFoundException;
+import com.hoister.tonshoister.advisors.UserIdDoesNotMatchException;
 import com.hoister.tonshoister.advisors.WorkoutNotFoundException;
 import com.hoister.tonshoister.models.Exercise;
 import com.hoister.tonshoister.models.GoalType;
@@ -106,11 +107,15 @@ public class ExerciseServiceTests {
 
   @Test
   public void updateExerciseSuccess() throws ExerciseNotFoundException {
+    String userId = "uuid";
     Exercise exercise1 = new Exercise(
         1, "High Bar Squat", 120, GoalType.STRENGTH, 150, "Bar rests at the traps.");
     Exercise exercise2 = new Exercise(
         1, "Front Squat", 100, GoalType.HYPERTROPHY, 180, "No instructions.");
+    exercise1.setUserId(userId);
+    exercise2.setUserId(userId);
 
+    when(principalService.getAuthUserId()).thenReturn(userId);
     when(exerciseRepository.findById(1)).thenReturn(Optional.of(exercise1));
     when(exerciseRepository.save(exercise1)).thenReturn(exercise2);
 
@@ -134,6 +139,22 @@ public class ExerciseServiceTests {
     when(exerciseRepository.findById(1)).thenReturn(Optional.empty());
 
     assertThrows(ExerciseNotFoundException.class, () -> {
+      exerciseService.updateExercise(exercise);
+    });
+
+    verify(exerciseRepository).findById(1);
+  }
+
+  @Test
+  public void updateExerciseThrowsUserIdDoesNotMatchException() {
+    String userId = "uuid";
+    Exercise exercise = new Exercise(
+        1, "High Bar Squat", 120, GoalType.STRENGTH, 150, "Bar rests at the traps.");
+    exercise.setUserId(userId);
+
+    when(exerciseRepository.findById(1)).thenReturn(Optional.of(exercise));
+
+    assertThrows(UserIdDoesNotMatchException.class, () -> {
       exerciseService.updateExercise(exercise);
     });
 

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hoister.tonshoister.advisors.ExerciseNotFoundException;
+import com.hoister.tonshoister.advisors.UserIdDoesNotMatchException;
 import com.hoister.tonshoister.advisors.WorkoutNotFoundException;
 import com.hoister.tonshoister.models.Exercise;
 import com.hoister.tonshoister.models.Workout;
@@ -52,6 +53,10 @@ public class ExerciseService {
   public Exercise updateExercise(Exercise exercise) throws ExerciseNotFoundException {
     Exercise foundExercise = exerciseRepository.findById(exercise.getId())
         .orElseThrow(() -> new ExerciseNotFoundException());
+
+    if (!foundExercise.getUserId().equals(principalService.getAuthUserId())) {
+      throw new UserIdDoesNotMatchException();
+    }
 
     foundExercise.setName(exercise.getName());
     foundExercise.setLoad(exercise.getLoad());
