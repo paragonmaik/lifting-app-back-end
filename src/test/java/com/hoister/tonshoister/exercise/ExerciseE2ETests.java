@@ -228,10 +228,18 @@ public class ExerciseE2ETests {
 
   @Test
   public void deleteExerciseSuccess() throws Exception {
+    Exercise exercise = new Exercise(
+        "Deadlift", 150, GoalType.STRENGTH, 180, "No instructions.");
+
+    exercise.setUserId(userId);
+    Integer exerciseId = exerciseRepository
+        .save(exercise)
+        .getId();
+
     HttpHeaders headers = new HttpHeaders();
     headers.setBearerAuth(token);
 
-    ResponseEntity<Exercise> response = testRestTemplate.exchange("/api/exercises/1",
+    ResponseEntity<Exercise> response = testRestTemplate.exchange("/api/exercises/" + exerciseId,
         HttpMethod.DELETE, new HttpEntity<String>(null, headers), Exercise.class);
 
     assertEquals(response.getStatusCode(), HttpStatus.NO_CONTENT);
@@ -246,5 +254,23 @@ public class ExerciseE2ETests {
         HttpMethod.DELETE, new HttpEntity<String>(null, headers), Exercise.class);
 
     assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
+  }
+
+  @Test
+  public void deleteExerciseThrowsUserIdsDoNotMatchException() throws Exception {
+    Exercise exercise = new Exercise(
+        "Deadlift", 150, GoalType.STRENGTH, 180, "No instructions.");
+
+    Integer exerciseId = exerciseRepository
+        .save(exercise)
+        .getId();
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.setBearerAuth(token);
+
+    ResponseEntity<Exercise> response = testRestTemplate.exchange("/api/exercises/" + exerciseId,
+        HttpMethod.DELETE, new HttpEntity<String>(null, headers), Exercise.class);
+
+    assertEquals(response.getStatusCode(), HttpStatus.FORBIDDEN);
   }
 }
