@@ -6,6 +6,7 @@ import com.hoister.tonshoister.models.GoalType;
 
 public record ExerciseDTO(
     Integer id,
+    String userId,
     String name,
     Integer load,
     GoalType goal,

@@ -25,6 +25,8 @@ public class Exercise {
   @SequenceGenerator(name = "exercise_sequence", sequenceName = "exercise_sequence", allocationSize = 1)
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "exercise_sequence")
   Integer id;
+  @Column(name = "user_id")
+  String userId;
   @NotBlank
   String name;
   @NotNull
@@ -73,6 +75,14 @@ public class Exercise {
     this.restSeconds = restSeconds;
     this.instructions = instructions;
     this.dateCreated = dateCreated;
+  }
+
+  public String getUserId() {
+    return this.userId;
+  }
+
+  public void setUserId(String userId) {
+    this.userId = userId;
   }
 
   public Integer getId() {
