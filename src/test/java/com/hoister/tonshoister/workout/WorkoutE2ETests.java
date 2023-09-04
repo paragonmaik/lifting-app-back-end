@@ -74,7 +74,8 @@ public class WorkoutE2ETests {
   @BeforeEach
   public void setUp() {
     Program program = new Program(1, null, "5x5", 52, "A really long program.", null, null);
-    Workout workout = new Workout("Workout A", 12, "Strength workout.");
+    Workout workout = new Workout(
+        null, null, "Workout A", 12, "Strength workout.", null, null, null);
 
     workoutRepository.deleteAll();
 
@@ -84,7 +85,8 @@ public class WorkoutE2ETests {
 
   @Test
   public void createWorkoutSuccess() throws Exception {
-    Workout workout = new Workout("Workout B", 12, "Strength workout.");
+    Workout workout = new Workout(
+        null, null, "Workout B", 12, "Strength workout.", null, null, null);
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
@@ -111,7 +113,8 @@ public class WorkoutE2ETests {
 
   @Test
   public void getAllWorkoutsSuccess() throws Exception {
-    Workout workout = new Workout("Workout B", 22, "Cool workout.");
+    Workout workout = new Workout(
+        null, null, "Workout B", 22, "Cool workout.", null, null, null);
     workout.setUserId(userId);
     workoutRepository.save(workout);
 
@@ -155,10 +158,12 @@ public class WorkoutE2ETests {
 
   @Test
   public void updateWorkoutSuccess() throws Exception {
-    Workout workout1 = new Workout("Workout B", 12, "Cool workout.");
+    Workout workout1 = new Workout(
+        null, null, "Workout B", 12, "Cool workout.", null, null, null);
     workout1.setUserId(userId);
     Integer workoutId = workoutRepository.save(workout1).getId();
-    Workout workout2 = new Workout(workoutId, "Workout C", 22, "Quick workout.");
+    Workout workout2 = new Workout(
+        workoutId, null, "Workout C", 22, "Quick workout.", null, null, null);
 
     String requestBody = objectMapper.writeValueAsString(workout2);
 
@@ -176,7 +181,7 @@ public class WorkoutE2ETests {
 
   @Test
   public void updateWorkoutThrowsException() throws Exception {
-    Workout workout = new Workout(2, "Workout B", 12, "Cool workout.");
+    Workout workout = new Workout(2, null, "Workout B", 12, "Cool workout.", null, null, null);
     String requestBody = objectMapper.writeValueAsString(workout);
 
     HttpHeaders headers = new HttpHeaders();
@@ -194,9 +199,11 @@ public class WorkoutE2ETests {
 
   @Test
   public void updateWorkoutThrowsUserIdDoesNotMatchException() throws Exception {
-    Workout workout1 = new Workout("Workout B", 12, "Cool workout.");
+    Workout workout1 = new Workout(
+        null, null, "Workout B", 12, "Cool workout.", null, null, null);
     Integer workoutId = workoutRepository.save(workout1).getId();
-    Workout workout2 = new Workout(workoutId, "Workout C", 22, "Quick workout.");
+    Workout workout2 = new Workout(
+        workoutId, null, "Workout C", 22, "Quick workout.", null, null, null);
 
     String requestBody = objectMapper.writeValueAsString(workout2);
 
@@ -214,7 +221,8 @@ public class WorkoutE2ETests {
 
   @Test
   public void deleteWorkoutSuccess() throws Exception {
-    Workout workout = new Workout("Workout B", 12, "Cool workout.");
+    Workout workout = new Workout(
+        null, null, "Workout B", 12, "Cool workout.", null, null, null);
     workout.setUserId(userId);
     Integer workoutId = workoutRepository
         .save(workout)
@@ -248,7 +256,8 @@ public class WorkoutE2ETests {
 
   @Test
   public void deleteWorkoutThrowsUserIdsDoNotMatchException() throws Exception {
-    Workout workout = new Workout("Workout B", 12, "Cool workout.");
+    Workout workout = new Workout(
+        null, null, "Workout B", 12, "Cool workout.", null, null, null);
     Integer workoutId = workoutRepository
         .save(workout)
         .getId();

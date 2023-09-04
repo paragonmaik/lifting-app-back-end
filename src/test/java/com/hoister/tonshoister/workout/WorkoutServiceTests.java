@@ -37,7 +37,8 @@ public class WorkoutServiceTests {
 
   @Test
   public void createWorkoutSuccess() {
-    Workout workout = new Workout("Workout A", 10, "A really tough workout.");
+    Workout workout = new Workout(
+        null, null, "Workout A", 10, "A really tough workout.", null, new HashSet<Program>(), null);
     Program program = new Program(1, null, "5x5", 52, null, null, new HashSet<Workout>());
     String userId = "uuid";
 
@@ -54,7 +55,8 @@ public class WorkoutServiceTests {
 
   @Test
   public void createWorkoutThrowsException() throws ProgramNotFoundException {
-    Workout workout = new Workout("Workout A", 10, "A really tough workout.");
+    Workout workout = new Workout(
+        null, null, "Workout A", 10, "A really tough workout.", null, null, null);
 
     when(programRepository.findById(1)).thenReturn(Optional.empty());
 
@@ -67,7 +69,8 @@ public class WorkoutServiceTests {
 
   @Test
   public void findAllWorkoutsSuccess() throws WorkoutNotFoundException {
-    Workout workout = new Workout("Workout A", 12, "A really boring one.");
+    Workout workout = new Workout(
+        null, null, "Workout A", 12, "A really boring one.", null, null, null);
     List<Workout> workouts = new ArrayList<Workout>();
     workouts.add(workout);
     String userId = "uuid";
@@ -100,9 +103,9 @@ public class WorkoutServiceTests {
   public void updateWorkoutSuccess() throws WorkoutNotFoundException {
     String userId = "uuid";
     Workout workout1 = new Workout(
-        1, "Workout A", 20, "Rookie workout.", null, null);
+        1, null, "Workout A", 20, "Rookie workout.", null, null, null);
     Workout workout2 = new Workout(
-        1, "Workout B", 10, "Intense workout.", null, null);
+        1, null, "Workout B", 10, "Intense workout.", null, null, null);
     workout1.setUserId(userId);
     workout2.setUserId(userId);
 
@@ -123,7 +126,7 @@ public class WorkoutServiceTests {
   @Test
   public void updateWorkoutThrowsException() throws WorkoutNotFoundException {
     Workout workout = new Workout(
-        1, "Workout A", 20, "Rookie workout.", null, null);
+        1, null, "Workout A", 20, "Rookie workout.", null, null, null);
 
     when(workoutRepository.findById(1)).thenReturn(Optional.empty());
 
@@ -138,7 +141,7 @@ public class WorkoutServiceTests {
   public void updateWorkoutThrowsUserIdDoesNotMatchException() throws WorkoutNotFoundException {
     String userId = "uuid";
     Workout workout = new Workout(
-        1, "Workout A", 20, "Rookie workout.", null, null);
+        1, null, "Workout A", 20, "Rookie workout.", null, null, null);
     workout.setUserId(userId);
 
     when(workoutRepository.findById(1)).thenReturn(Optional.of(workout));
@@ -152,7 +155,8 @@ public class WorkoutServiceTests {
 
   @Test
   public void deleteWorkoutSuccess() throws Exception {
-    Workout workout = new Workout("Workout A", 20, "Rookie workout.");
+    Workout workout = new Workout(
+        null, null, "Workout A", 20, "Rookie workout.", null, null, null);
     workout.setUserId("uuid");
 
     when(principalService.getAuthUserId()).thenReturn("uuid");
@@ -176,7 +180,8 @@ public class WorkoutServiceTests {
 
   @Test
   public void deleteProgramThrowsUserIdsDoNotMatchException() throws Exception {
-    Workout workout = new Workout("Workout A", 20, "Rookie workout.");
+    Workout workout = new Workout(
+        null, null, "Workout A", 20, "Rookie workout.", null, null, null);
     workout.setUserId("uuid");
     when(workoutRepository.findById(1)).thenReturn(Optional.of(workout));
 
@@ -185,6 +190,5 @@ public class WorkoutServiceTests {
     });
 
     verify(workoutRepository).findById(1);
-
   }
 }

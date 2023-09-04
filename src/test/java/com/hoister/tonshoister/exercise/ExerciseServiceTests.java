@@ -1,6 +1,7 @@
 package com.hoister.tonshoister.exercise;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -45,7 +46,8 @@ public class ExerciseServiceTests {
     String userId = "uuid";
     Exercise exercise = new Exercise(
         "High Bar Squat", 120, GoalType.STRENGTH, 150, "Bar rests at the traps.");
-    Workout workout = new Workout("Workout A", 10, "A really tough workout.");
+    Workout workout = new Workout(
+        null, null, "Workout A", 10, "A really tough workout.", null, null, new HashSet<Exercise>());
     exercise.setUserId(userId);
 
     when(principalService.getAuthUserId()).thenReturn(userId);

@@ -61,7 +61,8 @@ public class WorkoutControllerTests {
 
   @Test
   public void createWorkoutSuccess() throws Exception {
-    Workout workout = new Workout(1, "Workout A", 12, "A long workout.");
+    Workout workout = new Workout(
+        1, null, "Workout A", 12, "A long workout.", null, null, null);
     WorkoutDTO workoutDTO = new WorkoutDTO(
         workout.getId(), workout.getUserId(), workout.getName(), workout.getDurationMins(),
         workout.getDescription(), LocalDateTime.now(), null);
@@ -86,7 +87,8 @@ public class WorkoutControllerTests {
 
   @Test
   public void getWorkoutsSuccess() throws Exception {
-    Workout workout = new Workout(1, "Workout A", 12, "A long workout.");
+    Workout workout = new Workout(
+        1, null, "Workout A", 12, "A long workout.", null, null, null);
     WorkoutDTO workoutDTO = new WorkoutDTO(
         workout.getId(), workout.getUserId(), workout.getName(), workout.getDurationMins(),
         workout.getDescription(), LocalDateTime.now(), null);
@@ -123,7 +125,8 @@ public class WorkoutControllerTests {
 
   @Test
   public void updateWorkoutSuccess() throws Exception {
-    Workout workout = new Workout(1, "Workout A", 12, "A long workout.");
+    Workout workout = new Workout(
+        1, null, "Workout A", 12, "A long workout.", null, null, null);
 
     when(DTOsMapper.convertToEntity(any(WorkoutDTO.class))).thenReturn(workout);
     when(workoutService.updateWorkout(any(Workout.class))).thenReturn(workout);
@@ -140,7 +143,8 @@ public class WorkoutControllerTests {
 
   @Test
   public void updateWorkoutThrowsException() throws Exception {
-    Workout workout = new Workout(1, "Workout A", 12, "A long workout.");
+    Workout workout = new Workout(
+        1, null, "Workout A", 12, "A long workout.", null, null, null);
 
     when(DTOsMapper.convertToEntity(any(WorkoutDTO.class))).thenReturn(workout);
     when(workoutService.updateWorkout(any(Workout.class)))
@@ -157,7 +161,8 @@ public class WorkoutControllerTests {
 
   @Test
   public void updateWorkoutThrowsUserIdDoesNotMatchException() throws Exception {
-    Workout workout = new Workout(1, "Workout A", 12, "A long workout.");
+    Workout workout = new Workout(
+        1, null, "Workout A", 12, "A long workout.", null, null, null);
 
     when(DTOsMapper.convertToEntity(any(WorkoutDTO.class))).thenReturn(workout);
     when(workoutService.updateWorkout(any(Workout.class)))

@@ -80,7 +80,8 @@ public class ExerciseE2ETests {
 
   @BeforeEach
   public void setUp() {
-    Workout workout = new Workout("Workout A", 70, "A long workout.");
+    Workout workout = new Workout(
+        null, null, "Workout A", 70, "A long workout.", null, null, null);
     Exercise exercise = new Exercise(
         1, "High Bar Squat", 120, GoalType.STRENGTH, 150, "No instructions.");
 
