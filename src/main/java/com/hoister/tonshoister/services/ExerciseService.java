@@ -68,8 +68,11 @@ public class ExerciseService {
   }
 
   public void deleteExercise(Integer id) throws ExerciseNotFoundException {
-    if (!exerciseRepository.existsById(id)) {
-      throw new ExerciseNotFoundException();
+    Exercise foundExercise = exerciseRepository.findById(id)
+        .orElseThrow(() -> new ExerciseNotFoundException());
+
+    if (!foundExercise.getUserId().equals(principalService.getAuthUserId())) {
+      throw new UserIdDoesNotMatchException();
     }
 
     exerciseRepository.deleteById(id);

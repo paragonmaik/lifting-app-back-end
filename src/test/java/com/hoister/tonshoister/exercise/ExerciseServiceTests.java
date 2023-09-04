@@ -163,22 +163,40 @@ public class ExerciseServiceTests {
 
   @Test
   public void deleteExerciseSuccess() throws Exception {
-    when(exerciseRepository.existsById(1)).thenReturn(true);
+    Exercise exercise = new Exercise(
+        1, "High Bar Squat", 120, GoalType.STRENGTH, 150, "Bar rests at the traps.");
+    exercise.setUserId("uuid");
+
+    when(principalService.getAuthUserId()).thenReturn("uuid");
+    when(exerciseRepository.findById(1)).thenReturn(Optional.of(exercise));
     exerciseService.deleteExercise(1);
-    
-    verify(exerciseRepository).existsById(1);
+
+    verify(exerciseRepository).findById(1);
     verify(exerciseRepository).deleteById(1);
   }
 
   @Test
   public void deleteExerciseThrowsException() throws Exception {
-    when(exerciseRepository.existsById(1)).thenReturn(false);
+    when(exerciseRepository.findById(1)).thenReturn(Optional.empty());
 
     assertThrows(ExerciseNotFoundException.class, () -> {
       exerciseService.deleteExercise(1);
     });
 
-    verify(exerciseRepository).existsById(1);
+    verify(exerciseRepository).findById(1);
   }
 
+  @Test
+  public void deleteExerciseThrowsUserIdsDoNotMatchException() {
+    Exercise exercise = new Exercise(
+        1, "High Bar Squat", 120, GoalType.STRENGTH, 150, "Bar rests at the traps.");
+    exercise.setUserId("uuid");
+    when(exerciseRepository.findById(1)).thenReturn(Optional.of(exercise));
+
+    assertThrows(UserIdDoesNotMatchException.class, () -> {
+      exerciseService.deleteExercise(1);
+    });
+
+    verify(exerciseRepository).findById(1);
+  }
 }
