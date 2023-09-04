@@ -4,12 +4,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebM
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.annotation.DirtiesContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,8 +19,7 @@ import com.hoister.tonshoister.repositories.UserRepository;
 import com.hoister.tonshoister.repositories.WorkoutRepository;
 import com.hoister.tonshoister.security.TokenService;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 import java.util.List;
@@ -220,13 +214,19 @@ public class WorkoutE2ETests {
 
   @Test
   public void deleteWorkoutSuccess() throws Exception {
+    Workout workout = new Workout("Workout B", 12, "Cool workout.");
+    workout.setUserId(userId);
+    Integer workoutId = workoutRepository
+        .save(workout)
+        .getId();
+
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setBearerAuth(token);
 
     HttpEntity<String> entity = new HttpEntity<String>(null, headers);
 
-    ResponseEntity<Workout> response = testRestTemplate.exchange("/api/workouts/1",
+    ResponseEntity<Workout> response = testRestTemplate.exchange("/api/workouts/" + workoutId,
         HttpMethod.DELETE, entity, Workout.class);
 
     assertEquals(response.getStatusCode(), HttpStatus.NO_CONTENT);
@@ -244,6 +244,24 @@ public class WorkoutE2ETests {
         HttpMethod.DELETE, entity, Workout.class);
 
     assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
+  }
 
+  @Test
+  public void deleteWorkoutThrowsUserIdsDoNotMatchException() throws Exception {
+    Workout workout = new Workout("Workout B", 12, "Cool workout.");
+    Integer workoutId = workoutRepository
+        .save(workout)
+        .getId();
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setBearerAuth(token);
+
+    HttpEntity<String> entity = new HttpEntity<String>(null, headers);
+
+    ResponseEntity<Workout> response = testRestTemplate.exchange("/api/workouts/" + workoutId,
+        HttpMethod.DELETE, entity, Workout.class);
+
+    assertEquals(response.getStatusCode(), HttpStatus.FORBIDDEN);
   }
 }
