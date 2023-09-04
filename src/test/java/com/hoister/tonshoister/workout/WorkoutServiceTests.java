@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,7 +38,7 @@ public class WorkoutServiceTests {
   @Test
   public void createWorkoutSuccess() {
     Workout workout = new Workout("Workout A", 10, "A really tough workout.");
-    Program program = new Program(1, null, "5x5", 52, null);
+    Program program = new Program(1, null, "5x5", 52, null, null, new HashSet<Workout>());
     String userId = "uuid";
 
     when(principalService.getAuthUserId()).thenReturn(userId);

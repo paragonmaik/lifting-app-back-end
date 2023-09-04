@@ -33,7 +33,7 @@ public class ProgramServiceTests {
 
   @Test
   public void createProgramSuccess() {
-    Program program = new Program("Starting Strength", 40, "Rookie Program.");
+    Program program = new Program(null, null, "Starting Strength", 40, "Rookie Program.", null, null);
     String userId = "uuid";
 
     when(principalService.getAuthUserId()).thenReturn(userId);
@@ -48,7 +48,7 @@ public class ProgramServiceTests {
 
   @Test
   public void findAllProgramsSuccess() throws ProgramNotFoundException {
-    Program program = new Program("GVT", 12, "German Volume training");
+    Program program = new Program(null, null, "GVT", 12, "German Volume training", null, null);
     String userId = "uuid";
     List<Program> programs = new ArrayList<Program>();
     programs.add(program);
@@ -80,7 +80,7 @@ public class ProgramServiceTests {
   @Test
   public void findByIdSuccess() {
     Optional<Program> program = Optional.of(
-        new Program("GVT", 12, "German Volume training"));
+        new Program(null, null, "GVT", 13, "German Volume training", null, null));
 
     when(programRepository.findById(1)).thenReturn(program);
 
@@ -107,8 +107,8 @@ public class ProgramServiceTests {
   public void updateProgramSuccess() throws Exception {
     String userId = "uuid";
     Program program1 = new Program(
-        1, userId, "Starting Strength", 40, "Rookie Program.");
-    Program program2 = new Program(1, userId, "5x5", 10, "five sets of five.");
+        1, userId, "Starting Strength", 40, "Rookie Program.", null, null);
+    Program program2 = new Program(1, userId, "5x5", 10, "five sets of five.", null, null);
 
     when(principalService.getAuthUserId()).thenReturn(userId);
     when(programRepository.findById(1)).thenReturn(Optional.of(program1));
@@ -125,7 +125,7 @@ public class ProgramServiceTests {
 
   @Test
   public void updateProgramThrowsException() {
-    Program program = new Program(1, "5x5", 10, "five sets of five.", null, null);
+    Program program = new Program(1, null, "5x5", 10, "five sets of five.", null, null);
 
     when(programRepository.findById(1)).thenReturn(Optional.empty());
 
@@ -138,7 +138,7 @@ public class ProgramServiceTests {
 
   @Test
   public void updateProgramThrowsUnauthorizedException() {
-    Program program = new Program(1, "uuid", "5x5", 1, "five sets of five.");
+    Program program = new Program(1, "uuid", "5x5", 1, "five sets of five.", null, null);
     when(programRepository.findById(1)).thenReturn(Optional.of(program));
 
     assertThrows(UserIdDoesNotMatchException.class, () -> {
@@ -150,7 +150,7 @@ public class ProgramServiceTests {
 
   @Test
   public void deleteProgramSuccess() throws Exception {
-    Program program = new Program(1, "uuid", "5x5", 1, "five sets of five.");
+    Program program = new Program(1, "uuid", "5x5", 1, "five sets of five.", null, null);
 
     when(principalService.getAuthUserId()).thenReturn("uuid");
     when(programRepository.findById(1)).thenReturn(Optional.of(program));
@@ -173,7 +173,7 @@ public class ProgramServiceTests {
 
   @Test
   public void deleteProgramUserIdDoesNotMatchException() {
-    Program program = new Program(1, "uuid", "5x5", 1, "five sets of five.");
+    Program program = new Program(1, "uuid", "5x5", 1, "five sets of five.", null, null);
     when(programRepository.findById(1)).thenReturn(Optional.of(program));
 
     assertThrows(UserIdDoesNotMatchException.class, () -> {

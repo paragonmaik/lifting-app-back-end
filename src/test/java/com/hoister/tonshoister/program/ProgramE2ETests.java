@@ -74,7 +74,7 @@ public class ProgramE2ETests {
 
   @Test
   public void createProgramSuccess() throws Exception {
-    Program program = new Program("Starting Strength", 40, "Rookie program.");
+    Program program = new Program(null, null, "Starting Strength", 40, "Rookie program.", null, null);
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
@@ -100,7 +100,7 @@ public class ProgramE2ETests {
 
   @Test
   public void getAllProgramsSuccess() throws Exception {
-    Program program = new Program("GVT", 12, "German Volume training");
+    Program program = new Program(null, null, "GVT", 12, "German Volume training", null, null);
     program.setUserId(userId);
     programRepository.save(program);
 
@@ -141,7 +141,7 @@ public class ProgramE2ETests {
 
   @Test
   public void getProgramByIdSuccess() throws Exception {
-    Program program = new Program("GVT", 12, "German Volume training");
+    Program program = new Program(null, null, "GVT", 12, "German Volume training", null, null);
     programRepository.save(program);
 
     HttpHeaders headers = new HttpHeaders();
@@ -181,10 +181,10 @@ public class ProgramE2ETests {
 
   @Test
   public void updateProgramSuccess() throws Exception {
-    Program program1 = new Program(3, userId, "5x5", 10, "Rookie program.");
+    Program program1 = new Program(3, userId, "5x5", 10, "Rookie program.", null, null);
     programRepository.save(program1);
 
-    Program program2 = new Program(3, userId, "GVT", 20, "Rookie program.");
+    Program program2 = new Program(3, userId, "GVT", 20, "Rookie program.", null, null);
 
     String requestBody = objectMapper.writeValueAsString(program2);
     HttpHeaders headers = new HttpHeaders();
@@ -203,7 +203,7 @@ public class ProgramE2ETests {
 
   @Test
   public void updateProgramThrowsException() throws Exception {
-    Program program = new Program(1, "5x5", 10, "Rookie program.", null, null);
+    Program program = new Program(1, null, "5x5", 10, "Rookie program.", null, null);
     String requestBody = objectMapper.writeValueAsString(program);
     HttpHeaders headers = new HttpHeaders();
 
@@ -221,10 +221,10 @@ public class ProgramE2ETests {
 
   @Test
   public void updateProgramThrowsUserIdDoesNotMatchException() throws Exception {
-    Program program1 = new Program(5, "5x5", 10, "Rookie program.", null, null);
+    Program program1 = new Program(5, null, "5x5", 10, "Rookie program.", null, null);
     programRepository.save(program1);
 
-    Program program2 = new Program(5, userId, "5x5", 10, "Rookie program.");
+    Program program2 = new Program(5, userId, "5x5", 10, "Rookie program.", null, null);
 
     String requestBody = objectMapper.writeValueAsString(program2);
     HttpHeaders headers = new HttpHeaders();
@@ -243,7 +243,7 @@ public class ProgramE2ETests {
 
   @Test
   public void deleteProgramSuccess() throws Exception {
-    Program program = new Program(6, userId, "Starting Strength", 40, "Rookie program.");
+    Program program = new Program(6, userId, "Starting Strength", 40, "Rookie program.", null, null);
     programRepository.save(program);
 
     HttpHeaders headers = new HttpHeaders();
@@ -275,7 +275,7 @@ public class ProgramE2ETests {
 
   @Test
   public void deleteProgramThrowsUserIdsDoNotMatchException() throws Exception {
-    Program program = new Program(7, "Starting Strength", 40, "Rookie program.", null, null);
+    Program program = new Program(7, null, "Starting Strength", 40, "Rookie program.", null, null);
     programRepository.save(program);
 
     String requestBody = objectMapper.writeValueAsString(program);

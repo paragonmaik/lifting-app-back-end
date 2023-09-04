@@ -73,7 +73,7 @@ public class WorkoutE2ETests {
 
   @BeforeEach
   public void setUp() {
-    Program program = new Program(1, null, "5x5", 52, "A really long program.");
+    Program program = new Program(1, null, "5x5", 52, "A really long program.", null, null);
     Workout workout = new Workout("Workout A", 12, "Strength workout.");
 
     workoutRepository.deleteAll();
