@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hoister.tonshoister.DTOs.DTOsMapper;
 import com.hoister.tonshoister.DTOs.ExerciseDTO;
 import com.hoister.tonshoister.advisors.ExerciseNotFoundException;
+import com.hoister.tonshoister.advisors.UserIdDoesNotMatchException;
 import com.hoister.tonshoister.controllers.ExerciseController;
 import com.hoister.tonshoister.models.Exercise;
 import com.hoister.tonshoister.models.GoalType;
@@ -169,6 +170,23 @@ public class ExerciseControllerTests {
             put("/api/exercises").contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(exercise)))
         .andExpect(MockMvcResultMatchers.status().isNotFound())
+        .andExpect(jsonPath("$.message").exists());
+  }
+
+  @Test
+  public void updateExerciseThrowsUserIdDoesNotMatchException() throws Exception {
+    Exercise exercise = new Exercise(
+        1, "High Bar Squat", 120, GoalType.STRENGTH, 150, "No instructions.");
+
+    when(DTOsMapper.convertToEntity(any(ExerciseDTO.class))).thenReturn(exercise);
+    when(exerciseService.updateExercise(any(Exercise.class)))
+        .thenThrow(new UserIdDoesNotMatchException());
+
+    mockMvc
+        .perform(
+            put("/api/exercises").contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(exercise)))
+        .andExpect(MockMvcResultMatchers.status().isForbidden())
         .andExpect(jsonPath("$.message").exists());
   }
 
