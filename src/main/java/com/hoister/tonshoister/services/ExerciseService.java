@@ -38,8 +38,9 @@ public class ExerciseService {
     return createdExercise;
   }
 
-  public List<Exercise> findAll() {
-    List<Exercise> exercises = exerciseRepository.findAll();
+  public List<Exercise> findAllByUserId() {
+    List<Exercise> exercises = exerciseRepository
+        .findAllByUserId(principalService.getAuthUserId());
 
     if (exercises.isEmpty()) {
       throw new ExerciseNotFoundException();
