@@ -18,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.hoister.tonshoister.advisors.ProgramNotFoundException;
+import com.hoister.tonshoister.advisors.UserIdDoesNotMatchException;
 import com.hoister.tonshoister.advisors.WorkoutNotFoundException;
 import com.hoister.tonshoister.models.Program;
 import com.hoister.tonshoister.models.Workout;
@@ -101,11 +102,15 @@ public class WorkoutServiceTests {
 
   @Test
   public void updateWorkoutSuccess() throws WorkoutNotFoundException {
+    String userId = "uuid";
     Workout workout1 = new Workout(
         1, "Workout A", 20, "Rookie workout.", null, null);
     Workout workout2 = new Workout(
         1, "Workout B", 10, "Intense workout.", null, null);
+    workout1.setUserId(userId);
+    workout2.setUserId(userId);
 
+    when(principalService.getAuthUserId()).thenReturn(userId);
     when(workoutRepository.findById(1)).thenReturn(Optional.of(workout1));
     when(workoutRepository.save(workout1)).thenReturn(workout2);
 
@@ -127,6 +132,22 @@ public class WorkoutServiceTests {
     when(workoutRepository.findById(1)).thenReturn(Optional.empty());
 
     assertThrows(WorkoutNotFoundException.class, () -> {
+      workoutService.updateWorkout(workout);
+    });
+
+    verify(workoutRepository).findById(1);
+  }
+
+  @Test
+  public void updateWorkoutThrowsUserIdDoesNotMatchException() throws WorkoutNotFoundException {
+    String userId = "uuid";
+    Workout workout = new Workout(
+        1, "Workout A", 20, "Rookie workout.", null, null);
+    workout.setUserId(userId);
+
+    when(workoutRepository.findById(1)).thenReturn(Optional.of(workout));
+
+    assertThrows(UserIdDoesNotMatchException.class, () -> {
       workoutService.updateWorkout(workout);
     });
 
