@@ -161,8 +161,13 @@ public class WorkoutE2ETests {
 
   @Test
   public void updateWorkoutSuccess() throws Exception {
-    Workout workout = new Workout(1, "Workout B", 12, "Cool workout.");
-    String requestBody = objectMapper.writeValueAsString(workout);
+    Workout workout1 = new Workout(10, "Workout B", 12, "Cool workout.");
+    Workout workout2 = new Workout(10, "Workout C", 22, "Quick workout.");
+    workout1.setUserId(userId);
+    workout2.setUserId(userId);
+    workoutRepository.save(workout1);
+
+    String requestBody = objectMapper.writeValueAsString(workout2);
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
@@ -192,6 +197,27 @@ public class WorkoutE2ETests {
         Workout.class);
 
     assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
+  }
+
+  @Test
+  public void updateWorkoutThrowsUserIdDoesNotMatchException() throws Exception {
+    Workout workout1 = new Workout("Workout B", 12, "Cool workout.");
+    Workout workout2 = new Workout(7, "Workout C", 22, "Quick workout.");
+    workout1.setUserId(userId);
+    workout2.setUserId("someotheruserid");
+
+    String requestBody = objectMapper.writeValueAsString(workout2);
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setBearerAuth(token);
+
+    HttpEntity<String> entity = new HttpEntity<String>(requestBody, headers);
+    ResponseEntity<Workout> response = testRestTemplate.exchange("/api/workouts",
+        HttpMethod.PUT, entity,
+        Workout.class);
+
+    assertEquals(response.getStatusCode(), HttpStatus.NO_CONTENT);
   }
 
   @Test
