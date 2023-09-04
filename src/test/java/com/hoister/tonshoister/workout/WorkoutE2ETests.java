@@ -161,11 +161,10 @@ public class WorkoutE2ETests {
 
   @Test
   public void updateWorkoutSuccess() throws Exception {
-    Workout workout1 = new Workout(10, "Workout B", 12, "Cool workout.");
-    Workout workout2 = new Workout(10, "Workout C", 22, "Quick workout.");
+    Workout workout1 = new Workout("Workout B", 12, "Cool workout.");
     workout1.setUserId(userId);
-    workout2.setUserId(userId);
-    workoutRepository.save(workout1);
+    Integer workoutId = workoutRepository.save(workout1).getId();
+    Workout workout2 = new Workout(workoutId, "Workout C", 22, "Quick workout.");
 
     String requestBody = objectMapper.writeValueAsString(workout2);
 
@@ -202,9 +201,8 @@ public class WorkoutE2ETests {
   @Test
   public void updateWorkoutThrowsUserIdDoesNotMatchException() throws Exception {
     Workout workout1 = new Workout("Workout B", 12, "Cool workout.");
-    Workout workout2 = new Workout(7, "Workout C", 22, "Quick workout.");
-    workout1.setUserId(userId);
-    workout2.setUserId("someotheruserid");
+    Integer workoutId = workoutRepository.save(workout1).getId();
+    Workout workout2 = new Workout(workoutId, "Workout C", 22, "Quick workout.");
 
     String requestBody = objectMapper.writeValueAsString(workout2);
 
@@ -217,7 +215,7 @@ public class WorkoutE2ETests {
         HttpMethod.PUT, entity,
         Workout.class);
 
-    assertEquals(response.getStatusCode(), HttpStatus.NO_CONTENT);
+    assertEquals(response.getStatusCode(), HttpStatus.FORBIDDEN);
   }
 
   @Test
