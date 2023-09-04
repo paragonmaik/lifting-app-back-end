@@ -6,18 +6,7 @@ import java.util.Set;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
@@ -51,28 +40,15 @@ public class Workout {
   public Workout() {
   }
 
-  public Workout(String name, Integer durationMins,
-      String description) {
-    this.name = name;
-    this.durationMins = durationMins;
-    this.description = description;
-  }
-
-  public Workout(Integer id, String name, Integer durationMins,
-      String description) {
+  public Workout(Integer id, String userId, String name, Integer durationMins, String description,
+      LocalDateTime dateCreated, Set<Program> programs, Set<Exercise> exercises) {
     this.id = id;
-    this.name = name;
-    this.durationMins = durationMins;
-    this.description = description;
-  }
-
-  public Workout(Integer id, String name, Integer durationMins,
-      String description, LocalDateTime dateCreated, Set<Exercise> exercises) {
-    this.id = id;
+    this.userId = userId;
     this.name = name;
     this.durationMins = durationMins;
     this.description = description;
     this.dateCreated = dateCreated;
+    this.programs = programs;
     this.exercises = exercises;
   }
 
