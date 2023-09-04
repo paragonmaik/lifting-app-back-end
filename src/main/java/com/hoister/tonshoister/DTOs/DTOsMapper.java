@@ -69,6 +69,7 @@ public class DTOsMapper {
   public ExerciseDTO convertToDto(Exercise exercise) {
     return new ExerciseDTO(
         exercise.getId(),
+        exercise.getUserId(),
         exercise.getName(),
         exercise.getLoad(),
         exercise.getGoal(),

@@ -115,7 +115,8 @@ public class DTOsMapperServiceTests {
 
   @Test
   public void convertDTOToExercise() {
-    ExerciseDTO exerciseDTO = new ExerciseDTO(1, "High Bar Back Squat", 210, GoalType.STRENGTH, 150,
+    ExerciseDTO exerciseDTO = new ExerciseDTO(
+        1, "userid", "High Bar Back Squat", 210, GoalType.STRENGTH, 150,
         "Squat deep.", LocalDateTime.now());
 
     Exercise exercise = DTOsMapper.convertToEntity(exerciseDTO);
