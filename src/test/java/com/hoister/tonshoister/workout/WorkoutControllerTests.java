@@ -24,6 +24,7 @@ import static org.mockito.Mockito.when;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hoister.tonshoister.DTOs.DTOsMapper;
 import com.hoister.tonshoister.DTOs.WorkoutDTO;
+import com.hoister.tonshoister.advisors.UserIdDoesNotMatchException;
 import com.hoister.tonshoister.advisors.WorkoutNotFoundException;
 import com.hoister.tonshoister.controllers.WorkoutController;
 import com.hoister.tonshoister.models.Workout;
@@ -148,6 +149,23 @@ public class WorkoutControllerTests {
     mockMvc.perform(put("/api/workouts").contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(workout)))
         .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.message").exists());
+
+    verify(DTOsMapper).convertToEntity(any(WorkoutDTO.class));
+    verify(workoutService).updateWorkout(any(Workout.class));
+  }
+
+  @Test
+  public void updateWorkoutThrowsUserIdDoesNotMatchException() throws Exception {
+    Workout workout = new Workout(1, "Workout A", 12, "A long workout.");
+
+    when(DTOsMapper.convertToEntity(any(WorkoutDTO.class))).thenReturn(workout);
+    when(workoutService.updateWorkout(any(Workout.class)))
+        .thenThrow(new UserIdDoesNotMatchException());
+
+    mockMvc.perform(put("/api/workouts").contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(workout)))
+        .andExpect(status().isForbidden())
         .andExpect(jsonPath("$.message").exists());
 
     verify(DTOsMapper).convertToEntity(any(WorkoutDTO.class));
