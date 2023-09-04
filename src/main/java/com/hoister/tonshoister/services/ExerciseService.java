@@ -16,18 +16,15 @@ import com.hoister.tonshoister.repositories.WorkoutRepository;
 public class ExerciseService {
 
   @Autowired
+  PrincipalService principalService;
+  @Autowired
   private ExerciseRepository exerciseRepository;
   @Autowired
   private WorkoutRepository workoutRepository;
 
-  public ExerciseService(ExerciseRepository exerciseRepository,
-      WorkoutRepository workoutRepository) {
-    this.exerciseRepository = exerciseRepository;
-    this.workoutRepository = workoutRepository;
-  }
-
   public Exercise createExercise(Exercise exercise, Integer workoutId)
       throws WorkoutNotFoundException {
+    exercise.setUserId(principalService.getAuthUserId());
 
     Workout workout = workoutRepository.findById(workoutId)
         .orElseThrow(() -> new WorkoutNotFoundException());

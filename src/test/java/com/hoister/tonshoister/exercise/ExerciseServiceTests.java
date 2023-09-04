@@ -25,10 +25,13 @@ import com.hoister.tonshoister.models.Workout;
 import com.hoister.tonshoister.repositories.ExerciseRepository;
 import com.hoister.tonshoister.repositories.WorkoutRepository;
 import com.hoister.tonshoister.services.ExerciseService;
+import com.hoister.tonshoister.services.PrincipalService;
 
 @ExtendWith(MockitoExtension.class)
 public class ExerciseServiceTests {
 
+  @Mock
+  PrincipalService principalService;
   @Mock
   ExerciseRepository exerciseRepository;
   @Mock
@@ -38,10 +41,13 @@ public class ExerciseServiceTests {
 
   @Test
   public void createExerciseSuccess() throws WorkoutNotFoundException {
+    String userId = "uuid";
     Exercise exercise = new Exercise(
         "High Bar Squat", 120, GoalType.STRENGTH, 150, "Bar rests at the traps.");
     Workout workout = new Workout("Workout A", 10, "A really tough workout.");
+    exercise.setUserId(userId);
 
+    when(principalService.getAuthUserId()).thenReturn(userId);
     when(workoutRepository.findById(1)).thenReturn(Optional.of(workout));
     when(exerciseRepository.save(exercise)).thenReturn(exercise);
 
