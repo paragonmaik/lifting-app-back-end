@@ -5,6 +5,7 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 import static org.mockito.ArgumentMatchers.any;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.*;
@@ -21,6 +22,7 @@ import com.hoister.tonshoister.advisors.UserIdDoesNotMatchException;
 import com.hoister.tonshoister.controllers.ExerciseController;
 import com.hoister.tonshoister.models.Exercise;
 import com.hoister.tonshoister.models.GoalType;
+import com.hoister.tonshoister.models.Workout;
 import com.hoister.tonshoister.repositories.UserRepository;
 import com.hoister.tonshoister.security.TokenService;
 import com.hoister.tonshoister.services.ExerciseService;
@@ -30,12 +32,16 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.hamcrest.CoreMatchers;
 
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(ExerciseController.class)
 public class ExerciseControllerTests {
+  private String userId = "37755df9-5607-495e-b5d4-da4f01f7c665";
+  Exercise exercise;
+  ExerciseDTO exerciseDTO;
 
   @Autowired
   ObjectMapper objectMapper;
@@ -53,16 +59,20 @@ public class ExerciseControllerTests {
   @Autowired
   MockMvc mockMvc;
 
-  @Test
-  public void createExerciseSuccess() throws Exception {
-    Exercise exercise = new Exercise(
-        1, "uuid", "High Bar Squat", 120, GoalType.STRENGTH,
-        150, "No instructions.", null, null);
-    ExerciseDTO exerciseDTO = new ExerciseDTO(
+  @BeforeEach
+  public void setEntities() {
+    exercise = new Exercise(
+        1, userId, "High Bar Squat", 120, GoalType.STRENGTH,
+        150, "Bar rests at the traps.", null, new HashSet<Workout>());
+
+    exerciseDTO = new ExerciseDTO(
         exercise.getId(), exercise.getUserId(), exercise.getName(), exercise.getLoad(),
         exercise.getGoal(), exercise.getRestSeconds(), exercise.getInstructions(),
         exercise.getDateCreated());
+  }
 
+  @Test
+  public void createExerciseSuccess() throws Exception {
     when(DTOsMapper.convertToEntity(any(ExerciseDTO.class))).thenReturn(exercise);
     when(exerciseService.createExercise(exercise, 1)).thenReturn(exercise);
     when(DTOsMapper.convertToDto(any(Exercise.class))).thenReturn(exerciseDTO);
@@ -91,14 +101,6 @@ public class ExerciseControllerTests {
 
   @Test
   public void getExercisesSuccess() throws Exception {
-    Exercise exercise = new Exercise(
-        1, "uuid", "High Bar Squat", 120, GoalType.STRENGTH,
-        150, "No instructions.", null, null);
-    ExerciseDTO exerciseDTO = new ExerciseDTO(
-        exercise.getId(), exercise.getUserId(), exercise.getName(), exercise.getLoad(),
-        exercise.getGoal(), exercise.getRestSeconds(), exercise.getInstructions(),
-        exercise.getDateCreated());
-
     List<Exercise> exercises = new ArrayList<Exercise>();
     List<ExerciseDTO> exercisesDTO = new ArrayList<ExerciseDTO>();
     exercises.add(exercise);
@@ -134,10 +136,6 @@ public class ExerciseControllerTests {
 
   @Test
   public void updateExerciseSuccess() throws Exception {
-    Exercise exercise = new Exercise(
-        1, "uuid", "High Bar Squat", 120, GoalType.STRENGTH,
-        150, "No instructions.", null, null);
-
     when(DTOsMapper.convertToEntity(any(ExerciseDTO.class))).thenReturn(exercise);
     when(exerciseService.updateExercise(any(Exercise.class))).thenReturn(exercise);
 
@@ -153,10 +151,6 @@ public class ExerciseControllerTests {
 
   @Test
   public void updateExerciseThrowsException() throws Exception {
-    Exercise exercise = new Exercise(
-        1, "uuid", "High Bar Squat", 120, GoalType.STRENGTH,
-        150, "No instructions.", null, null);
-
     when(DTOsMapper.convertToEntity(any(ExerciseDTO.class))).thenReturn(exercise);
     when(exerciseService.updateExercise(any(Exercise.class)))
         .thenThrow(new ExerciseNotFoundException());
@@ -171,10 +165,6 @@ public class ExerciseControllerTests {
 
   @Test
   public void updateExerciseThrowsUserIdDoesNotMatchException() throws Exception {
-    Exercise exercise = new Exercise(
-        1, "uuid", "High Bar Squat", 120, GoalType.STRENGTH,
-        150, "No instructions.", null, null);
-
     when(DTOsMapper.convertToEntity(any(ExerciseDTO.class))).thenReturn(exercise);
     when(exerciseService.updateExercise(any(Exercise.class)))
         .thenThrow(new UserIdDoesNotMatchException());
