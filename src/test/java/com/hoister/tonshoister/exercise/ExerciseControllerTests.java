@@ -2,16 +2,12 @@ package com.hoister.tonshoister.exercise;
 
 import java.util.List;
 
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.*;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -30,12 +26,8 @@ import com.hoister.tonshoister.security.TokenService;
 import com.hoister.tonshoister.services.ExerciseService;
 import com.hoister.tonshoister.services.PrincipalService;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.ArrayList;
 
@@ -64,7 +56,8 @@ public class ExerciseControllerTests {
   @Test
   public void createExerciseSuccess() throws Exception {
     Exercise exercise = new Exercise(
-        1, "High Bar Squat", 120, GoalType.STRENGTH, 150, "No instructions.");
+        1, "uuid", "High Bar Squat", 120, GoalType.STRENGTH,
+        150, "No instructions.", null, null);
     ExerciseDTO exerciseDTO = new ExerciseDTO(
         exercise.getId(), exercise.getUserId(), exercise.getName(), exercise.getLoad(),
         exercise.getGoal(), exercise.getRestSeconds(), exercise.getInstructions(),
@@ -99,7 +92,8 @@ public class ExerciseControllerTests {
   @Test
   public void getExercisesSuccess() throws Exception {
     Exercise exercise = new Exercise(
-        1, "High Bar Squat", 120, GoalType.STRENGTH, 150, "No instructions.");
+        1, "uuid", "High Bar Squat", 120, GoalType.STRENGTH,
+        150, "No instructions.", null, null);
     ExerciseDTO exerciseDTO = new ExerciseDTO(
         exercise.getId(), exercise.getUserId(), exercise.getName(), exercise.getLoad(),
         exercise.getGoal(), exercise.getRestSeconds(), exercise.getInstructions(),
@@ -141,7 +135,8 @@ public class ExerciseControllerTests {
   @Test
   public void updateExerciseSuccess() throws Exception {
     Exercise exercise = new Exercise(
-        1, "High Bar Squat", 120, GoalType.STRENGTH, 150, "No instructions.");
+        1, "uuid", "High Bar Squat", 120, GoalType.STRENGTH,
+        150, "No instructions.", null, null);
 
     when(DTOsMapper.convertToEntity(any(ExerciseDTO.class))).thenReturn(exercise);
     when(exerciseService.updateExercise(any(Exercise.class))).thenReturn(exercise);
@@ -159,7 +154,8 @@ public class ExerciseControllerTests {
   @Test
   public void updateExerciseThrowsException() throws Exception {
     Exercise exercise = new Exercise(
-        1, "High Bar Squat", 120, GoalType.STRENGTH, 150, "No instructions.");
+        1, "uuid", "High Bar Squat", 120, GoalType.STRENGTH,
+        150, "No instructions.", null, null);
 
     when(DTOsMapper.convertToEntity(any(ExerciseDTO.class))).thenReturn(exercise);
     when(exerciseService.updateExercise(any(Exercise.class)))
@@ -176,7 +172,8 @@ public class ExerciseControllerTests {
   @Test
   public void updateExerciseThrowsUserIdDoesNotMatchException() throws Exception {
     Exercise exercise = new Exercise(
-        1, "High Bar Squat", 120, GoalType.STRENGTH, 150, "No instructions.");
+        1, "uuid", "High Bar Squat", 120, GoalType.STRENGTH,
+        150, "No instructions.", null, null);
 
     when(DTOsMapper.convertToEntity(any(ExerciseDTO.class))).thenReturn(exercise);
     when(exerciseService.updateExercise(any(Exercise.class)))

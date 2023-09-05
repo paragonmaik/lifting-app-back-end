@@ -3,19 +3,14 @@ package com.hoister.tonshoister.exercise;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.hoister.tonshoister.advisors.ExerciseNotFoundException;
@@ -45,7 +40,8 @@ public class ExerciseServiceTests {
   public void createExerciseSuccess() throws WorkoutNotFoundException {
     String userId = "uuid";
     Exercise exercise = new Exercise(
-        "High Bar Squat", 120, GoalType.STRENGTH, 150, "Bar rests at the traps.");
+        1, "uuid", "High Bar Squat", 120, GoalType.STRENGTH,
+        150, "Bar rests at the traps.", null, new HashSet<Workout>());
     Workout workout = new Workout(
         null, null, "Workout A", 10, "A really tough workout.", null, null, new HashSet<Exercise>());
     exercise.setUserId(userId);
@@ -64,7 +60,8 @@ public class ExerciseServiceTests {
   @Test
   public void createExerciseThrowsException() throws WorkoutNotFoundException {
     Exercise exercise = new Exercise(
-        "High Bar Squat", 120, GoalType.STRENGTH, 150, "Bar rests at the traps.");
+        1, "uuid", "High Bar Squat", 120, GoalType.STRENGTH,
+        150, "Bar rests at the traps.", null, null);
 
     when(workoutRepository.findById(1)).thenReturn(Optional.empty());
 
@@ -78,7 +75,8 @@ public class ExerciseServiceTests {
   @Test
   public void findAllExercisesSuccess() throws ExerciseNotFoundException {
     Exercise exercise = new Exercise(
-        "High Bar Squat", 120, GoalType.STRENGTH, 150, "Bar rests at the traps.");
+        1, "uuid", "High Bar Squat", 120, GoalType.STRENGTH, 150,
+        "Bar rests at the traps.", null, null);
     List<Exercise> exercises = new ArrayList<Exercise>();
     exercises.add(exercise);
     String userId = "uuid";
@@ -111,9 +109,12 @@ public class ExerciseServiceTests {
   public void updateExerciseSuccess() throws ExerciseNotFoundException {
     String userId = "uuid";
     Exercise exercise1 = new Exercise(
-        1, "High Bar Squat", 120, GoalType.STRENGTH, 150, "Bar rests at the traps.");
+        1, "uuid", "High Bar Squat", 120, GoalType.STRENGTH,
+        150, "Bar rests at the traps.", null, null);
+
     Exercise exercise2 = new Exercise(
-        1, "Front Squat", 100, GoalType.HYPERTROPHY, 180, "No instructions.");
+        1, "uuid", "Front Squat", 100, GoalType.HYPERTROPHY,
+        180, "No instructions.", null, null);
     exercise1.setUserId(userId);
     exercise2.setUserId(userId);
 
@@ -136,7 +137,8 @@ public class ExerciseServiceTests {
   @Test
   public void updateExerciseThrowsException() throws ExerciseNotFoundException {
     Exercise exercise = new Exercise(
-        1, "High Bar Squat", 120, GoalType.STRENGTH, 150, "Bar rests at the traps.");
+        1, "uuid", "High Bar Squat", 120, GoalType.STRENGTH,
+        150, "Bar rests at the traps.", null, null);
 
     when(exerciseRepository.findById(1)).thenReturn(Optional.empty());
 
@@ -151,7 +153,8 @@ public class ExerciseServiceTests {
   public void updateExerciseThrowsUserIdDoesNotMatchException() {
     String userId = "uuid";
     Exercise exercise = new Exercise(
-        1, "High Bar Squat", 120, GoalType.STRENGTH, 150, "Bar rests at the traps.");
+        1, "uuid", "High Bar Squat", 120, GoalType.STRENGTH,
+        150, "Bar rests at the traps.", null, null);
     exercise.setUserId(userId);
 
     when(exerciseRepository.findById(1)).thenReturn(Optional.of(exercise));
@@ -166,7 +169,8 @@ public class ExerciseServiceTests {
   @Test
   public void deleteExerciseSuccess() throws Exception {
     Exercise exercise = new Exercise(
-        1, "High Bar Squat", 120, GoalType.STRENGTH, 150, "Bar rests at the traps.");
+        1, "uuid", "High Bar Squat", 120, GoalType.STRENGTH,
+        150, "Bar rests at the traps.", null, null);
     exercise.setUserId("uuid");
 
     when(principalService.getAuthUserId()).thenReturn("uuid");
@@ -191,7 +195,8 @@ public class ExerciseServiceTests {
   @Test
   public void deleteExerciseThrowsUserIdsDoNotMatchException() {
     Exercise exercise = new Exercise(
-        1, "High Bar Squat", 120, GoalType.STRENGTH, 150, "Bar rests at the traps.");
+        1, "uuid", "High Bar Squat", 120, GoalType.STRENGTH,
+        150, "Bar rests at the traps.", null, null);
     exercise.setUserId("uuid");
     when(exerciseRepository.findById(1)).thenReturn(Optional.of(exercise));
 
