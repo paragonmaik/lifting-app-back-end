@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hamcrest.CoreMatchers;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -34,6 +35,9 @@ import com.hoister.tonshoister.services.ProgramService;
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(ProgramController.class)
 public class ProgramControllerTests {
+  private String userId = "37755df9-5607-495e-b5d4-da4f01f7c665";
+  Program program;
+  ProgramDTO programDTO;
 
   @Autowired
   ObjectMapper objectMapper;
@@ -51,14 +55,19 @@ public class ProgramControllerTests {
   @Autowired
   MockMvc mockMvc;
 
-  @Test
-  public void createProgramSuccess() throws Exception {
-    Program program = new Program(1, "uuid", "Starting Strength", 40, "Rookie Program.", null, null);
-    ProgramDTO programDTO = new ProgramDTO(program.getId(),
+  @BeforeEach
+  public void setEntities() {
+    program = new Program(1, userId, "Starting Strength",
+        40, "Rookie Program.", null, null);
+
+    programDTO = new ProgramDTO(program.getId(),
         program.getUserId(), program.getName(),
         program.getDurationWeeks(),
         program.getDescription(), program.getDateCreated(), null);
+  }
 
+  @Test
+  public void createProgramSuccess() throws Exception {
     when(DTOsMapper.convertToEntity(any(ProgramDTO.class))).thenReturn(program);
     when(programService.createProgram(any(Program.class))).thenReturn(program);
     when(DTOsMapper.convertToDto(any(Program.class))).thenReturn(programDTO);
@@ -80,11 +89,6 @@ public class ProgramControllerTests {
 
   @Test
   public void getProgramsSuccess() throws Exception {
-    Program program = new Program(1, "uuid", "GVT", 12, "German Volume training", null, null);
-    ProgramDTO programDTO = new ProgramDTO(program.getId(), program.getUserId(), program.getName(),
-        program.getDurationWeeks(),
-        program.getDescription(), program.getDateCreated(), null);
-
     List<Program> programs = new ArrayList<Program>();
     List<ProgramDTO> programsDTO = new ArrayList<ProgramDTO>();
     programs.add(program);
@@ -118,12 +122,6 @@ public class ProgramControllerTests {
 
   @Test
   public void getProgramByIdSuccess() throws Exception {
-    Program program = new Program(1, "uuid", "GVT", 12, "German Volume training", null, null);
-    ProgramDTO programDTO = new ProgramDTO(program.getId(), program.getUserId(),
-        program.getName(),
-        program.getDurationWeeks(),
-        program.getDescription(), program.getDateCreated(), null);
-
     when(programService.findById(1)).thenReturn(program);
     when(DTOsMapper.convertToDto(any(Program.class))).thenReturn(programDTO);
 
@@ -152,8 +150,6 @@ public class ProgramControllerTests {
 
   @Test
   public void updateProgramSuccess() throws Exception {
-    Program program = new Program(1, null, "5x5", 12, "Rookie Program.", null, null);
-
     when(DTOsMapper.convertToEntity(any(ProgramDTO.class))).thenReturn(program);
     when(programService.updateProgram(any(Program.class))).thenReturn(program);
 
@@ -169,8 +165,6 @@ public class ProgramControllerTests {
 
   @Test
   public void updateProgramThrowsException() throws Exception {
-    Program program = new Program(1, null, "5x5", 12, "Rookie Program.", null, null);
-
     when(DTOsMapper.convertToEntity(any(ProgramDTO.class))).thenReturn(program);
     when(programService.updateProgram(any(Program.class))).thenThrow(new ProgramNotFoundException());
 
@@ -185,8 +179,6 @@ public class ProgramControllerTests {
 
   @Test
   public void updateProgramThrowsUserIdsDoNotMatchException() throws Exception {
-    Program program = new Program(1, "uuid", "5x5", 12, "Rookie Program.", null, null);
-
     when(DTOsMapper.convertToEntity(any(ProgramDTO.class))).thenReturn(program);
     when(programService.updateProgram(any(Program.class)))
         .thenThrow(new UserIdDoesNotMatchException());
