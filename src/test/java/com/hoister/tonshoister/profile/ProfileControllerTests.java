@@ -1,28 +1,30 @@
 package com.hoister.tonshoister.profile;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.*;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import java.util.HashSet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hoister.tonshoister.DTOs.DTOsMapper;
 import com.hoister.tonshoister.DTOs.ProfileDTO;
 import com.hoister.tonshoister.advisors.ProfileNotFoundException;
 import com.hoister.tonshoister.controllers.ProfileController;
+import com.hoister.tonshoister.models.Exercise;
 import com.hoister.tonshoister.models.Profile;
+import com.hoister.tonshoister.models.Program;
+import com.hoister.tonshoister.models.Workout;
 import com.hoister.tonshoister.repositories.UserRepository;
 import com.hoister.tonshoister.security.TokenService;
 import com.hoister.tonshoister.services.PrincipalService;
@@ -50,7 +52,9 @@ public class ProfileControllerTests {
 
   @Test
   public void updateProfileSuccess() throws Exception {
-    Profile profile = new Profile("uuid", 75, 175, null);
+    Profile profile = new Profile(
+        "uuid", 75, 175, null,
+        new HashSet<Program>(), new HashSet<Workout>(), new HashSet<Exercise>());
 
     when(DTOsMapper.convertToEntity(any(ProfileDTO.class))).thenReturn(profile);
     when(profileService.updateProfile(any(Profile.class))).thenReturn(profile);
@@ -67,7 +71,8 @@ public class ProfileControllerTests {
 
   @Test
   public void updateProfileThrowsException() throws Exception {
-    Profile profile = new Profile("uuid", 75, 175, null);
+    Profile profile = new Profile("uuid", 75, 175, null,
+        new HashSet<Program>(), new HashSet<Workout>(), new HashSet<Exercise>());
 
     when(DTOsMapper.convertToEntity(any(ProfileDTO.class))).thenReturn(profile);
     when(profileService.updateProfile(any(Profile.class))).thenThrow(new ProfileNotFoundException());
