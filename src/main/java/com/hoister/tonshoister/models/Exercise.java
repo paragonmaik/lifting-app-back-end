@@ -37,35 +37,17 @@ public class Exercise {
   public Exercise() {
   }
 
-  public Exercise(String name, Integer load, GoalType goal, Integer restSeconds,
-      String instructions) {
-    this.name = name;
-    this.load = load;
-    this.goal = goal;
-    this.restSeconds = restSeconds;
-    this.instructions = instructions;
-  }
-
-  public Exercise(Integer id, String name, Integer load, GoalType goal,
-      Integer restSeconds, String instructions) {
+  public Exercise(Integer id, String userId, String name, Integer load, GoalType goal, Integer restSeconds,
+      String instructions, LocalDateTime dateCreated, Set<Workout> workouts) {
     this.id = id;
-    this.name = name;
-    this.load = load;
-    this.goal = goal;
-    this.restSeconds = restSeconds;
-    this.instructions = instructions;
-  }
-
-  public Exercise(Integer id, String name, Integer load, GoalType goal,
-      Integer restSeconds, String instructions,
-      LocalDateTime dateCreated) {
-    this.id = id;
+    this.userId = userId;
     this.name = name;
     this.load = load;
     this.goal = goal;
     this.restSeconds = restSeconds;
     this.instructions = instructions;
     this.dateCreated = dateCreated;
+    this.workouts = workouts;
   }
 
   public String getUserId() {
