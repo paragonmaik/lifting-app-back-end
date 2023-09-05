@@ -33,6 +33,7 @@ import com.hoister.tonshoister.services.ProfileService;
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(ProfileController.class)
 public class ProfileControllerTests {
+  private String userId = "37755df9-5607-495e-b5d4-da4f01f7c665";
 
   @Autowired
   ObjectMapper objectMapper;
@@ -53,7 +54,7 @@ public class ProfileControllerTests {
   @Test
   public void updateProfileSuccess() throws Exception {
     Profile profile = new Profile(
-        "uuid", 75, 175, null,
+        userId, 75, 175, null,
         new HashSet<Program>(), new HashSet<Workout>(), new HashSet<Exercise>());
 
     when(DTOsMapper.convertToEntity(any(ProfileDTO.class))).thenReturn(profile);
@@ -71,7 +72,7 @@ public class ProfileControllerTests {
 
   @Test
   public void updateProfileThrowsException() throws Exception {
-    Profile profile = new Profile("uuid", 75, 175, null,
+    Profile profile = new Profile(userId, 75, 175, null,
         new HashSet<Program>(), new HashSet<Workout>(), new HashSet<Exercise>());
 
     when(DTOsMapper.convertToEntity(any(ProfileDTO.class))).thenReturn(profile);

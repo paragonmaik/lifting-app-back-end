@@ -71,7 +71,7 @@ public class ProfileE2ETests {
         HttpMethod.PUT, entity,
         Profile.class);
 
-    assertEquals(response.getStatusCode(), HttpStatus.NO_CONTENT);
+    assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
   }
 
   @Test
@@ -89,7 +89,6 @@ public class ProfileE2ETests {
         HttpMethod.PUT, entity,
         Profile.class);
 
-    assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
-
+    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
   }
 }

@@ -24,6 +24,7 @@ import com.hoister.tonshoister.services.ProfileService;
 
 @ExtendWith(MockitoExtension.class)
 public class ProfileServiceTests {
+  private String userId = "37755df9-5607-495e-b5d4-da4f01f7c665";
 
   @Mock
   ProfileRepository profileRepository;
@@ -32,7 +33,7 @@ public class ProfileServiceTests {
 
   @Test
   public void createProfileSuccess() {
-    User user = new User("uuid", "arnold", "gettothechoppah", UserRole.ADMIN, null);
+    User user = new User(userId, "arnold", "gettothechoppah", UserRole.ADMIN, null);
     Profile profile = new Profile(user.getId(), null, null, user,
         new HashSet<Program>(), new HashSet<Workout>(), new HashSet<Exercise>());
 
@@ -44,34 +45,34 @@ public class ProfileServiceTests {
 
   @Test
   public void updateProfileSuccess() throws Exception {
-    Profile profile1 = new Profile("uuid", 70, 175, null,
+    Profile profile1 = new Profile(userId, 70, 175, null,
         new HashSet<Program>(), new HashSet<Workout>(), new HashSet<Exercise>());
-    Profile profile2 = new Profile("uuid", 75, 176, null,
+    Profile profile2 = new Profile(userId, 75, 176, null,
         new HashSet<Program>(), new HashSet<Workout>(), new HashSet<Exercise>());
 
-    when(profileRepository.findById("uuid")).thenReturn(Optional.of(profile1));
+    when(profileRepository.findById(userId)).thenReturn(Optional.of(profile1));
     when(profileRepository.save(profile1)).thenReturn(profile2);
 
     Profile updatedProfile = profileService.updateProfile(profile1);
 
-    assertNotEquals(profile1.getWeight(), updatedProfile.getWeight());
-    assertNotEquals(profile1.getHeight(), updatedProfile.getHeight());
+    assertNotEquals(updatedProfile.getWeight(), profile1.getWeight());
+    assertNotEquals(updatedProfile.getHeight(), profile1.getHeight());
 
-    verify(profileRepository).findById("uuid");
+    verify(profileRepository).findById(userId);
     verify(profileRepository).save(profile1);
   }
 
   @Test
   public void updateProfileThrowsException() {
-    Profile profile1 = new Profile("uuid", 70, 175, null,
+    Profile profile1 = new Profile(userId, 70, 175, null,
         new HashSet<Program>(), new HashSet<Workout>(), new HashSet<Exercise>());
 
-    when(profileRepository.findById("uuid")).thenReturn(Optional.empty());
+    when(profileRepository.findById(userId)).thenReturn(Optional.empty());
 
     assertThrows(ProfileNotFoundException.class, () -> {
       profileService.updateProfile(profile1);
     });
 
-    verify(profileRepository).findById("uuid");
+    verify(profileRepository).findById(userId);
   }
 }
