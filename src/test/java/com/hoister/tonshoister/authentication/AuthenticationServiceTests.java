@@ -1,16 +1,17 @@
 package com.hoister.tonshoister.authentication;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 
 import com.hoister.tonshoister.DTOs.AuthenticationDTO;
+import com.hoister.tonshoister.advisors.UserAlreadyRegisteredException;
 import com.hoister.tonshoister.models.User;
 import com.hoister.tonshoister.models.UserRole;
 import com.hoister.tonshoister.repositories.UserRepository;
@@ -40,8 +41,21 @@ public class AuthenticationServiceTests {
   @Test
   public void registerUserSuccess() {
     User user = new User("arnold", "gettothechoppah", UserRole.ADMIN);
+
     when(userService.loadUserByUsername(user.getLogin())).thenReturn(null);
     authenticationService.registerUser(user);
+
+    verify(userService).loadUserByUsername(user.getLogin());
+  }
+
+  @Test
+  public void registerUserThrowsException() {
+    User user = new User("arnold", "gettothechoppah", UserRole.ADMIN);
+
+    when(userService.loadUserByUsername(user.getLogin())).thenReturn(user);
+    assertThrows(UserAlreadyRegisteredException.class, () -> {
+      authenticationService.registerUser(user);
+    });
 
     verify(userService).loadUserByUsername(user.getLogin());
   }
