@@ -115,6 +115,9 @@ public class DTOsMapper {
         profileDTO.id(),
         profileDTO.weight(),
         profileDTO.height(),
-        profileDTO.user());
+        profileDTO.user(),
+        new HashSet<Program>(),
+        new HashSet<Workout>(),
+        new HashSet<Exercise>());
   }
 }
