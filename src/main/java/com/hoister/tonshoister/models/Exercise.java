@@ -6,17 +6,8 @@ import java.util.Set;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 @Entity
 @Table
@@ -24,24 +15,24 @@ public class Exercise {
   @Id
   @SequenceGenerator(name = "exercise_sequence", sequenceName = "exercise_sequence", allocationSize = 1)
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "exercise_sequence")
-  Integer id;
+  private Integer id;
   @Column(name = "user_id")
-  String userId;
+  private String userId;
   @NotBlank
-  String name;
+  private String name;
   @NotNull
-  Integer load;
+  private Integer load;
   @NotNull
-  GoalType goal;
+  private GoalType goal;
   @Column(name = "rest_seconds")
-  Integer restSeconds;
-  String instructions;
+  private Integer restSeconds;
+  private String instructions;
   @Column(name = "date_created")
   @CreationTimestamp
-  LocalDateTime dateCreated;
+  private LocalDateTime dateCreated;
 
   @ManyToMany(mappedBy = "exercises", fetch = FetchType.LAZY)
-  Set<Workout> workouts = new HashSet<>();
+  private Set<Workout> workouts = new HashSet<>();
 
   public Exercise() {
   }
