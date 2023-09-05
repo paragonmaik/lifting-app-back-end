@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hamcrest.CoreMatchers;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -16,10 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hoister.tonshoister.DTOs.DTOsMapper;
@@ -33,16 +31,15 @@ import com.hoister.tonshoister.security.TokenService;
 import com.hoister.tonshoister.services.PrincipalService;
 import com.hoister.tonshoister.services.WorkoutService;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(WorkoutController.class)
 public class WorkoutControllerTests {
+  private String userId = "37755df9-5607-495e-b5d4-da4f01f7c665";
+  Workout workout;
+  WorkoutDTO workoutDTO;
 
   @Autowired
   ObjectMapper objectMapper;
@@ -59,14 +56,17 @@ public class WorkoutControllerTests {
   @Autowired
   MockMvc mockMvc;
 
-  @Test
-  public void createWorkoutSuccess() throws Exception {
-    Workout workout = new Workout(
-        1, null, "Workout A", 12, "A long workout.", null, null, null);
-    WorkoutDTO workoutDTO = new WorkoutDTO(
+  @BeforeEach
+  public void setEntities() {
+    workout = new Workout(
+        1, userId, "Workout A", 12, "A long workout.", null, null, null);
+    workoutDTO = new WorkoutDTO(
         workout.getId(), workout.getUserId(), workout.getName(), workout.getDurationMins(),
         workout.getDescription(), LocalDateTime.now(), null);
+  }
 
+  @Test
+  public void createWorkoutSuccess() throws Exception {
     when(DTOsMapper.convertToEntity(any(WorkoutDTO.class))).thenReturn(workout);
     when(workoutService.createWorkout(workout, 1)).thenReturn(workout);
     when(DTOsMapper.convertToDto(any(Workout.class))).thenReturn(workoutDTO);
@@ -87,12 +87,6 @@ public class WorkoutControllerTests {
 
   @Test
   public void getWorkoutsSuccess() throws Exception {
-    Workout workout = new Workout(
-        1, null, "Workout A", 12, "A long workout.", null, null, null);
-    WorkoutDTO workoutDTO = new WorkoutDTO(
-        workout.getId(), workout.getUserId(), workout.getName(), workout.getDurationMins(),
-        workout.getDescription(), LocalDateTime.now(), null);
-
     List<Workout> workouts = new ArrayList<Workout>();
     List<WorkoutDTO> workoutsDTO = new ArrayList<WorkoutDTO>();
     workouts.add(workout);
@@ -109,25 +103,21 @@ public class WorkoutControllerTests {
         .andExpect(MockMvcResultMatchers.jsonPath("$..description").value(workoutsDTO.get(0).description()))
         .andExpect(MockMvcResultMatchers.jsonPath("$..dateCreated").exists())
         .andExpect(MockMvcResultMatchers.jsonPath("$..exercises").exists());
-
   }
 
   @Test
   public void getWorkoutsThrowsException() throws Exception {
     when(workoutService.findAllByUserId()).thenThrow(new WorkoutNotFoundException());
 
-     mockMvc.perform(get("/api/workouts"))
+    mockMvc.perform(get("/api/workouts"))
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$..message").exists());
 
-        verify(workoutService).findAllByUserId();    
+    verify(workoutService).findAllByUserId();    
   }
 
   @Test
   public void updateWorkoutSuccess() throws Exception {
-    Workout workout = new Workout(
-        1, null, "Workout A", 12, "A long workout.", null, null, null);
-
     when(DTOsMapper.convertToEntity(any(WorkoutDTO.class))).thenReturn(workout);
     when(workoutService.updateWorkout(any(Workout.class))).thenReturn(workout);
 
@@ -143,9 +133,6 @@ public class WorkoutControllerTests {
 
   @Test
   public void updateWorkoutThrowsException() throws Exception {
-    Workout workout = new Workout(
-        1, null, "Workout A", 12, "A long workout.", null, null, null);
-
     when(DTOsMapper.convertToEntity(any(WorkoutDTO.class))).thenReturn(workout);
     when(workoutService.updateWorkout(any(Workout.class)))
         .thenThrow(new WorkoutNotFoundException());
@@ -161,9 +148,6 @@ public class WorkoutControllerTests {
 
   @Test
   public void updateWorkoutThrowsUserIdDoesNotMatchException() throws Exception {
-    Workout workout = new Workout(
-        1, null, "Workout A", 12, "A long workout.", null, null, null);
-
     when(DTOsMapper.convertToEntity(any(WorkoutDTO.class))).thenReturn(workout);
     when(workoutService.updateWorkout(any(Workout.class)))
         .thenThrow(new UserIdDoesNotMatchException());
