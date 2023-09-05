@@ -39,11 +39,16 @@ public class Profile {
     this.height = height;
   }
 
-  public Profile(String id, Integer weight, Integer height, User user) {
+  public Profile(String id, Integer weight, Integer height, User user,
+      Set<Program> programs, Set<Workout> workouts,
+      Set<Exercise> exercises) {
     this.id = id;
     this.weight = weight;
     this.height = height;
     this.user = user;
+    this.programs = programs;
+    this.workouts = workouts;
+    this.exercises = exercises;
   }
 
   public String getId() {
