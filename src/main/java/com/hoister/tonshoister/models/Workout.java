@@ -15,27 +15,27 @@ public class Workout {
   @Id
   @SequenceGenerator(name = "workout_sequence", sequenceName = "workout_sequence", allocationSize = 1)
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "workout_sequence")
-  Integer id;
+  private Integer id;
   @Column(name = "user_id")
-  String userId;
+  private String userId;
   @NotBlank
-  String name;
+  private String name;
   @Column(name = "duration_mins")
-  Integer durationMins;
-  String description;
+  private Integer durationMins;
+  private String description;
   @Column(name = "date_created")
   @CreationTimestamp
-  LocalDateTime dateCreated;
+  private LocalDateTime dateCreated;
 
   @ManyToMany(mappedBy = "workouts", fetch = FetchType.LAZY)
-  Set<Program> programs = new HashSet<>();
+  private Set<Program> programs = new HashSet<>();
 
   @ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE,
       CascadeType.PERSIST, CascadeType.REFRESH }, fetch = FetchType.LAZY)
   @JoinTable(name = "workout_exercise", joinColumns = {
       @JoinColumn(name = "workout_id") }, inverseJoinColumns = {
           @JoinColumn(name = "exercise_id") })
-  Set<Exercise> exercises = new HashSet<>();
+  private Set<Exercise> exercises = new HashSet<>();
 
   public Workout() {
   }
