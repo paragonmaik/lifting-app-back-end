@@ -91,11 +91,14 @@ public class DTOsMapper {
   public Exercise convertToEntity(ExerciseDTO exerciseDTO) {
     return new Exercise(
         exerciseDTO.id(),
+        exerciseDTO.userId(),
         exerciseDTO.name(),
         exerciseDTO.load(),
         exerciseDTO.goal(),
         exerciseDTO.restSeconds(),
-        exerciseDTO.instructions());
+        exerciseDTO.instructions(),
+        exerciseDTO.dateCreated(),
+        new HashSet<Workout>());
   }
 
   // Authentication

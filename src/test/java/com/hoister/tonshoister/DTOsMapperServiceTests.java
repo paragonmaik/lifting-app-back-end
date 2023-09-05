@@ -98,8 +98,9 @@ public class DTOsMapperServiceTests {
 
   @Test
   public void convertExerciseToDTO() {
-    Exercise exercise = new Exercise(1, "High Bar Back Squat", 210, GoalType.STRENGTH, 150,
-        "Squat deep.", LocalDateTime.now());
+    Exercise exercise = new Exercise(
+        1, "uuid", "High Bar Back Squat", 210, GoalType.STRENGTH, 150,
+        "Squat deep.", LocalDateTime.now(), null);
 
     ExerciseDTO exerciseDTO = DTOsMapper.convertToDto(exercise);
 
