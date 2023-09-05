@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hoister.tonshoister.DTOs.AuthenticationDTO;
 import com.hoister.tonshoister.DTOs.DTOsMapper;
 import com.hoister.tonshoister.DTOs.RegisterDTO;
+import com.hoister.tonshoister.advisors.UserAlreadyRegisteredException;
 import com.hoister.tonshoister.controllers.AuthenticationController;
 import com.hoister.tonshoister.models.User;
 import com.hoister.tonshoister.models.UserRole;
@@ -58,6 +59,23 @@ public class AuthenticationControllerTests {
             post("/api/auth/register").contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(user)))
         .andExpect(MockMvcResultMatchers.status().isOk());
+
+    verify(authenticationService).registerUser(user);
+  }
+
+  @Test
+  public void registerUserThrowsException() throws Exception {
+    User user = new User(
+        "arnold", "gettothechoppah", UserRole.ADMIN);
+
+    when(DTOsMapper.convertToEntity(any(RegisterDTO.class))).thenReturn(user);
+    doThrow(UserAlreadyRegisteredException.class).when(authenticationService).registerUser(user);
+
+    mockMvc
+        .perform(
+            post("/api/auth/register").contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(user)))
+        .andExpect(MockMvcResultMatchers.status().isConflict());
 
     verify(authenticationService).registerUser(user);
   }
