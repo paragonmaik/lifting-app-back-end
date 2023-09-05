@@ -8,15 +8,9 @@ import org.springframework.http.*;
 import org.springframework.test.annotation.DirtiesContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hoister.tonshoister.DTOs.AuthenticationDTO;
-import com.hoister.tonshoister.DTOs.LoginResponseDTO;
-import com.hoister.tonshoister.models.Program;
-import com.hoister.tonshoister.models.User;
-import com.hoister.tonshoister.models.UserRole;
-import com.hoister.tonshoister.models.Workout;
-import com.hoister.tonshoister.repositories.ProgramRepository;
-import com.hoister.tonshoister.repositories.UserRepository;
-import com.hoister.tonshoister.repositories.WorkoutRepository;
+import com.hoister.tonshoister.DTOs.*;
+import com.hoister.tonshoister.models.*;
+import com.hoister.tonshoister.repositories.*;
 import com.hoister.tonshoister.security.TokenService;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,10 +18,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
 

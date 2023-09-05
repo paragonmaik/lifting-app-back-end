@@ -13,12 +13,7 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.hoister.tonshoister.advisors.ProfileNotFoundException;
-import com.hoister.tonshoister.models.Exercise;
-import com.hoister.tonshoister.models.Profile;
-import com.hoister.tonshoister.models.Program;
-import com.hoister.tonshoister.models.User;
-import com.hoister.tonshoister.models.UserRole;
-import com.hoister.tonshoister.models.Workout;
+import com.hoister.tonshoister.models.*;
 import com.hoister.tonshoister.repositories.ProfileRepository;
 import com.hoister.tonshoister.services.ProfileService;
 

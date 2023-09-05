@@ -17,18 +17,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.HashSet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hoister.tonshoister.DTOs.DTOsMapper;
-import com.hoister.tonshoister.DTOs.ProfileDTO;
+import com.hoister.tonshoister.DTOs.*;
 import com.hoister.tonshoister.advisors.ProfileNotFoundException;
 import com.hoister.tonshoister.controllers.ProfileController;
-import com.hoister.tonshoister.models.Exercise;
-import com.hoister.tonshoister.models.Profile;
-import com.hoister.tonshoister.models.Program;
-import com.hoister.tonshoister.models.Workout;
+import com.hoister.tonshoister.models.*;
 import com.hoister.tonshoister.repositories.UserRepository;
 import com.hoister.tonshoister.security.TokenService;
-import com.hoister.tonshoister.services.PrincipalService;
-import com.hoister.tonshoister.services.ProfileService;
+import com.hoister.tonshoister.services.*;
 
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(ProfileController.class)

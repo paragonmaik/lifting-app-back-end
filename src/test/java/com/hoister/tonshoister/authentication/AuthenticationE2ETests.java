@@ -12,11 +12,8 @@ import org.springframework.http.*;
 import org.springframework.test.annotation.DirtiesContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hoister.tonshoister.DTOs.AuthenticationDTO;
-import com.hoister.tonshoister.DTOs.LoginResponseDTO;
-import com.hoister.tonshoister.DTOs.RegisterDTO;
-import com.hoister.tonshoister.models.User;
-import com.hoister.tonshoister.models.UserRole;
+import com.hoister.tonshoister.DTOs.*;
+import com.hoister.tonshoister.models.*;
 import com.hoister.tonshoister.repositories.UserRepository;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)

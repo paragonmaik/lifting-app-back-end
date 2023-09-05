@@ -7,11 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hamcrest.CoreMatchers;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.*;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -21,16 +19,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hoister.tonshoister.DTOs.DTOsMapper;
-import com.hoister.tonshoister.DTOs.ProgramDTO;
-import com.hoister.tonshoister.advisors.ProgramNotFoundException;
-import com.hoister.tonshoister.advisors.UserIdDoesNotMatchException;
+import com.hoister.tonshoister.DTOs.*;
+import com.hoister.tonshoister.advisors.*;
 import com.hoister.tonshoister.controllers.ProgramController;
 import com.hoister.tonshoister.models.Program;
 import com.hoister.tonshoister.repositories.UserRepository;
 import com.hoister.tonshoister.security.TokenService;
-import com.hoister.tonshoister.services.PrincipalService;
-import com.hoister.tonshoister.services.ProgramService;
+import com.hoister.tonshoister.services.*;
 
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(ProgramController.class)

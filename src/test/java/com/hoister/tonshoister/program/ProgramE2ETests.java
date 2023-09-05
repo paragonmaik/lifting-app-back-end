@@ -11,13 +11,9 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.test.annotation.DirtiesContext;
 
-import com.hoister.tonshoister.DTOs.AuthenticationDTO;
-import com.hoister.tonshoister.DTOs.LoginResponseDTO;
-import com.hoister.tonshoister.models.Program;
-import com.hoister.tonshoister.models.User;
-import com.hoister.tonshoister.models.UserRole;
-import com.hoister.tonshoister.repositories.ProgramRepository;
-import com.hoister.tonshoister.repositories.UserRepository;
+import com.hoister.tonshoister.DTOs.*;
+import com.hoister.tonshoister.models.*;
+import com.hoister.tonshoister.repositories.*;
 import com.hoister.tonshoister.security.TokenService;
 import com.hoister.tonshoister.services.PrincipalService;
 import com.fasterxml.jackson.databind.ObjectMapper;

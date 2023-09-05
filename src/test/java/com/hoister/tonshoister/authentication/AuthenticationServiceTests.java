@@ -12,13 +12,10 @@ import org.springframework.security.core.Authentication;
 
 import com.hoister.tonshoister.DTOs.AuthenticationDTO;
 import com.hoister.tonshoister.advisors.UserAlreadyRegisteredException;
-import com.hoister.tonshoister.models.User;
-import com.hoister.tonshoister.models.UserRole;
+import com.hoister.tonshoister.models.*;
 import com.hoister.tonshoister.repositories.UserRepository;
 import com.hoister.tonshoister.security.TokenService;
-import com.hoister.tonshoister.services.AuthenticationService;
-import com.hoister.tonshoister.services.ProfileService;
-import com.hoister.tonshoister.services.UserService;
+import com.hoister.tonshoister.services.*;
 
 @ExtendWith(MockitoExtension.class)
 public class AuthenticationServiceTests {

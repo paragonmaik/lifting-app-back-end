@@ -8,22 +8,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.hoister.tonshoister.advisors.ProgramNotFoundException;
-import com.hoister.tonshoister.advisors.UserIdDoesNotMatchException;
-import com.hoister.tonshoister.advisors.WorkoutNotFoundException;
-import com.hoister.tonshoister.models.Exercise;
-import com.hoister.tonshoister.models.Program;
-import com.hoister.tonshoister.models.Workout;
-import com.hoister.tonshoister.repositories.ProgramRepository;
-import com.hoister.tonshoister.repositories.WorkoutRepository;
-import com.hoister.tonshoister.services.PrincipalService;
-import com.hoister.tonshoister.services.WorkoutService;
+import com.hoister.tonshoister.advisors.*;
+import com.hoister.tonshoister.models.*;
+import com.hoister.tonshoister.repositories.*;
+import com.hoister.tonshoister.services.*;
 
 @ExtendWith(MockitoExtension.class)
 public class WorkoutServiceTests {

@@ -20,16 +20,13 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import static org.mockito.Mockito.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hoister.tonshoister.DTOs.DTOsMapper;
-import com.hoister.tonshoister.DTOs.WorkoutDTO;
-import com.hoister.tonshoister.advisors.UserIdDoesNotMatchException;
-import com.hoister.tonshoister.advisors.WorkoutNotFoundException;
+import com.hoister.tonshoister.DTOs.*;
+import com.hoister.tonshoister.advisors.*;
 import com.hoister.tonshoister.controllers.WorkoutController;
 import com.hoister.tonshoister.models.Workout;
 import com.hoister.tonshoister.repositories.UserRepository;
 import com.hoister.tonshoister.security.TokenService;
-import com.hoister.tonshoister.services.PrincipalService;
-import com.hoister.tonshoister.services.WorkoutService;
+import com.hoister.tonshoister.services.*;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;

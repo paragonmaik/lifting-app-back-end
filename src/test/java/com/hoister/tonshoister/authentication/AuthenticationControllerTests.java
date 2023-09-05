@@ -12,17 +12,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hoister.tonshoister.DTOs.AuthenticationDTO;
-import com.hoister.tonshoister.DTOs.DTOsMapper;
-import com.hoister.tonshoister.DTOs.RegisterDTO;
+import com.hoister.tonshoister.DTOs.*;
 import com.hoister.tonshoister.advisors.UserAlreadyRegisteredException;
 import com.hoister.tonshoister.controllers.AuthenticationController;
-import com.hoister.tonshoister.models.User;
-import com.hoister.tonshoister.models.UserRole;
+import com.hoister.tonshoister.models.*;
 import com.hoister.tonshoister.repositories.UserRepository;
 import com.hoister.tonshoister.security.TokenService;
-import com.hoister.tonshoister.services.AuthenticationService;
-import com.hoister.tonshoister.services.PrincipalService;
+import com.hoister.tonshoister.services.*;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
