@@ -117,11 +117,11 @@ public class ExerciseServiceTests {
 
     Exercise updatedExercise = exerciseService.updateExercise(exercise1);
 
-    assertNotEquals(updatedExercise.getName(), exercise1.getName());
-    assertNotEquals(updatedExercise.getLoad(), exercise1.getLoad());
-    assertNotEquals(updatedExercise.getGoal(), exercise1.getGoal());
-    assertNotEquals(updatedExercise.getRestSeconds(), exercise1.getRestSeconds());
-    assertNotEquals(updatedExercise.getInstructions(), exercise1.getInstructions());
+    assertNotEquals(exercise1.getName(), updatedExercise.getName());
+    assertNotEquals(exercise1.getLoad(), updatedExercise.getLoad());
+    assertNotEquals(exercise1.getGoal(), updatedExercise.getGoal());
+    assertNotEquals(exercise1.getRestSeconds(), updatedExercise.getRestSeconds());
+    assertNotEquals(exercise1.getInstructions(), updatedExercise.getInstructions());
 
     verify(exerciseRepository).save(exercise1);
     verify(exerciseRepository).findById(1);

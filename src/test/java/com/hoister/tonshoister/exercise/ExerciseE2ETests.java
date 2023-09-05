@@ -101,14 +101,14 @@ public class ExerciseE2ETests {
 
     Exercise responseExercise = response.getBody();
 
-    assertEquals(response.getStatusCode(), HttpStatus.CREATED);
+    assertEquals(HttpStatus.CREATED, response.getStatusCode());
 
     assertNotNull(responseExercise.getId());
-    assertEquals(responseExercise.getName(), exercise.getName());
-    assertEquals(responseExercise.getLoad(), exercise.getLoad());
-    assertEquals(responseExercise.getGoal(), exercise.getGoal());
-    assertEquals(responseExercise.getRestSeconds(), exercise.getRestSeconds());
-    assertEquals(responseExercise.getInstructions(), exercise.getInstructions());
+    assertEquals(exercise.getName(), responseExercise.getName());
+    assertEquals(exercise.getLoad(), responseExercise.getLoad());
+    assertEquals(exercise.getGoal(), responseExercise.getGoal());
+    assertEquals(exercise.getRestSeconds(), responseExercise.getRestSeconds());
+    assertEquals(exercise.getInstructions(), responseExercise.getInstructions());
     assertNotNull(responseExercise.getDateCreated());
   }
 
@@ -134,14 +134,14 @@ public class ExerciseE2ETests {
 
     Exercise responseExercise = response.getBody().get(0);
 
-    assertEquals(response.getStatusCode(), HttpStatus.OK);
+    assertEquals(HttpStatus.OK, response.getStatusCode());
 
     assertNotNull(responseExercise.getId());
-    assertEquals(responseExercise.getName(), exercise.getName());
-    assertEquals(responseExercise.getLoad(), exercise.getLoad());
-    assertEquals(responseExercise.getGoal(), exercise.getGoal());
-    assertEquals(responseExercise.getRestSeconds(), exercise.getRestSeconds());
-    assertEquals(responseExercise.getInstructions(), exercise.getInstructions());
+    assertEquals(exercise.getName(), responseExercise.getName());
+    assertEquals(exercise.getLoad(), responseExercise.getLoad());
+    assertEquals(exercise.getGoal(), responseExercise.getGoal());
+    assertEquals(exercise.getRestSeconds(), responseExercise.getRestSeconds());
+    assertEquals(exercise.getInstructions(), responseExercise.getInstructions());
     assertNotNull(responseExercise.getDateCreated());
   }
 
