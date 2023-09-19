@@ -18,7 +18,7 @@ CREATE TABLE users (
 );
 
 CREATE TABLE profile (
-  user_id TEXT PRIMARY KEY REFERENCES users (id),
+  user_id TEXT PRIMARY KEY REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE,
   weight INTEGER,
   height INTEGER,
   date_created TIMESTAMP
@@ -26,7 +26,7 @@ CREATE TABLE profile (
 
 CREATE TABLE exercise (
   id SERIAL PRIMARY KEY,
-  user_id TEXT REFERENCES profile (user_id),
+  user_id TEXT REFERENCES profile (user_id) ON UPDATE CASCADE ON DELETE CASCADE,
   name VARCHAR(30) NOT NULL,
   load INTEGER,
   goal VARCHAR(30) NOT NULL,
@@ -40,7 +40,7 @@ CREATE SEQUENCE exercise_sequence START WITH 1 INCREMENT BY 1 MINVALUE 1;
 
 CREATE TABLE workout (
   id SERIAL PRIMARY KEY,
-  user_id TEXT REFERENCES profile (user_id),
+  user_id TEXT REFERENCES profile (user_id) ON UPDATE CASCADE ON DELETE CASCADE,
   name VARCHAR(30) NOT NULL,
   duration_mins INTEGER,
   description TEXT,
@@ -58,7 +58,7 @@ CREATE TABLE workout_exercise (
 
 CREATE TABLE program (
   id SERIAL PRIMARY KEY,
-  user_id TEXT REFERENCES profile (user_id),
+  user_id TEXT REFERENCES profile (user_id) ON UPDATE CASCADE ON DELETE CASCADE,
   name VARCHAR(30) NOT NULL,
   duration_weeks INTEGER,
   description TEXT,
