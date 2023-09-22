@@ -55,19 +55,6 @@ public class Exercise {
     this.workouts = workouts;
   }
 
-  public Exercise(Integer id, String userId, String name, Integer load, GoalType goal, Integer restSeconds,
-      String instructions, LocalDateTime dateCreated, Set<Workout> workouts) {
-    this.id = id;
-    this.userId = userId;
-    this.name = name;
-    this.load = load;
-    this.goal = goal;
-    this.restSeconds = restSeconds;
-    this.instructions = instructions;
-    this.dateCreated = dateCreated;
-    this.workouts = workouts;
-  }
-
   public String getUserId() {
     return this.userId;
   }
