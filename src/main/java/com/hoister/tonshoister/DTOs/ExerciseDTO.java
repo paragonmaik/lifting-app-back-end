@@ -12,5 +12,7 @@ public record ExerciseDTO(
     GoalType goal,
     Integer restSeconds,
     String instructions,
-    LocalDateTime dateCreated) {
+    LocalDateTime dateCreated,
+    Integer sets,
+    Integer reps) {
 }

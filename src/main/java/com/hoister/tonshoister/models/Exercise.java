@@ -30,11 +30,29 @@ public class Exercise {
   @Column(name = "date_created")
   @CreationTimestamp
   private LocalDateTime dateCreated;
+  private Integer sets;
+  private Integer reps;
 
   @ManyToMany(mappedBy = "exercises", fetch = FetchType.LAZY)
   private Set<Workout> workouts = new HashSet<>();
 
   public Exercise() {
+  }
+
+  public Exercise(Integer id, String userId, String name, Integer load, GoalType goal,
+      Integer restSeconds, String instructions, LocalDateTime dateCreated, Integer sets,
+      Integer reps, Set<Workout> workouts) {
+    this.id = id;
+    this.userId = userId;
+    this.name = name;
+    this.load = load;
+    this.goal = goal;
+    this.restSeconds = restSeconds;
+    this.instructions = instructions;
+    this.dateCreated = dateCreated;
+    this.sets = sets;
+    this.reps = reps;
+    this.workouts = workouts;
   }
 
   public Exercise(Integer id, String userId, String name, Integer load, GoalType goal, Integer restSeconds,
@@ -121,4 +139,21 @@ public class Exercise {
   public void setWorkouts(Set<Workout> workouts) {
     this.workouts = workouts;
   }
+
+  public Integer getSets() {
+    return this.sets;
+  }
+
+  public void setSets(Integer sets) {
+    this.sets = sets;
+  }
+
+  public Integer getReps() {
+    return this.reps;
+  }
+
+  public void setReps(Integer reps) {
+    this.reps = reps;
+  }
+
 }
