@@ -87,7 +87,7 @@ public class DTOsMapperServiceTests {
   public void convertExerciseToDTO() {
     Exercise exercise = new Exercise(
         1, "uuid", "High Bar Back Squat", 210, GoalType.STRENGTH, 150,
-        "Squat deep.", LocalDateTime.now(), null);
+        "Squat deep.", LocalDateTime.now(), 3, 5, null);
 
     ExerciseDTO exerciseDTO = DTOsMapper.convertToDto(exercise);
 
@@ -98,6 +98,8 @@ public class DTOsMapperServiceTests {
     assertEquals(exerciseDTO.restSeconds(), exercise.getRestSeconds());
     assertEquals(exerciseDTO.instructions(), exercise.getInstructions());
     assertEquals(exerciseDTO.dateCreated(), exercise.getDateCreated());
+    assertEquals(exerciseDTO.reps(), exercise.getReps());
+    assertEquals(exerciseDTO.sets(), exercise.getSets());
 
     assertInstanceOf(ExerciseDTO.class, exerciseDTO);
   }
@@ -106,7 +108,7 @@ public class DTOsMapperServiceTests {
   public void convertDTOToExercise() {
     ExerciseDTO exerciseDTO = new ExerciseDTO(
         1, null, "High Bar Back Squat", 210, GoalType.STRENGTH, 150,
-        "Squat deep.", LocalDateTime.now());
+        "Squat deep.", LocalDateTime.now(), 3, 5);
 
     Exercise exercise = DTOsMapper.convertToEntity(exerciseDTO);
 
@@ -115,6 +117,8 @@ public class DTOsMapperServiceTests {
     assertEquals(exerciseDTO.goal(), exercise.getGoal());
     assertEquals(exerciseDTO.restSeconds(), exercise.getRestSeconds());
     assertEquals(exerciseDTO.instructions(), exercise.getInstructions());
+    assertEquals(exerciseDTO.reps(), exercise.getReps());
+    assertEquals(exerciseDTO.sets(), exercise.getSets());
 
     assertInstanceOf(Exercise.class, exercise);
   }

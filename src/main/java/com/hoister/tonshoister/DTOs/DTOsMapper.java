@@ -85,7 +85,9 @@ public class DTOsMapper {
         exercise.getGoal(),
         exercise.getRestSeconds(),
         exercise.getInstructions(),
-        exercise.getDateCreated());
+        exercise.getDateCreated(),
+        exercise.getSets(),
+        exercise.getReps());
   }
 
   public Exercise convertToEntity(ExerciseDTO exerciseDTO) {
@@ -98,6 +100,8 @@ public class DTOsMapper {
         exerciseDTO.restSeconds(),
         exerciseDTO.instructions(),
         exerciseDTO.dateCreated(),
+        exerciseDTO.sets(),
+        exerciseDTO.reps(),
         new HashSet<Workout>());
   }
 
