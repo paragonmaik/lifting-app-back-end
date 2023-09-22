@@ -33,37 +33,37 @@ import org.hamcrest.CoreMatchers;
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(ExerciseController.class)
 public class ExerciseControllerTests {
-    private String userId = "37755df9-5607-495e-b5d4-da4f01f7c665";
-    Exercise exercise;
-    ExerciseDTO exerciseDTO;
+  private String userId = "37755df9-5607-495e-b5d4-da4f01f7c665";
+  Exercise exercise;
+  ExerciseDTO exerciseDTO;
 
-    @Autowired
-    ObjectMapper objectMapper;
+  @Autowired
+  ObjectMapper objectMapper;
 
-    @MockBean
-    PrincipalService principalService;
-    @MockBean
-    UserRepository userRepository;
-    @MockBean
-    TokenService tokenService;
-    @MockBean
-    ExerciseService exerciseService;
-    @MockBean
-    DTOsMapper DTOsMapper;
-    @Autowired
-    MockMvc mockMvc;
+  @MockBean
+  PrincipalService principalService;
+  @MockBean
+  UserRepository userRepository;
+  @MockBean
+  TokenService tokenService;
+  @MockBean
+  ExerciseService exerciseService;
+  @MockBean
+  DTOsMapper DTOsMapper;
+  @Autowired
+  MockMvc mockMvc;
 
-    @BeforeEach
-    public void setEntities() {
-        exercise = new Exercise(
-                1, userId, "High Bar Squat", 120, GoalType.STRENGTH,
-                150, "Bar rests at the traps.", null, new HashSet<Workout>());
+  @BeforeEach
+  public void setEntities() {
+    exercise = new Exercise(
+        1, userId, "High Bar Squat", 120, GoalType.STRENGTH,
+        150, "Bar rests at the traps.", null, new HashSet<Workout>());
 
-        exerciseDTO = new ExerciseDTO(
-                exercise.getId(), exercise.getUserId(), exercise.getName(), exercise.getLoad(),
-                exercise.getGoal(), exercise.getRestSeconds(), exercise.getInstructions(),
-                exercise.getDateCreated());
-    }
+    exerciseDTO = new ExerciseDTO(
+        exercise.getId(), exercise.getUserId(), exercise.getName(), exercise.getLoad(),
+        exercise.getGoal(), exercise.getRestSeconds(), exercise.getInstructions(),
+        exercise.getDateCreated(), exercise.getSets(), exercise.getReps());
+  }
 
   @Test
   public void createExerciseSuccess() throws Exception {
@@ -93,29 +93,29 @@ public class ExerciseControllerTests {
     verify(DTOsMapper).convertToDto(any(Exercise.class));
   }
 
-    @Test
-    public void getExercisesSuccess() throws Exception {
-        List<Exercise> exercises = new ArrayList<Exercise>();
-        List<ExerciseDTO> exercisesDTO = new ArrayList<ExerciseDTO>();
-        exercises.add(exercise);
-        exercisesDTO.add(exerciseDTO);
+  @Test
+  public void getExercisesSuccess() throws Exception {
+    List<Exercise> exercises = new ArrayList<Exercise>();
+    List<ExerciseDTO> exercisesDTO = new ArrayList<ExerciseDTO>();
+    exercises.add(exercise);
+    exercisesDTO.add(exerciseDTO);
 
-        when(exerciseService.findAllByUserId()).thenReturn(exercises);
-        when(DTOsMapper.convertToDto(any(Exercise.class))).thenReturn(exerciseDTO);
+    when(exerciseService.findAllByUserId()).thenReturn(exercises);
+    when(DTOsMapper.convertToDto(any(Exercise.class))).thenReturn(exerciseDTO);
 
-        mockMvc.perform(get("/api/exercises"))
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$..id").value(exercisesDTO.get(0).id()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$..name").value(exercisesDTO.get(0).name()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$..load").value(exercisesDTO.get(0).load()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$..goal")
-                        .value(exercisesDTO.get(0).goal().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$..restSeconds")
-                        .value(exercisesDTO.get(0).restSeconds()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$..instructions")
-                        .value(exercisesDTO.get(0).instructions()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$..dateCreated").exists());
-    }
+    mockMvc.perform(get("/api/exercises"))
+        .andExpect(status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$..id").value(exercisesDTO.get(0).id()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$..name").value(exercisesDTO.get(0).name()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$..load").value(exercisesDTO.get(0).load()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$..goal")
+            .value(exercisesDTO.get(0).goal().toString()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$..restSeconds")
+            .value(exercisesDTO.get(0).restSeconds()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$..instructions")
+            .value(exercisesDTO.get(0).instructions()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$..dateCreated").exists());
+  }
 
   @Test
   public void getExercisesThrowsException() throws Exception {
@@ -171,39 +171,39 @@ public class ExerciseControllerTests {
         .andExpect(jsonPath("$.message").exists());
   }
 
-    @Test
-    public void deleteWorkoutSuccess() throws Exception {
-        doNothing().when(exerciseService).deleteExercise(1);
+  @Test
+  public void deleteWorkoutSuccess() throws Exception {
+    doNothing().when(exerciseService).deleteExercise(1);
 
-        mockMvc
-                .perform(
-                        delete("/api/exercises/1"))
-                .andExpect(MockMvcResultMatchers.status().isNoContent());
+    mockMvc
+        .perform(
+            delete("/api/exercises/1"))
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
 
-        verify(exerciseService).deleteExercise(1);
-    }
+    verify(exerciseService).deleteExercise(1);
+  }
 
-    @Test
-    public void deleteWorkoutThrowsException() throws Exception {
-        doThrow(new ExerciseNotFoundException()).when(exerciseService).deleteExercise(1);
+  @Test
+  public void deleteWorkoutThrowsException() throws Exception {
+    doThrow(new ExerciseNotFoundException()).when(exerciseService).deleteExercise(1);
 
-        mockMvc
-                .perform(
-                        delete("/api/exercises/1"))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    mockMvc
+        .perform(
+            delete("/api/exercises/1"))
+        .andExpect(MockMvcResultMatchers.status().isNotFound());
 
-        verify(exerciseService).deleteExercise(1);
-    }
+    verify(exerciseService).deleteExercise(1);
+  }
 
-    @Test
-    public void deleteExerciseThrowsUserIdsDoNotMatchException() throws Exception {
-        doThrow(new UserIdDoesNotMatchException()).when(exerciseService).deleteExercise(1);
+  @Test
+  public void deleteExerciseThrowsUserIdsDoNotMatchException() throws Exception {
+    doThrow(new UserIdDoesNotMatchException()).when(exerciseService).deleteExercise(1);
 
-        mockMvc
-                .perform(
-                        delete("/api/exercises/1"))
-                .andExpect(MockMvcResultMatchers.status().isForbidden());
+    mockMvc
+        .perform(
+            delete("/api/exercises/1"))
+        .andExpect(MockMvcResultMatchers.status().isForbidden());
 
-        verify(exerciseService).deleteExercise(1);
-    }
+    verify(exerciseService).deleteExercise(1);
+  }
 }

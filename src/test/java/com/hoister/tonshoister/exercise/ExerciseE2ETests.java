@@ -68,7 +68,7 @@ public class ExerciseE2ETests {
         null, null, "Workout A", 70, "A long workout.", null, null, null);
     Exercise exercise = new Exercise(
         1, null, "High Bar Squat", 120, GoalType.STRENGTH,
-        150, "No instructions.", null, null);
+        150, "No instructions.", null, null, null, null);
 
     exerciseRepository.deleteAll();
 
