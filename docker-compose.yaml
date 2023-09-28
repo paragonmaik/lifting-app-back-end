@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  lifting-db:
+    image: postgres:alpine
+    container_name: lifting-db
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=lifting
+
+  lifting-app:
+    build: .
+    container_name: lifting-app
+    environment:
+      - DB_SERVER=lifting-db
+      - POSTGRES_DB=lifting
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    ports:
+      - 8080:8080
+    links:
+      - lifting-db
