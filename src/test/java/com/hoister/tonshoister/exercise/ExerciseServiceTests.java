@@ -39,11 +39,11 @@ public class ExerciseServiceTests {
   public void setEntities() {
     exercise1 = new Exercise(
         1, userId, "High Bar Squat", 120, GoalType.STRENGTH,
-        150, "Bar rests at the traps.", null, 3, 5, new HashSet<Workout>());
+        150, "Bar rests at the traps.", null, 3, 5, 1, new HashSet<Workout>());
 
     exercise2 = new Exercise(
         1, userId, "Front Squat", 100, GoalType.HYPERTROPHY,
-        180, "No instructions.", null, 3, 5, null);
+        180, "No instructions.", null, 3, 5, 1, null);
 
     workout = new Workout(
         null, null, "Workout A", 10, "A really tough workout.",

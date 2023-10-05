@@ -57,12 +57,13 @@ public class ExerciseControllerTests {
   public void setEntities() {
     exercise = new Exercise(
         1, userId, "High Bar Squat", 120, GoalType.STRENGTH,
-        150, "Bar rests at the traps.", null, 3, 5, new HashSet<Workout>());
+        150, "Bar rests at the traps.", null, 3, 5, 1, new HashSet<Workout>());
 
     exerciseDTO = new ExerciseDTO(
         exercise.getId(), exercise.getUserId(), exercise.getName(), exercise.getLoad(),
         exercise.getGoal(), exercise.getRestSeconds(), exercise.getInstructions(),
-        exercise.getDateCreated(), exercise.getSets(), exercise.getReps());
+        exercise.getDateCreated(), exercise.getSets(), exercise.getReps(),
+        exercise.getExecOrder());
   }
 
   @Test

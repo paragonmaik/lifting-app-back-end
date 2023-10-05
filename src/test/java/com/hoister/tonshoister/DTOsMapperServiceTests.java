@@ -87,7 +87,7 @@ public class DTOsMapperServiceTests {
   public void convertExerciseToDTO() {
     Exercise exercise = new Exercise(
         1, "uuid", "High Bar Back Squat", 210, GoalType.STRENGTH, 150,
-        "Squat deep.", LocalDateTime.now(), 3, 5, null);
+        "Squat deep.", LocalDateTime.now(), 3, 5, 1, null);
 
     ExerciseDTO exerciseDTO = DTOsMapper.convertToDto(exercise);
 
@@ -108,7 +108,7 @@ public class DTOsMapperServiceTests {
   public void convertDTOToExercise() {
     ExerciseDTO exerciseDTO = new ExerciseDTO(
         1, null, "High Bar Back Squat", 210, GoalType.STRENGTH, 150,
-        "Squat deep.", LocalDateTime.now(), 3, 5);
+        "Squat deep.", LocalDateTime.now(), 3, 5, 1);
 
     Exercise exercise = DTOsMapper.convertToEntity(exerciseDTO);
 

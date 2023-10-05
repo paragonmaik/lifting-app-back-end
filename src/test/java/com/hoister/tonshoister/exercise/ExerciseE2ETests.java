@@ -68,7 +68,7 @@ public class ExerciseE2ETests {
         null, null, "Workout A", 70, "A long workout.", null, null, null);
     Exercise exercise = new Exercise(
         1, null, "High Bar Squat", 120, GoalType.STRENGTH,
-        150, "No instructions.", null, null, null, null);
+        150, "No instructions.", null, null, null, null, null);
 
     exerciseRepository.deleteAll();
 
@@ -80,7 +80,7 @@ public class ExerciseE2ETests {
   public void createExerciseSuccess() throws Exception {
     Exercise exercise = new Exercise(
         2, "uuid", "Deadlift", 150, GoalType.STRENGTH,
-        180, "No instructions.", null, null, null, null);
+        180, "No instructions.", null, null, null, null, null);
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
@@ -109,7 +109,7 @@ public class ExerciseE2ETests {
   public void getAllExercisesSuccess() throws Exception {
     Exercise exercise = new Exercise(
         2, "uuid", "Deadlift", 150, GoalType.STRENGTH,
-        180, "No instructions.", null, null, null, null);
+        180, "No instructions.", null, null, null, null, null);
     exercise.setUserId(userId);
     exerciseRepository.save(exercise);
 
@@ -157,12 +157,12 @@ public class ExerciseE2ETests {
   public void updateExerciseSuccess() throws Exception {
     Exercise exercise1 = new Exercise(
         null, null, "Deadlift", 150, GoalType.STRENGTH,
-        180, "No instructions.", null, null, null, null);
+        180, "No instructions.", null, null, null, null, null);
     exercise1.setUserId(userId);
     Integer exerciseId = exerciseRepository.save(exercise1).getId();
     Exercise exercise2 = new Exercise(
         exerciseId, null, "Romanian Deadlift", 120, GoalType.STRENGTH,
-        150, "No instructions.", null, null, null, null);
+        150, "No instructions.", null, null, null, null, null);
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
@@ -180,7 +180,8 @@ public class ExerciseE2ETests {
   @Test
   public void updateExerciseThrowsException() throws Exception {
     Exercise exercise = new Exercise(
-        2, null, "Deadlift", 150, GoalType.STRENGTH, 180, "No instructions.", null, null, null, null);
+        2, null, "Deadlift", 150, GoalType.STRENGTH, 180,
+        "No instructions.", null, null, null, null, null);
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
@@ -199,11 +200,12 @@ public class ExerciseE2ETests {
   public void updateExerciseThrowsUserIdDoesNotMatchException() throws Exception {
     Exercise exercise1 = new Exercise(
         null, null, "Deadlift", 150, GoalType.STRENGTH, 180, "No instructions.",
-        null, null, null, null);
+        null, null, null, null, null);
     Integer exerciseId = exerciseRepository.save(exercise1).getId();
     Exercise exercise2 = new Exercise(
         exerciseId, null, "Romanian Deadlift", 120,
-        GoalType.STRENGTH, 150, "No instructions.", null, null, null, null);
+        GoalType.STRENGTH, 150, "No instructions.", null,
+        null, null, null, null);
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
@@ -222,7 +224,7 @@ public class ExerciseE2ETests {
   public void deleteExerciseSuccess() throws Exception {
     Exercise exercise = new Exercise(
         null, null, "Deadlift", 150, GoalType.STRENGTH, 180, "No instructions.",
-        null, null, null, null);
+        null, null, null, null, null);
 
     exercise.setUserId(userId);
     Integer exerciseId = exerciseRepository
@@ -253,7 +255,7 @@ public class ExerciseE2ETests {
   public void deleteExerciseThrowsUserIdsDoNotMatchException() throws Exception {
     Exercise exercise = new Exercise(
         null, null, "Deadlift", 150, GoalType.STRENGTH, 180, "No instructions.",
-        null, null, null, null);
+        null, null, null, null, null);
 
     Integer exerciseId = exerciseRepository
         .save(exercise)
