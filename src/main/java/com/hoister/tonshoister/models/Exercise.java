@@ -32,6 +32,8 @@ public class Exercise {
   private LocalDateTime dateCreated;
   private Integer sets;
   private Integer reps;
+  @Column(name = "exec_order")
+  private Integer execOrder;
 
   @ManyToMany(mappedBy = "exercises", fetch = FetchType.LAZY)
   private Set<Workout> workouts = new HashSet<>();
@@ -39,9 +41,9 @@ public class Exercise {
   public Exercise() {
   }
 
-  public Exercise(Integer id, String userId, String name, Integer load, GoalType goal,
-      Integer restSeconds, String instructions, LocalDateTime dateCreated, Integer sets,
-      Integer reps, Set<Workout> workouts) {
+  public Exercise(Integer id, String userId, String name, Integer load, GoalType goal, Integer restSeconds,
+      String instructions, LocalDateTime dateCreated, Integer sets, Integer reps, Integer execOrder,
+      Set<Workout> workouts) {
     this.id = id;
     this.userId = userId;
     this.name = name;
@@ -52,6 +54,7 @@ public class Exercise {
     this.dateCreated = dateCreated;
     this.sets = sets;
     this.reps = reps;
+    this.execOrder = execOrder;
     this.workouts = workouts;
   }
 
@@ -141,6 +144,14 @@ public class Exercise {
 
   public void setReps(Integer reps) {
     this.reps = reps;
+  }
+
+  public Integer getExecOrder() {
+    return this.execOrder;
+  }
+
+  public void setExecOrder(Integer execOrder) {
+    this.execOrder = execOrder;
   }
 
 }

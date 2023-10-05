@@ -14,5 +14,6 @@ public record ExerciseDTO(
     String instructions,
     LocalDateTime dateCreated,
     Integer sets,
-    Integer reps) {
+    Integer reps,
+    Integer order) {
 }
