@@ -19,6 +19,7 @@ services:
       - POSTGRES_DB=lifting
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://lifting-db:5432/lifting
     ports:
       - 8080:8080
     links:
