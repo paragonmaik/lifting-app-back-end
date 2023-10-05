@@ -35,7 +35,8 @@ CREATE TABLE exercise (
   date_created TIMESTAMP NOT NULL,
   date_updated TIMESTAMP,
   sets INTEGER,
-  reps INTEGER
+  reps INTEGER,
+  exec_order INTEGER
 );
 
 CREATE SEQUENCE exercise_sequence START WITH 1 INCREMENT BY 1 MINVALUE 1;
