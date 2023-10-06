@@ -103,7 +103,7 @@ public class DTOsMapper {
         exerciseDTO.dateCreated(),
         exerciseDTO.sets(),
         exerciseDTO.reps(),
-        exerciseDTO.order(),
+        exerciseDTO.execOrder(),
         new HashSet<Workout>());
   }
 

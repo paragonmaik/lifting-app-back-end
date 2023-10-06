@@ -15,5 +15,5 @@ public record ExerciseDTO(
     LocalDateTime dateCreated,
     Integer sets,
     Integer reps,
-    Integer order) {
+    Integer execOrder) {
 }
