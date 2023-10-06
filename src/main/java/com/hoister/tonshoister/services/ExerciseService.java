@@ -62,6 +62,7 @@ public class ExerciseService {
     foundExercise.setLoad(exercise.getLoad());
     foundExercise.setSets(exercise.getSets());
     foundExercise.setReps(exercise.getReps());
+    foundExercise.setExecOrder(exercise.getExecOrder());
     foundExercise.setGoal(exercise.getGoal());
     foundExercise.setRestSeconds(exercise.getRestSeconds());
     foundExercise.setInstructions(exercise.getInstructions());
