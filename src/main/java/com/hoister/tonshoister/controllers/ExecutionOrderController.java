@@ -7,7 +7,6 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import com.hoister.tonshoister.DTOs.ExerciseDTO;
-import com.hoister.tonshoister.models.Exercise;
 import com.hoister.tonshoister.services.ExecutionOrderService;
 
 import jakarta.validation.Valid;
@@ -19,8 +18,7 @@ public class ExecutionOrderController {
 
   @PutMapping("/api/exercises/reorder")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public List<Exercise> updateExercisesExecOrder(@Valid @RequestBody List<ExerciseDTO> exerciseDTOs) {
-
-    return executionOrderService.updateExercisesExecOrder(exerciseDTOs);
+  public void updateExercisesExecOrder(@Valid @RequestBody List<ExerciseDTO> exerciseDTOs) {
+    executionOrderService.updateExercisesExecOrder(exerciseDTOs);
   }
 }
