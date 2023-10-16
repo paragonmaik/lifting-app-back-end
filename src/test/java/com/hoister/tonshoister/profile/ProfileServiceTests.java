@@ -12,15 +12,18 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.hoister.tonshoister.advisors.ProfileNotFoundException;
+import com.hoister.tonshoister.advisors.UserIdDoesNotMatchException;
 import com.hoister.tonshoister.models.*;
 import com.hoister.tonshoister.repositories.ProfileRepository;
+import com.hoister.tonshoister.services.PrincipalService;
 import com.hoister.tonshoister.services.ProfileService;
 
 @ExtendWith(MockitoExtension.class)
 public class ProfileServiceTests {
   private String userId = "37755df9-5607-495e-b5d4-da4f01f7c665";
 
+  @Mock
+  PrincipalService principalService;
   @Mock
   ProfileRepository profileRepository;
   @InjectMocks
@@ -45,6 +48,7 @@ public class ProfileServiceTests {
     Profile profile2 = new Profile(userId, 75, 176, null,
         new HashSet<Program>(), new HashSet<Workout>(), new HashSet<Exercise>());
 
+    when(principalService.getAuthUserId()).thenReturn(userId);
     when(profileRepository.findById(userId)).thenReturn(Optional.of(profile1));
     when(profileRepository.save(profile1)).thenReturn(profile2);
 
@@ -62,9 +66,10 @@ public class ProfileServiceTests {
     Profile profile1 = new Profile(userId, 70, 175, null,
         new HashSet<Program>(), new HashSet<Workout>(), new HashSet<Exercise>());
 
+    when(principalService.getAuthUserId()).thenReturn(userId);
     when(profileRepository.findById(userId)).thenReturn(Optional.empty());
 
-    assertThrows(ProfileNotFoundException.class, () -> {
+    assertThrows(UserIdDoesNotMatchException.class, () -> {
       profileService.updateProfile(profile1);
     });
 

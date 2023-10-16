@@ -75,7 +75,7 @@ public class ProfileE2ETests {
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.setBearerAuth(token);
+    headers.setBearerAuth("expiredtoken");
 
     HttpEntity<String> entity = new HttpEntity<String>(
         objectMapper.writeValueAsString(profileDTO), headers);
@@ -84,6 +84,6 @@ public class ProfileE2ETests {
         HttpMethod.PUT, entity,
         Profile.class);
 
-    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
   }
 }
