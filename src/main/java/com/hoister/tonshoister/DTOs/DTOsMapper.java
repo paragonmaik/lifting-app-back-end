@@ -116,12 +116,19 @@ public class DTOsMapper {
   }
 
   // Profile
+  public ProfileDTO convertToDto(Profile profile) {
+    return new ProfileDTO(
+        profile.getId(),
+        profile.getWeight(),
+        profile.getHeight());
+  }
+
   public Profile convertToEntity(ProfileDTO profileDTO) {
     return new Profile(
         profileDTO.id(),
         profileDTO.weight(),
         profileDTO.height(),
-        profileDTO.user(),
+        null,
         new HashSet<Program>(),
         new HashSet<Workout>(),
         new HashSet<Exercise>());

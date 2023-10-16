@@ -137,7 +137,7 @@ public class DTOsMapperServiceTests {
   @Test
   public void convertDTOToProfile() {
     ProfileDTO profileDTO = new ProfileDTO(
-        "37755df9-5607-495e-b5d4-da4f01f7c665", 75, 175, null);
+        "37755df9-5607-495e-b5d4-da4f01f7c665", 75, 175);
     Profile profile = DTOsMapper.convertToEntity(profileDTO);
 
     assertEquals(profileDTO.id(), profile.getId());
