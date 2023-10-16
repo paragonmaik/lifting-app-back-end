@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.hoister.tonshoister.advisors.ProfileNotFoundException;
 import com.hoister.tonshoister.advisors.UserIdDoesNotMatchException;
 import com.hoister.tonshoister.models.*;
 import com.hoister.tonshoister.repositories.ProfileRepository;
@@ -39,6 +40,36 @@ public class ProfileServiceTests {
     profileService.createProfile(user);
 
     verify(profileRepository).save(any(Profile.class));
+  }
+
+  @Test
+  public void getProfileSuccess() throws Exception {
+    Optional<Profile> profile = Optional.of(
+        new Profile(userId, 70, 175, null,
+            null, null, null));
+
+    when(principalService.getAuthUserId()).thenReturn(userId);
+    when(profileRepository.findById(userId)).thenReturn(profile);
+
+    Optional<Profile> requestedProgram = Optional.of(
+        profileService.findById());
+
+    assertEquals(requestedProgram, profile);
+    verify(profileRepository).findById(userId);
+  }
+
+  @Test
+  public void getProfileThrowsException() throws Exception {
+    Optional<Profile> profile = Optional.empty();
+
+    when(principalService.getAuthUserId()).thenReturn(userId);
+    when(profileRepository.findById(userId)).thenReturn(profile);
+
+    assertThrows(ProfileNotFoundException.class, () -> {
+      profileService.findById();
+    });
+
+    verify(profileRepository).findById(userId);
   }
 
   @Test

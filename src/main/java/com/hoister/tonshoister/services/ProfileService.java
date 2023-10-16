@@ -3,6 +3,7 @@ package com.hoister.tonshoister.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hoister.tonshoister.advisors.ProfileNotFoundException;
 import com.hoister.tonshoister.advisors.UserIdDoesNotMatchException;
 import com.hoister.tonshoister.models.Profile;
 import com.hoister.tonshoister.models.User;
@@ -21,6 +22,13 @@ public class ProfileService {
     profile.setUser(user);
 
     profileRepository.save(profile);
+  }
+
+  public Profile findById() throws Exception {
+    var userId = principalService.getAuthUserId();
+
+    return profileRepository.findById(userId)
+        .orElseThrow(() -> new ProfileNotFoundException());
   }
 
   public Profile updateProfile(Profile profile) throws Exception {
