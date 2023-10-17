@@ -1,6 +1,7 @@
 package com.hoister.tonshoister.profile;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 import org.springframework.http.MediaType;
@@ -52,8 +53,31 @@ public class ProfileE2ETests {
   }
 
   @Test
+  public void getProfileByIdSuccess() throws Exception {
+    Profile profile = new Profile(userId, 80, 190, null, null, null, null);
+    profileRepository.save(profile);
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setBearerAuth(token);
+    HttpEntity<String> entity = new HttpEntity<String>(null, headers);
+
+    ResponseEntity<ProfileDTO> response = testRestTemplate
+        .exchange("/api/profile", HttpMethod.GET, entity,
+            ProfileDTO.class);
+
+    ProfileDTO responseProfile = response.getBody();
+
+    assertEquals(response.getStatusCode(), HttpStatus.OK);
+
+    assertNotNull(responseProfile.id());
+    assertEquals(responseProfile.weight(), profile.getWeight());
+    assertEquals(responseProfile.height(), profile.getHeight());
+  }
+
+  @Test
   public void updateProfileSuccess() throws Exception {
-    ProfileDTO profileDTO = new ProfileDTO(userId, 70, 178, null);
+    ProfileDTO profileDTO = new ProfileDTO(userId, 70, 178);
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
@@ -71,7 +95,7 @@ public class ProfileE2ETests {
 
   @Test
   public void updateProfileThrowsException() throws Exception {
-    ProfileDTO profileDTO = new ProfileDTO("nonexistantuuid", 73, 172, null);
+    ProfileDTO profileDTO = new ProfileDTO("nonexistantuuid", 73, 172);
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
