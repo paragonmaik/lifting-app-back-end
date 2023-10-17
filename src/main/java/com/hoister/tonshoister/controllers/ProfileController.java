@@ -19,9 +19,14 @@ public class ProfileController {
   @Autowired
   DTOsMapper DTOsMapper;
 
+  @GetMapping()
+  public ProfileDTO getProfileById() throws Exception {
+    return DTOsMapper.convertToDto(profileService.findById());
+  }
+
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @PutMapping("/edit")
-  public void updateProgram(@Valid @RequestBody ProfileDTO profileDTO) throws Exception {
+  public void updateProfile(@Valid @RequestBody ProfileDTO profileDTO) throws Exception {
     profileService
         .updateProfile(DTOsMapper.convertToEntity(profileDTO));
   }

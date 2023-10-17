@@ -3,6 +3,7 @@ package com.hoister.tonshoister.profile;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.*;
@@ -11,7 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.HashSet;
@@ -64,6 +65,32 @@ public class ProfileControllerTests {
     verify(DTOsMapper).convertToEntity(any(ProfileDTO.class));
     verify(profileService).updateProfile(any(Profile.class));
   }
+
+  @Test
+  public void getProfileByIdSuccess() throws Exception {
+    Profile profile = new Profile("uuid", 76, 175, null, null, null, null);
+    ProfileDTO profileDTO = new ProfileDTO("uuid", 76, 175);
+    when(profileService.findById()).thenReturn(profile);
+    when(DTOsMapper.convertToDto(any(Profile.class))).thenReturn(profileDTO);
+
+    mockMvc.perform(get("/api/profile"))
+        .andExpect(status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.height", CoreMatchers.is(profileDTO.height())))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.weight", CoreMatchers.is(profileDTO.weight())));
+
+    verify(profileService).findById();
+  }
+
+  @Test
+   public void getProfileByIdThrowsException() throws Exception {
+   when(profileService.findById()).thenThrow(new ProfileNotFoundException());
+   
+   mockMvc.perform(get("/api/profile"))
+   .andExpect(status().isNotFound())
+   .andExpect(jsonPath("$..message").exists());
+   
+   verify(profileService).findById();
+   }
 
   @Test
   public void updateProfileThrowsException() throws Exception {
