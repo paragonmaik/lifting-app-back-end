@@ -17,6 +17,9 @@ CREATE TABLE users (
   role TEXT NOT NULL
 );
 
+INSERT INTO users(id, login, password, role)
+VALUES (9999, 'demo@email.com', '$2y$10$Y.qxjolFMcIDwlv4wATwz.0D1kr1wwM6Nbu0e3KoZ89LM.TLzwvnu', 1);
+
 CREATE TABLE profile (
   user_id TEXT PRIMARY KEY REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE,
   weight INTEGER,
