@@ -18,7 +18,7 @@ CREATE TABLE users (
 );
 
 INSERT INTO users(id, login, password, role)
-VALUES (9999, 'demo@email.com', '$2y$10$Y.qxjolFMcIDwlv4wATwz.0D1kr1wwM6Nbu0e3KoZ89LM.TLzwvnu', 1);
+VALUES ('a3a74802-75ad-4063-a8fe-27e5d34d773d', 'demo@email.com', '$2y$10$Y.qxjolFMcIDwlv4wATwz.0D1kr1wwM6Nbu0e3KoZ89LM.TLzwvnu', 1);
 
 CREATE TABLE profile (
   user_id TEXT PRIMARY KEY REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE,
@@ -26,6 +26,9 @@ CREATE TABLE profile (
   height INTEGER,
   date_created TIMESTAMP
 );
+
+INSERT INTO profile(user_id, weight, height, date_created)
+VALUES ('a3a74802-75ad-4063-a8fe-27e5d34d773d', 89, 172, NOW());
 
 CREATE TABLE exercise (
   id SERIAL PRIMARY KEY,
