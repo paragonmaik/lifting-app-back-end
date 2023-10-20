@@ -8,9 +8,15 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "users")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class User implements UserDetails {
 
   @Id
@@ -25,22 +31,10 @@ public class User implements UserDetails {
   @PrimaryKeyJoinColumn
   private Profile profile;
 
-  public User() {
-  }
-
   public User(String login, String password, UserRole role) {
     this.login = login;
     this.password = password;
     this.role = role;
-  }
-
-  public User(String id, String login, String password,
-      UserRole role, Profile profile) {
-    this.id = id;
-    this.login = login;
-    this.password = password;
-    this.role = role;
-    this.profile = profile;
   }
 
   @Override
@@ -49,42 +43,6 @@ public class User implements UserDetails {
       return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
     else
       return List.of(new SimpleGrantedAuthority("ROLE_USER"));
-  }
-
-  public Profile getProfile() {
-    return this.profile;
-  }
-
-  public void setProfile(Profile profile) {
-    this.profile = profile;
-  }
-
-  public String getId() {
-    return this.id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
-  }
-
-  public String getLogin() {
-    return this.login;
-  }
-
-  public void setLogin(String login) {
-    this.login = login;
-  }
-
-  public void setPassword(String password) {
-    this.password = password;
-  }
-
-  public UserRole getRole() {
-    return this.role;
-  }
-
-  public void setRole(UserRole role) {
-    this.role = role;
   }
 
   @Override
