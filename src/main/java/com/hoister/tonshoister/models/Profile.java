@@ -4,9 +4,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "profile")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Profile {
 
   @Id
@@ -18,9 +24,6 @@ public class Profile {
   @MapsId
   @JoinColumn(name = "user_id")
   private User user;
-
-  public Profile() {
-  }
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = false)
   @JoinColumn(name = "user_id")
@@ -34,52 +37,4 @@ public class Profile {
   @JoinColumn(name = "user_id")
   private Set<Exercise> exercises = new HashSet<>();
 
-  public Profile(Integer weight, Integer height) {
-    this.weight = weight;
-    this.height = height;
-  }
-
-  public Profile(String id, Integer weight, Integer height, User user,
-      Set<Program> programs, Set<Workout> workouts,
-      Set<Exercise> exercises) {
-    this.id = id;
-    this.weight = weight;
-    this.height = height;
-    this.user = user;
-    this.programs = programs;
-    this.workouts = workouts;
-    this.exercises = exercises;
-  }
-
-  public String getId() {
-    return this.id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
-  }
-
-  public Integer getWeight() {
-    return this.weight;
-  }
-
-  public void setWeight(Integer weight) {
-    this.weight = weight;
-  }
-
-  public Integer getHeight() {
-    return this.height;
-  }
-
-  public void setHeight(Integer height) {
-    this.height = height;
-  }
-
-  public User getUser() {
-    return this.user;
-  }
-
-  public void setUser(User user) {
-    this.user = user;
-  }
 }
