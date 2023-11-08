@@ -35,4 +35,9 @@ public class AuthenticationController {
 
     return ResponseEntity.ok(new LoginResponseDTO(token));
   }
+
+  @GetMapping("/info")
+  public String Head() {
+    return "test";
+  }
 }
